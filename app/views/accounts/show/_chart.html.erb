@@ -13,12 +13,16 @@
           <%= render "investments/value_tooltip", balance: account.balance_money, holdings: account.balance_money - account.cash_balance_money, cash: account.cash_balance_money %>
         <% end %>
       </div>
-
-      <% if account.syncing? %>
-        <div class="bg-loader rounded-md h-7 w-20"></div>
-      <% else %>
-        <%= tag.p format_money(account.balance_money), class: "text-primary text-3xl font-medium truncate" %>
-      <% end %>
+      <div class="flex flex-row gap-2 items-baseline">
+        <% if account.syncing? %>
+          <div class="bg-loader rounded-md h-7 w-20"></div>
+        <% else %>
+          <%= tag.p format_money(account.balance_money), class: "text-primary text-3xl font-medium truncate" %>
+          <% if account.currency != Current.family.currency %>
+            <%= tag.p format_money(account.balance_money.exchange_to(Current.family.currency, fallback_rate: 1)), class: "text-sm font-medium text-secondary" %>
+          <% end %>
+        <% end %>
+      </div>
     </div>
 
     <%= form_with url: request.path, method: :get, data: { controller: "auto-submit-form" } do |form| %>
@@ -27,7 +31,7 @@
           <%= form.select :chart_view,
             [["Total value", "balance"], ["Holdings", "holdings_balance"], ["Cash", "cash_balance"]],
             { selected: chart_view },
-            class: "border border-secondary rounded-lg text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0",
+            class: "bg-container border border-secondary rounded-lg text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0",
             data: { "auto-submit-form-target": "auto" } %>
         <% end %>
 

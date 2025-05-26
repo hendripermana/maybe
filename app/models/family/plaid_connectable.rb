@@ -5,10 +5,17 @@ module Family::PlaidConnectable
     has_many :plaid_items, dependent: :destroy
   end
 
-  def create_plaid_item!(public_token:, item_name:, region:)
-    provider = plaid_provider_for_region(region)
+  def can_connect_plaid_us?
+    plaid(:us).present?
+  end
 
-    public_token_response = provider.exchange_public_token(public_token)
+  # If Plaid provider is configured and user is in the EU region
+  def can_connect_plaid_eu?
+    plaid(:eu).present? && self.eu?
+  end
+
+  def create_plaid_item!(public_token:, item_name:, region:)
+    public_token_response = plaid(region).exchange_public_token(public_token)
 
     plaid_item = plaid_items.create!(
       name: item_name,
@@ -23,11 +30,9 @@ module Family::PlaidConnectable
   end
 
   def get_link_token(webhooks_url:, redirect_url:, accountable_type: nil, region: :us, access_token: nil)
-    return nil unless plaid_us || plaid_eu
+    return nil unless plaid(region)
 
-    provider = plaid_provider_for_region(region)
-
-    provider.get_link_token(
+    plaid(region).get_link_token(
       user_id: self.id,
       webhooks_url: webhooks_url,
       redirect_url: redirect_url,
@@ -37,15 +42,7 @@ module Family::PlaidConnectable
   end
 
   private
-    def plaid_us
-      @plaid ||= Provider::Registry.get_provider(:plaid_us)
-    end
-
-    def plaid_eu
-      @plaid_eu ||= Provider::Registry.get_provider(:plaid_eu)
-    end
-
-    def plaid_provider_for_region(region)
-      region.to_sym == :eu ? plaid_eu : plaid_us
+    def plaid(region)
+      Provider::Registry.plaid_provider_for_region(region)
     end
 end

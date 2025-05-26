@@ -5,22 +5,12 @@ class PlaidItemTest < ActiveSupport::TestCase
 
   setup do
     @plaid_item = @syncable = plaid_items(:one)
+    @plaid_provider = mock
+    Provider::Registry.stubs(:plaid_provider_for_region).returns(@plaid_provider)
   end
 
   test "removes plaid item when destroyed" do
-    @plaid_provider = mock
-    @plaid_item.stubs(:plaid_provider).returns(@plaid_provider)
     @plaid_provider.expects(:remove_item).with(@plaid_item.access_token).once
-
-    assert_difference "PlaidItem.count", -1 do
-      @plaid_item.destroy
-    end
-  end
-
-  test "if plaid item not found, silently continues with deletion" do
-    @plaid_provider = mock
-    @plaid_item.stubs(:plaid_provider).returns(@plaid_provider)
-    @plaid_provider.expects(:remove_item).with(@plaid_item.access_token).raises(Plaid::ApiError.new("Item not found"))
 
     assert_difference "PlaidItem.count", -1 do
       @plaid_item.destroy

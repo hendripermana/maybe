@@ -57,6 +57,12 @@ class Sync < ApplicationRecord
 
   def perform
     Rails.logger.tagged("Sync", id, syncable_type, syncable_id) do
+      # This can happen on server restarts or if Sidekiq enqueues a duplicate job
+      unless may_start?
+        Rails.logger.warn("Sync #{id} is not in a valid state (#{aasm.from_state}) to start.  Skipping sync.")
+        return
+      end
+
       start!
 
       begin
@@ -101,13 +107,13 @@ class Sync < ApplicationRecord
     return if self.window_start_date.nil? && self.window_end_date.nil? # already as wide as possible
 
     earliest_start_date = if self.window_start_date && new_window_start_date
-      [self.window_start_date, new_window_start_date].min
+      [ self.window_start_date, new_window_start_date ].min
     else
       nil
     end
 
     latest_end_date = if self.window_end_date && new_window_end_date
-      [self.window_end_date, new_window_end_date].max
+      [ self.window_end_date, new_window_end_date ].max
     else
       nil
     end
