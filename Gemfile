@@ -41,7 +41,12 @@ gem "sentry-ruby"
 gem "sentry-rails"
 gem "sentry-sidekiq"
 gem "logtail-rails"
-gem "skylight", groups: [ :production ]
+gem "skylight", groups: [:production]
+gem "yabeda-prometheus"
+gem "yabeda-rails"
+gem "yabeda-prometheus-mmap"
+gem "yabeda-rails"
+
 
 # Active Storage
 gem "aws-sdk-s3", "~> 1.177.0", require: false
