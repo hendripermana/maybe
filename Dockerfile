@@ -7,6 +7,9 @@ FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
 # Rails app lives here
 WORKDIR /rails
 
+ENV TZ=Asia/Jakarta
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips postgresql-client libyaml-0-2
@@ -17,6 +20,7 @@ ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development" \
+    SKYLIGHT_AUTHENTICATION=${SKYLIGHT_AUTHENTICATION} \
     BUILD_COMMIT_SHA=${BUILD_COMMIT_SHA}
     
 # Throw-away build stage to reduce size of final image
@@ -42,6 +46,21 @@ RUN bundle exec bootsnap precompile -j 0 app/ lib/
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
+# Install Skylight gem
+RUN bundle exec skylight setup --force
+
+# Create Skylight configuration file if it does not exist
+RUN mkdir -p /rails/tmp/skylight && \
+    if [ ! -f /home/ubuntu/maybe/config/skylight.yml ]; then \
+      mkdir -p /home/ubuntu/maybe/config && \
+      echo "production:" > /home/ubuntu/maybe/config/skylight.yml && \
+      echo "  enabled: true" >> /home/ubuntu/maybe/config/skylight.yml && \
+      echo "  auth_token: <%= ENV[\"SKYLIGHT_AUTHENTICATION\"] %>" >> /home/ubuntu/maybe/config/skylight.yml && \
+      echo "  daemon:" >> /home/ubuntu/maybe/config/skylight.yml && \
+      echo "    pidfile_path: /rails/tmp/skylight/skylight.pid" >> /home/ubuntu/maybe/config/skylight.yml && \
+      echo "    sockdir_path: /rails/tmp/skylight" >> /home/ubuntu/maybe/config/skylight.yml ; \
+    fi
+
 # Final stage for app image
 FROM base
 
@@ -55,7 +74,10 @@ COPY --from=build /rails /rails
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
+    mkdir -p /rails/db /rails/log /rails/storage /rails/tmp /rails/tmp/miniprofiler /rails/tmp/skylight && \
+    chown -R rails:rails /rails/db /rails/log /rails/storage /rails/tmp && \
+    chmod -R 775 /rails/tmp && \
+    chmod -R 755 /rails/log
 USER 1000:1000
 
 # Entrypoint prepares the database.

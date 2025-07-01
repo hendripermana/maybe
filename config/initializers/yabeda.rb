@@ -12,8 +12,8 @@ Yabeda.configure do
   # end
 end
 
-Yabeda::Prometheus::Mmap.configure do
-  # This is the directory where the memory-mapped files will be stored.
-  # It must be shared between the application and the metrics exporter sidecar.
-  dir ENV.fetch("YABEDA_PROMETHEUS_MMAP_DIR")
-end
+# Yabeda::Prometheus::Mmap.configure do
+#   # This is the directory where the memory-mapped files will be stored.
+#   # It must be shared between the application and the metrics exporter sidecar.
+#   # dir ENV.fetch("YABEDA_PROMETHEUS_MMAP_DIR")
+# end

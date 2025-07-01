@@ -1,0 +1,19 @@
+services:
+  prometheus:
+    extra_hosts:
+      - "netdata.local:host-gateway"
+      - "kucai.permana.icu:172.17.0.1"
+    
+  grafana:
+    extra_hosts:
+      - "netdata.local:host-gateway"
+      - "kucai.permana.icu:172.17.0.1"
+
+  # Tambahan untuk memastikan semua monitoring tools bisa akses host
+  cadvisor:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      
+  node-exporter:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

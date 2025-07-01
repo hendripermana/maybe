@@ -5,12 +5,12 @@ class Rack::Attack
   enabled = Rails.env.production? || Rails.env.staging?
 
   # Throttle requests to the OAuth token endpoint
-  throttle("oauth/token", limit: 10, period: 1.minute) do |request|
+  throttle("oauth/token", limit: 5, period: 1.minute) do |request|
     request.ip if request.path == "/oauth/token"
   end
 
   # Throttle API requests per access token
-  throttle("api/requests", limit: 100, period: 1.hour) do |request|
+  throttle("api/requests", limit: 50, period: 1.hour) do |request|
     if request.path.start_with?("/api/")
       # Extract access token from Authorization header
       auth_header = request.get_header("HTTP_AUTHORIZATION")
@@ -36,7 +36,9 @@ class Rack::Attack
       /sqlmap/i,
       /nmap/i,
       /nikto/i,
-      /masscan/i
+      /masscan/i,
+      /curl/i,
+      /wget/i
     ]
 
     user_agent = request.user_agent
