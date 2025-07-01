@@ -45,7 +45,6 @@ gem "skylight", groups: [:production]
 gem "yabeda-prometheus"
 gem "yabeda-rails"
 gem "yabeda-prometheus-mmap"
-gem "yabeda-rails"
 
 
 # Active Storage
