@@ -43,6 +43,11 @@ gem "sentry-sidekiq"
 gem "logtail-rails"
 gem "skylight", groups: [ :production ]
 
+# === CUSTOM MONITORING GEMS (PRESERVED FROM PRODUCTION) ===
+gem "yabeda-prometheus"
+gem "yabeda-rails"
+gem "yabeda-prometheus-mmap"
+
 # Active Storage
 gem "aws-sdk-s3", "~> 1.177.0", require: false
 gem "image_processing", ">= 1.2"
