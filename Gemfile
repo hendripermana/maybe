@@ -42,12 +42,8 @@ gem "sentry-rails"
 gem "sentry-sidekiq"
 gem "logtail-rails"
 gem "skylight", groups: [:production]
-gem "yabeda-prometheus"
-gem "yabeda-rails"
-gem "yabeda-prometheus-mmap"
 
-
-# === CUSTOM MONITORING GEMS (PRESERVED FROM PRODUCTION) ===
+# === MONITORING GEMS (YABEDA PROMETHEUS STACK) ===
 gem "yabeda-prometheus"
 gem "yabeda-rails"
 gem "yabeda-prometheus-mmap"
