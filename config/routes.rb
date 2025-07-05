@@ -3,6 +3,8 @@ require "sidekiq/cron/web"
 
 Rails.application.routes.draw do
   mount Yabeda::Prometheus::Exporter => "/metrics"
+  get "brankas/link_url",  to: "brankas#link_url"
+  get "brankas/callback",  to: "brankas#callback"
 
   use_doorkeeper
   # MFA routes

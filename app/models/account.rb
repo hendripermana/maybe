@@ -18,6 +18,11 @@ class Account < ApplicationRecord
   monetize :balance, :cash_balance
 
   enum :classification, { asset: "asset", liability: "liability" }, validate: { allow_nil: true }
+  enum :provider, {
+    manual:  "manual",
+    plaid:   "plaid",
+    brankas: "brankas"
+  }
 
   scope :visible, -> { where(status: [ "draft", "active" ]) }
   scope :assets, -> { where(classification: "asset") }

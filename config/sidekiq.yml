@@ -5,3 +5,8 @@ queues:
   - [medium_priority, 2]
   - [low_priority, 1]
   - [default, 1]
+
+:schedule:
+  brankas_sync_job:
+    cron: "0 */6 * * *"   # every six hours
+    class: "Brankas::SyncJob"
