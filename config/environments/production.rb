@@ -70,25 +70,20 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   if ENV["CACHE_REDIS_URL"].present?
-    config.cache_store = :redis_cache_store, {
-      url: ENV["CACHE_REDIS_URL"],
-      size: ENV.fetch("REDIS_POOL_SIZE", 5).to_i,
-      timeout: ENV.fetch("REDIS_TIMEOUT", 5).to_i
-    }
+    config.cache_store = :redis_cache_store, { url: ENV["CACHE_REDIS_URL"] }
   end
 
   config.action_mailer.perform_caching = false
   config.action_mailer.deliver_later_queue_name = :high_priority
+  config.action_mailer.default_url_options = { host: ENV["APP_DOMAIN"] }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: ENV['SMTP_ADDRESS'],
-    port: ENV['SMTP_PORT'],
-    user_name: ENV['SMTP_USERNAME'],
-    password: ENV['SMTP_PASSWORD'],
-    authentication: :login,
-    enable_starttls_auto: ENV['SMTP_TLS_ENABLED'] == 'true'
+    address:   ENV["SMTP_ADDRESS"],
+    port:      ENV["SMTP_PORT"],
+    user_name: ENV["SMTP_USERNAME"],
+    password:  ENV["SMTP_PASSWORD"],
+    tls:       ENV["SMTP_TLS_ENABLED"] == "true"
   }
-  config.action_mailer.default_url_options = { host: ENV['APP_DOMAIN'] }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -112,30 +107,6 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  # Ensure Sidekiq uses Redis with connection pooling
+  # set REDIS_URL for Sidekiq to use Redis
   config.active_job.queue_adapter = :sidekiq
-  Sidekiq.configure_server do |config|
-    config.redis = {
-      url: ENV["REDIS_URL"],
-      size: ENV.fetch("SIDEKIQ_POOL_SIZE", 10).to_i,
-      timeout: ENV.fetch("SIDEKIQ_TIMEOUT", 5).to_i
-    }
-  end
-
-  # Disable rack-mini-profiler in production to avoid permission issues
-  config.middleware.delete(Rack::MiniProfiler) if defined?(Rack::MiniProfiler)
-
-  # Ensure Skylight is enabled and properly configured
-  if ENV['SKYLIGHT_AUTHENTICATION'].present?
-    config.skylight.environments += ['production']
-    config.skylight.authentication = ENV['SKYLIGHT_AUTHENTICATION']
-    config.skylight.daemon = { 
-      pidfile_path: '/rails/tmp/skylight.pid', 
-      sockdir_path: '/rails/tmp',
-      log_file: '/rails/log/skylight.log'
-    }
-  else
-    # Disable Skylight if not configured
-    config.skylight.enabled = false
-  end
 end

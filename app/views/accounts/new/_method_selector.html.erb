@@ -32,19 +32,5 @@
         <%= t("accounts.new.method_selector.connected_entry_eu") %>
       <% end %>
     <% end %>
-
-    <%# Brankas Link for Indonesian Banks %>
-    <div style="background: red; padding: 10px; margin: 10px;">
-      <h3 style="color: white;">BRANKAS DEBUG - If you see this, the view is working!</h3>
-    </div>
-    <%= button_to "#", 
-                  data: { controller: "brankas-link" },
-                  class: "text-primary flex items-center gap-4 w-full text-center focus:outline-hidden focus:bg-green-50 border border-transparent focus:border focus:border-green-200 px-2 hover:bg-green-50 rounded-lg p-2",
-                  form: { class: "w-full" } do %>
-      <span class="flex w-8 h-8 shrink-0 grow-0 items-center justify-center rounded-lg bg-green-100 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.02)]">
-        <%= icon("link-2") %>
-      </span>
-      Connect Indonesian Bank (Brankas)
-    <% end %>
   </div>
 <% end %>
