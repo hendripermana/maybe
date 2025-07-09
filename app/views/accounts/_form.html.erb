@@ -16,6 +16,20 @@
     <% end %>
 
     <%= yield form %>
+
+    <%# Brankas Integration Option %>
+    <div class="border-t pt-4 mt-4">
+      <p class="text-sm text-gray-600 mb-3">Or connect your Indonesian bank account automatically:</p>
+      <%= button_to "#", 
+                    data: { controller: "brankas-link" },
+                    class: "w-full text-primary flex items-center justify-center gap-3 focus:outline-hidden bg-green-50 border border-green-200 hover:bg-green-100 rounded-lg p-3",
+                    form: { class: "w-full" } do %>
+        <span class="flex w-6 h-6 items-center justify-center rounded bg-green-100">
+          <%= icon("link-2") %>
+        </span>
+        Connect Indonesian Bank (Brankas)
+      <% end %>
+    </div>
   </div>
 
   <%= form.submit %>
