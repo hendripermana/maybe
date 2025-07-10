@@ -1,5 +1,9 @@
 #!/bin/bash -e
 
+# Create Skylight socket directory with proper permissions
+mkdir -p /rails/tmp/skylight
+chown rails:rails /rails/tmp/skylight
+
 # If running the rails server then create or migrate existing database
 if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
   ./bin/rails db:prepare
