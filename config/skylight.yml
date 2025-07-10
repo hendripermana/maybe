@@ -1,0 +1,18 @@
+# Skylight Configuration
+# For more options, see: https://github.com/skylightio/skylight-ruby#configuration
+
+common: &default
+  daemon:
+    # Directory for Skylight IPC socket; must be writable in container
+    sockdir_path: "/rails/tmp/skylight"
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+  # Ensure you set SKYLIGHT_AUTHENTICATION in your environment
+  auth_token: <%= ENV['SKYLIGHT_AUTHENTICATION'] %>
