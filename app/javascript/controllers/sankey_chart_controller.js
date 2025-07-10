@@ -32,18 +32,30 @@ export default class extends Controller {
     const width = this.element.clientWidth || 600;
     const height = this.element.clientHeight || 400;
 
+    // Add padding based on container size for better spacing
+    const padding = {
+      top: Math.max(20, height * 0.05),
+      right: Math.max(20, width * 0.03),
+      bottom: Math.max(20, height * 0.05),
+      left: Math.max(20, width * 0.03)
+    };
+
     const svg = d3
       .select(this.element)
       .append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .style("background", "transparent");
+
+    // Container for all sankey elements, used for zooming
+    const chartGroup = svg.append("g").attr("class", "chartGroup");
 
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
-      .nodePadding(this.nodePaddingValue)
+      .nodePadding(Math.max(this.nodePaddingValue, height * 0.02))
       .extent([
-        [16, 16],
-        [width - 16, height - 16],
+        [padding.left, padding.top],
+        [width - padding.right, height - padding.bottom],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -200,5 +212,56 @@ export default class extends Controller {
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       });
+
+    // Enable zoom and pan
+    svg.call(
+      d3.zoom()
+        .scaleExtent([0.5, 3])
+        .on("start", () => svg.style("cursor", "grabbing"))
+        .on("end", () => svg.style("cursor", "grab"))
+        .on("zoom", (event) => chartGroup.attr("transform", event.transform))
+    )
+    .style("cursor", "grab");
+
+    // Add double-click to reset zoom
+    svg.on("dblclick.zoom", () => {
+      svg.transition().duration(750).call(
+        d3.zoom().transform,
+        d3.zoomIdentity
+      );
+    });
   }
-} 
+
+  // Fullscreen toggle for chart container
+  toggleFullscreen() {
+    const el = this.element;
+    const isFullscreen = !!document.fullscreenElement;
+    
+    if (!isFullscreen) {
+      // Add fullscreen styling
+      el.style.position = 'fixed';
+      el.style.top = '0';
+      el.style.left = '0';
+      el.style.width = '100vw';
+      el.style.height = '100vh';
+      el.style.zIndex = '9999';
+      el.style.background = 'var(--color-background)';
+      
+      el.requestFullscreen();
+    } else {
+      // Reset styling
+      el.style.position = '';
+      el.style.top = '';
+      el.style.left = '';
+      el.style.width = '';
+      el.style.height = '';
+      el.style.zIndex = '';
+      el.style.background = '';
+      
+      document.exitFullscreen();
+    }
+   
+    // Redraw chart after fullscreen toggle
+    setTimeout(() => this.#draw(), 100);
+  }
+}
