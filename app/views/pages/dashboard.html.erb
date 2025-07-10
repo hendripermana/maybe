@@ -8,43 +8,57 @@
         <p class="text-base lg:text-lg text-secondary font-medium">Here's what's happening with your finances</p>
       </div>
       <div class="flex items-center gap-2">
-        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        <span class="text-sm text-gray-600">Last updated: <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %></span>
+        <%= render Ui::BadgeComponent.new(variant: :success, size: :sm) do %>
+          <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-1"></div>
+          Last updated: <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %>
+        <% end %>
       </div>
     </div>
 
-    <%= render LinkComponent.new(
-      icon: "plus",
-      text: "Add Account",
+    <%= render Ui::ButtonComponent.new(
+      variant: :default,
+      size: :md,
       href: new_account_path,
-      frame: :modal,
-      class: "hidden lg:inline-flex bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-    ) %>
+      class: "hidden lg:inline-flex shadow-lg hover:shadow-xl",
+      data: { turbo_frame: :modal }
+    ) do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      Add Account
+    <% end %>
 
-    <%= render LinkComponent.new(
-        variant: "icon-inverse",
-        icon: "plus",
-        href: new_account_path,
-        frame: :modal,
-        class: "rounded-full lg:hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-      ) %>
+    <%= render Ui::ButtonComponent.new(
+      variant: :default,
+      size: :icon,
+      href: new_account_path,
+      class: "lg:hidden shadow-lg hover:shadow-xl rounded-full",
+      data: { turbo_frame: :modal }
+    ) do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+    <% end %>
   </div>
 <% end %>
 
 <div class="w-full space-y-8 pb-24">
   <% if Current.family.accounts.any? %>
-    <section class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
-      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
-        <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-          Net Worth Overview
-        </h2>
+    <%= render Ui::CardComponent.new(variant: :elevated, size: :lg, class: "overflow-hidden") do %>
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 -m-8 mb-6 p-6 border-b border-gray-100">
+        <div class="flex items-center gap-3">
+          <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+          <h2 class="text-xl font-bold text-gray-900">Net Worth Overview</h2>
+          <%= render Ui::BadgeComponent.new(variant: :primary, size: :sm) do %>
+            Live Data
+          <% end %>
+        </div>
       </div>
       <%= render partial: "pages/dashboard/net_worth_chart", locals: {
         balance_sheet: @balance_sheet,
         period: @period
       } %>
-    </section>
+    <% end %>
     
     <section class="space-y-6">
       <div class="flex items-center justify-between">
@@ -52,27 +66,30 @@
           <div class="w-1 h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></div>
           Account Overview
         </h2>
-        <div class="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-full">
-          <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
-          <span><%= Current.family.accounts.count %> accounts connected</span>
-        </div>
+        <%= render Ui::BadgeComponent.new(variant: :outline, size: :md, class: "bg-gray-50") do %>
+          <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+          <%= Current.family.accounts.count %> accounts connected
+        <% end %>
       </div>
       <%= render "pages/dashboard/balance_sheet", balance_sheet: @balance_sheet %>
     </section>
 
     <%= turbo_frame_tag "cashflow_sankey_section" do %>
-      <section class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
-        <div class="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-gray-100">
-          <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-            Cash Flow Analysis
-          </h2>
+      <%= render Ui::CardComponent.new(variant: :elevated, size: :lg, class: "overflow-hidden") do %>
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 -m-8 mb-6 p-6 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <h2 class="text-xl font-bold text-gray-900">Cash Flow Analysis</h2>
+            <%= render Ui::BadgeComponent.new(variant: :success, size: :sm) do %>
+              Updated
+            <% end %>
+          </div>
         </div>
         <%= render partial: "pages/dashboard/cashflow_sankey", locals: {
           sankey_data: @cashflow_sankey_data,
           period: @cashflow_period
         } %>
-      </section>
+      <% end %>
     <% end %>
   <% else %>
     <section>
