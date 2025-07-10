@@ -189,25 +189,37 @@ export default class extends Controller {
     const stimulusControllerInstance = this;
     node
       .append("text")
-      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("x", (d) => {
+        if (d.name === "Cash Flow") {
+          return (d.x0 + d.x1) / 2;
+        }
+        return d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6;
+      })
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "-0.2em")
-      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
-      .attr("class", "text-xs font-medium text-primary fill-current")
+      .attr("text-anchor", (d) => {
+        if (d.name === "Cash Flow") {
+          return "middle";
+        }
+        return d.x0 < width / 2 ? "start" : "end";
+      })
+      .attr("class", "text-xs font-medium text-primary fill-current select-none")
+      .style("text-shadow", "0 1px 3px rgba(0,0,0,0.3)")
       .each(function (d) {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();
 
         // Node Name on the first line
         textElement.append("tspan")
+          .attr("class", "font-semibold")
           .text(d.name);
 
         // Financial details on the second line
         const financialDetailsTspan = textElement.append("tspan")
           .attr("x", textElement.attr("x"))
           .attr("dy", "1.2em")
-          .attr("class", "font-mono text-secondary")
-          .style("font-size", "0.65rem"); // Explicitly set smaller font size
+          .attr("class", "font-mono text-secondary/80")
+          .style("font-size", Math.max(10, width * 0.015) + "px"); // Dynamic font size
 
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));

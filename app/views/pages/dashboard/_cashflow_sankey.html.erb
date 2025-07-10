@@ -15,23 +15,12 @@
   </div>
 
   <% if sankey_data[:links].present? %>
--    <div class="w-full h-96">
-+    <div class="w-full h-96 relative group">
-+      <!-- Fullscreen toggle button -->
-+      <button
-+        data-action="click->sankey-chart#toggleFullscreen"
-+        class="absolute top-2 right-2 z-10 p-2 bg-gray-800/80 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-gray-700"
-+        title="View Fullscreen">
-+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-+        </svg>
-+      </button>
+    <div class="w-full h-96">
       <div
         data-controller="sankey-chart"
         data-sankey-chart-data-value="<%= sankey_data.to_json %>"
         data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
--        class="w-full h-full"></div>
-+        class="w-full h-full bg-container rounded-lg border border-secondary/20 overflow-hidden"></div>
+        class="w-full h-full"></div>
     </div>
   <% else %>
     <div class="h-[300px] lg:h-[340px] bg-container py-4 flex flex-col items-center justify-center">
