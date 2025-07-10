@@ -1,83 +1,45 @@
-<div id="net-worth-chart" class="p-6">
+<%# locals: (balance_sheet:, period:, **args) %>
+
+<div id="net-worth-chart">
   <% series = balance_sheet.net_worth_series(period: period) %>
-  <div class="flex flex-col lg:flex-row lg:justify-between gap-6 mb-8">
-    <div class="space-y-4 flex-1">
-      <div class="space-y-3">
-        <div class="flex items-center gap-3">
-          <div class="w-4 h-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"></div>
-          <p class="text-base text-gray-600 font-semibold"><%= t(".title") %></p>
+  <div class="flex justify-between gap-4 px-4">
+    <div class="space-y-2">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2">
+          <p class="text-sm text-secondary font-medium"><%= t(".title") %></p>
         </div>
 
-        <div class="space-y-2">
-          <p class="text-primary text-4xl lg:text-5xl font-bold tracking-tight <%= "animate-pulse" if balance_sheet.syncing? %>">
-            <%= series.trend.current.format %>
-          </p>
-          
-          <% if series.trend.nil? %>
-            <div class="flex items-center gap-2 bg-yellow-50 text-yellow-800 px-3 py-2 rounded-lg border border-yellow-200">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-              </svg>
-              <p class="text-sm font-medium"><%= t(".data_not_available") %></p>
-            </div>
-          <% else %>
-            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-              <%= render partial: "shared/trend_change", locals: { trend: series.trend, comparison_label: period.comparison_label } %>
-            </div>
-          <% end %>
-        </div>
+        <p class="text-primary -space-x-0.5 text-3xl font-medium <%= "animate-pulse" if balance_sheet.syncing? %>">
+          <%= series.trend.current.format %>
+        </p>
+
+        <% if series.trend.nil? %>
+          <p class="text-sm text-secondary"><%= t(".data_not_available") %></p>
+        <% else %>
+          <%= render partial: "shared/trend_change", locals: { trend: series.trend, comparison_label: period.comparison_label } %>
+        <% end %>
       </div>
     </div>
 
-    <div class="flex flex-col gap-4">
-      <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form" }, class: "lg:self-start" do |form| %>
-        <div class="relative">
-          <%= form.select :period,
-                        Period.as_options,
-                        { selected: period.key },
-                        data: { "auto-submit-form-target": "auto" },
-                        class: "appearance-none bg-white border-2 border-gray-200 hover:border-blue-300 focus:border-blue-500 font-semibold rounded-xl px-4 py-3 text-sm pr-10 cursor-pointer text-gray-900 focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all duration-200 shadow-sm hover:shadow-md" %>
-          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </div>
-        </div>
-      <% end %>
-      
-      <div class="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-2">
-        <div class="bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">
-          <p class="text-xs text-blue-600 font-medium">Assets</p>
-          <p class="text-sm font-bold text-blue-900">$XXX,XXX</p>
-        </div>
-        <div class="bg-red-50 border border-red-100 rounded-lg px-3 py-2">
-          <p class="text-xs text-red-600 font-medium">Liabilities</p>
-          <p class="text-sm font-bold text-red-900">$XX,XXX</p>
-        </div>
-      </div>
-    </div>
+    <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form" } do |form| %>
+      <%= form.select :period,
+                    Period.as_options,
+                    { selected: period.key },
+                    data: { "auto-submit-form-target": "auto" },
+                    class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
+    <% end %>
   </div>
 
   <% if series.any? %>
-    <div class="bg-gradient-to-br from-gray-25 to-white rounded-xl p-4 border border-gray-100">
-      <div
-        id="netWorthChart"
-        class="w-full flex-1 min-h-64"
-        data-controller="time-series-chart"
-        data-time-series-chart-data-value="<%= series.to_json %>">
-      </div>
-    </div>
+    <div
+    id="netWorthChart"
+    class="w-full flex-1 min-h-52"
+    data-controller="time-series-chart"
+    data-time-series-chart-data-value="<%= series.to_json %>"></div>
   <% else %>
-    <div class="w-full h-64 flex items-center justify-center bg-gray-50 rounded-xl border border-gray-100">
-      <div class="text-center space-y-3">
-        <div class="w-16 h-16 bg-gray-200 rounded-full mx-auto flex items-center justify-center">
-          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-        </div>
-        <p class="text-gray-500 font-medium"><%= t(".data_not_available") %></p>
-        <p class="text-sm text-gray-400">Connect your accounts to see your net worth chart</p>
-      </div>
+    <div class="w-full h-full flex items-center justify-center">
+      <p class="text-secondary text-sm"><%= t(".data_not_available") %></p>
     </div>
   <% end %>
+
 </div>
