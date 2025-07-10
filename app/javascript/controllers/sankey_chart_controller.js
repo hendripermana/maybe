@@ -38,6 +38,9 @@ export default class extends Controller {
       .attr("width", width)
       .attr("height", height);
 
+    // Container for all sankey elements, used for zooming
+    const chartGroup = svg.append("g").attr("class", "chartGroup");
+
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
       .nodePadding(this.nodePaddingValue)
@@ -51,8 +54,8 @@ export default class extends Controller {
       links: links.map((d) => Object.assign({}, d)),
     });
 
-    // Define gradients for links
-    const defs = svg.append("defs");
+    // Define gradients
+    const defs = chartGroup.append("defs");
 
     sankeyData.links.forEach((link, i) => {
       const gradientId = `link-gradient-${link.source.index}-${link.target.index}-${i}`;
@@ -91,7 +94,7 @@ export default class extends Controller {
     });
 
     // Draw links
-    svg
+    chartGroup
       .append("g")
       .attr("fill", "none")
       .selectAll("path")
@@ -112,7 +115,7 @@ export default class extends Controller {
       .text((d) => `${nodes[d.source.index].name} → ${nodes[d.target.index].name}: ${this.currencySymbolValue}${Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${d.percentage}%)`);
 
     // Draw nodes
-    const node = svg
+    const node = chartGroup
       .append("g")
       .selectAll("g")
       .data(sankeyData.nodes)
@@ -200,5 +203,22 @@ export default class extends Controller {
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       });
+
+    // Enable zoom and pan
+    svg.call(
+      d3.zoom()
+        .scaleExtent([0.5, 3])
+        .on("zoom", (event) => chartGroup.attr("transform", event.transform))
+    );
   }
-} 
+
+  // Fullscreen toggle for chart container
+  toggleFullscreen() {
+    const el = this.element;
+    if (!document.fullscreenElement) {
+      el.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+}
