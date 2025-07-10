@@ -177,10 +177,20 @@ export default class extends Controller {
     const stimulusControllerInstance = this;
     node
       .append("text")
-      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("x", (d) => {
+        if (d.name === "Cash Flow") {
+          return (d.x0 + d.x1) / 2;
+        }
+        return d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6;
+      })
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "-0.2em")
-      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .attr("text-anchor", (d) => {
+        if (d.name === "Cash Flow") {
+          return "middle";
+        }
+        return d.x0 < width / 2 ? "start" : "end";
+      })
       .attr("class", "text-xs font-medium text-primary fill-current")
       .each(function (d) {
         const textElement = d3.select(this);
@@ -201,4 +211,4 @@ export default class extends Controller {
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       });
   }
-} 
+}
