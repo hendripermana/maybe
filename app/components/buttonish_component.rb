@@ -1,36 +1,36 @@
 class ButtonishComponent < ViewComponent::Base
   VARIANTS = {
     primary: {
-      container_classes: "text-inverse bg-inverse hover:bg-inverse-hover disabled:bg-gray-500 theme-dark:disabled:bg-gray-400",
-      icon_classes: "fg-inverse"
+      container_classes: "text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:from-gray-400 disabled:to-gray-500 disabled:transform-none disabled:shadow-none",
+      icon_classes: "text-white"
     },
     secondary: {
-      container_classes: "text-secondary bg-gray-50 theme-dark:bg-gray-700 hover:bg-gray-100 theme-dark:hover:bg-gray-600 disabled:bg-gray-200 theme-dark:disabled:bg-gray-600",
-      icon_classes: "fg-primary"
+      container_classes: "text-gray-700 bg-white border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 focus:ring-4 focus:ring-blue-100 shadow-sm hover:shadow-md transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200",
+      icon_classes: "text-gray-600"
     },
     destructive: {
-      container_classes: "text-inverse bg-red-500 theme-dark:bg-red-400 hover:bg-red-600 theme-dark:hover:bg-red-500 disabled:bg-red-200 theme-dark:disabled:bg-red-600",
-      icon_classes: "fg-white"
+      container_classes: "text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:ring-4 focus:ring-red-200 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:from-gray-400 disabled:to-gray-500 disabled:transform-none",
+      icon_classes: "text-white"
     },
     outline: {
-      container_classes: "text-primary border border-secondary bg-transparent hover:bg-surface-hover",
-      icon_classes: "fg-gray"
+      container_classes: "text-gray-700 border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 focus:ring-4 focus:ring-blue-100 shadow-sm hover:shadow-md transition-all duration-200",
+      icon_classes: "text-gray-600"
     },
     outline_destructive: {
-      container_classes: "text-destructive border border-secondary bg-transparent hover:bg-gray-100 theme-dark:hover:bg-gray-700",
-      icon_classes: "fg-gray"
+      container_classes: "text-red-600 border-2 border-red-200 bg-white hover:border-red-300 hover:bg-red-50 focus:ring-4 focus:ring-red-100 shadow-sm hover:shadow-md transition-all duration-200",
+      icon_classes: "text-red-600"
     },
     ghost: {
-      container_classes: "text-primary bg-transparent hover:bg-gray-100 theme-dark:hover:bg-gray-700",
-      icon_classes: "fg-gray"
+      container_classes: "text-gray-700 bg-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 rounded-lg transition-all duration-200",
+      icon_classes: "text-gray-600"
     },
     icon: {
-      container_classes: "hover:bg-gray-100 theme-dark:hover:bg-gray-700",
-      icon_classes: "fg-gray"
+      container_classes: "text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 rounded-lg transition-all duration-200",
+      icon_classes: "text-gray-600"
     },
     icon_inverse: {
-      container_classes: "bg-inverse hover:bg-inverse-hover",
-      icon_classes: "fg-inverse"
+      container_classes: "text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300",
+      icon_classes: "text-white"
     }
   }.freeze
 

@@ -1,121 +1,145 @@
 <%# locals: (balance_sheet:, **args) %>
 
-<div class="space-y-4" id="balance-sheet">
-  <% balance_sheet.classification_groups.each do |classification_group| %>
-    <div class="bg-container shadow-border-xs rounded-xl space-y-4 p-4">
-      <div class="flex items-center gap-2">
-        <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
-          <span class="<%= "animate-pulse" if classification_group.syncing? %>">
-            <%= classification_group.name %>
-          </span>
+<div class="grid gap-6 lg:grid-cols-2" id="balance-sheet">
+  <% balance_sheet.classification_groups.each_with_index do |classification_group, index| %>
+    <div class="bg-white shadow-lg hover:shadow-xl rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300 transform hover:scale-[1.02]">
+      <!-- Header with gradient background -->
+      <div class="bg-gradient-to-r <%= index.even? ? 'from-blue-50 to-indigo-50' : 'from-green-50 to-emerald-50' %> px-6 py-4 border-b border-gray-100">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-<%= index.even? ? 'blue' : 'green' %>-500 rounded-full <%= "animate-pulse" if classification_group.syncing? %>"></div>
+            <h2 class="text-xl font-bold text-gray-900">
+              <%= classification_group.name %>
+            </h2>
+          </div>
 
           <% if classification_group.account_groups.any? %>
-            <span class="text-secondary">&middot;</span>
-            <span class="text-secondary font-medium text-lg"><%= classification_group.total_money.format(precision: 0) %></span>
+            <div class="bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-sm">
+              <span class="text-lg font-bold text-gray-900"><%= classification_group.total_money.format(precision: 0) %></span>
+            </div>
           <% end %>
-        </h2>
+        </div>
       </div>
 
-      <% if classification_group.account_groups.any? %>
-        <div class="space-y-4">
-          <div class="flex gap-1">
-            <% classification_group.account_groups.each do |account_group| %>
-              <div class="h-1.5 rounded-sm" style="width: <%= account_group.weight %>%; background-color: <%= account_group.color %>;"></div>
-            <% end %>
-          </div>
-
-          <div class="flex flex-wrap gap-4">
-            <% classification_group.account_groups.each do |account_group| %>
-              <div class="flex items-center gap-2 text-sm">
-                <div class="h-2.5 w-2.5 rounded-full" style="background-color: <%= account_group.color %>;"></div>
-                <p class="text-secondary"><%= account_group.name %></p>
-                <p class="text-primary font-mono"><%= number_to_percentage(account_group.weight, precision: 0) %></p>
+      <div class="p-6">
+        <% if classification_group.account_groups.any? %>
+          <div class="space-y-6">
+            <!-- Enhanced progress bar with better visual hierarchy -->
+            <div class="space-y-3">
+              <div class="flex gap-1 h-3 rounded-full overflow-hidden bg-gray-100">
+                <% classification_group.account_groups.each do |account_group| %>
+                  <div class="h-full rounded-sm transition-all duration-500 hover:brightness-110" 
+                       style="width: <%= account_group.weight %>%; background-color: <%= account_group.color %>;"
+                       title="<%= account_group.name %>: <%= number_to_percentage(account_group.weight, precision: 1) %>">
+                  </div>
+                <% end %>
               </div>
-            <% end %>
-          </div>
-        </div>
 
-        <div class="bg-surface rounded-xl p-1 space-y-1 overflow-x-auto">
-          <div class="px-4 py-2 flex items-center uppercase text-xs font-medium text-secondary">
-            <div class="w-40">Name</div>
-            <div class="ml-auto text-right flex items-center gap-6">
-              <div class="w-24">
-                <p>Weight</p>
+              <!-- Legend with improved layout -->
+              <div class="grid grid-cols-1 gap-3">
+                <% classification_group.account_groups.each do |account_group| %>
+                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors">
+                    <div class="flex items-center gap-3">
+                      <div class="w-4 h-4 rounded-full shadow-sm" style="background-color: <%= account_group.color %>;"></div>
+                      <p class="text-gray-700 font-medium"><%= account_group.name %></p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-bold text-gray-600 bg-white px-2 py-1 rounded border">
+                        <%= number_to_percentage(account_group.weight, precision: 1) %>
+                      </span>
+                    </div>
+                  </div>
+                <% end %>
               </div>
-              <div class="w-40">
-                <p>Value</p>
+            </div>
+
+            <!-- Enhanced account details table -->
+            <div class="bg-gradient-to-br from-gray-25 to-white rounded-xl border border-gray-100 overflow-hidden">
+              <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
+                <div class="flex items-center justify-between text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  <div class="flex-1">Account Name</div>
+                  <div class="w-20 text-center">Weight</div>
+                  <div class="w-32 text-right">Value</div>
+                </div>
+              </div>
+
+              <div class="divide-y divide-gray-100">
+                <% classification_group.account_groups.each_with_index do |account_group, idx| %>
+                  <details class="group">
+                    <summary class="cursor-pointer p-4 hover:bg-gray-50 transition-colors flex items-center justify-between">
+                      <div class="flex items-center gap-4 flex-1">
+                        <svg class="w-4 h-4 text-gray-400 group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        <p class="font-semibold text-gray-700"><%= account_group.name %></p>
+                      </div>
+
+                      <div class="flex items-center gap-6">
+                        <div class="w-20 text-center">
+                          <span class="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-3 py-1 text-sm font-bold text-gray-700">
+                            <%= number_to_percentage(account_group.weight, precision: 1) %>
+                          </span>
+                        </div>
+                        <div class="w-32 text-right">
+                          <p class="font-bold text-gray-900"><%= format_money(account_group.total_money) %></p>
+                        </div>
+                      </div>
+                    </summary>
+
+                    <div class="bg-gray-25 border-t border-gray-100">
+                      <% account_group.accounts.each_with_index do |account, idx| %>
+                        <div class="pl-12 pr-4 py-3 flex items-center justify-between text-sm hover:bg-white transition-colors">
+                          <div class="flex items-center gap-3 flex-1">
+                            <%= render "accounts/logo", account: account, size: "sm", color: account_group.color %>
+                            <%= link_to account.name, account_path(account), class: "font-medium text-gray-700 hover:text-blue-600 transition-colors" %>
+                          </div>
+
+                          <div class="flex items-center gap-6">
+                            <div class="w-20 text-center">
+                              <%
+                                  # Calculate weight as percentage of classification total
+                                  classification_total = classification_group.total_money.amount
+                                  account_weight = classification_total.zero? ? 0 : account.converted_balance / classification_total * 100
+                              %>
+                              <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                <%= number_to_percentage(account_weight, precision: 1) %>
+                              </span>
+                            </div>
+                            <div class="w-32 text-right">
+                              <p class="font-semibold text-gray-800"><%= format_money(account.balance_money) %></p>
+                            </div>
+                          </div>
+                        </div>
+                        <% if idx < account_group.accounts.size - 1 %>
+                          <div class="ml-12 mr-4 border-b border-gray-100"></div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </details>
+                <% end %>
               </div>
             </div>
           </div>
 
-          <div class="shadow-border-xs rounded-lg bg-container font-medium text-sm min-w-fit">
-            <% classification_group.account_groups.each_with_index do |account_group, idx| %>
-              <details class="group open:bg-surface
-                <%= idx == 0 ? "rounded-t-lg" : "" %>
-                <%= idx == classification_group.account_groups.size - 1 ? "rounded-b-lg" : "" %>
-              ">
-                <summary class="cursor-pointer p-4 group-open:bg-surface rounded-lg flex items-center justify-between">
-                  <div class="w-40 shrink-0 flex items-center gap-4">
-                    <%= icon("chevron-right", class: "group-open:rotate-90") %>
-
-                    <p><%= account_group.name %></p>
-                  </div>
-
-                  <div class="flex items-center justify-between text-right gap-6">
-                    <div class="w-28 shrink-0 flex items-center justify-end gap-2">
-                      <%= render "pages/dashboard/group_weight", weight: account_group.weight, color: account_group.color %>
-                    </div>
-
-                    <div class="w-40 shrink-0">
-                      <p><%= format_money(account_group.total_money) %></p>
-                    </div>
-                  </div>
-                </summary>
-
-                <div>
-                  <% account_group.accounts.each_with_index do |account, idx| %>
-                    <div class="pl-12 pr-4 py-3 flex items-center justify-between text-sm font-medium">
-                      <div class="flex items-center gap-3">
-                        <%= render "accounts/logo", account: account, size: "sm", color: account_group.color %>
-
-                        <%= link_to account.name, account_path(account) %>
-                      </div>
-
-                      <div class="ml-auto flex items-center text-right gap-6">
-                        <div class="w-28 shrink-0 flex items-center justify-end gap-2">
-                          <%
-                              # Calculate weight as percentage of classification total
-                              classification_total = classification_group.total_money.amount
-                              account_weight = classification_total.zero? ? 0 : account.converted_balance / classification_total * 100
-                          %>
-                          <%= render "pages/dashboard/group_weight", weight: account_weight, color: account_group.color %>
-                        </div>
-
-                        <div class="w-40 shrink-0">
-                          <p><%= format_money(account.balance_money) %></p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <% if idx < account_group.accounts.size - 1 %>
-                      <%= render "shared/ruler", classes: "ml-21 mr-4" %>
-                    <% end %>
-                  <% end %>
-                </div>
-              </details>
-              <% unless idx == classification_group.account_groups.size - 1 %>
-                <%= render "shared/ruler", classes: "mx-4 group-ruler" %>
-              <% end %>
-            <% end %>
+        <% else %>
+          <div class="py-12 flex flex-col items-center text-center space-y-4">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+              <%= render FilledIconComponent.new(
+                variant: :container,
+                icon: classification_group.icon,
+                class: "w-8 h-8 text-gray-400"
+              ) %>
+            </div>
+            <div class="space-y-2">
+              <p class="font-semibold text-gray-700">No <%= classification_group.name.downcase %> accounts yet</p>
+              <p class="text-sm text-gray-500">Connect your accounts to see them here</p>
+            </div>
           </div>
-        </div>
-
-      <% else %>
-        <div class="py-10 flex flex-col items-center">
-          <%= render FilledIconComponent.new(
-            variant: :container,
-            icon: classification_group.icon,
-          ) %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
 
           <p class="text-primary text-sm font-medium mb-1 mt-4">No <%= classification_group.name %> yet</p>
           <p class="text-secondary text-sm text-center"><%= "Add your #{classification_group.name} accounts to see a full breakdown" %></p>
