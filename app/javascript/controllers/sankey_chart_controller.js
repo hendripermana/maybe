@@ -32,30 +32,18 @@ export default class extends Controller {
     const width = this.element.clientWidth || 600;
     const height = this.element.clientHeight || 400;
 
-    // Add padding based on container size for better spacing
-    const padding = {
-      top: Math.max(20, height * 0.05),
-      right: Math.max(20, width * 0.03),
-      bottom: Math.max(20, height * 0.05),
-      left: Math.max(20, width * 0.03)
-    };
-
     const svg = d3
       .select(this.element)
       .append("svg")
       .attr("width", width)
-      .attr("height", height)
-      .style("background", "transparent");
-
-    // Container for all sankey elements, used for zooming
-    const chartGroup = svg.append("g").attr("class", "chartGroup");
+      .attr("height", height);
 
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
-      .nodePadding(Math.max(this.nodePaddingValue, height * 0.02))
+      .nodePadding(this.nodePaddingValue)
       .extent([
-        [padding.left, padding.top],
-        [width - padding.right, height - padding.bottom],
+        [16, 16],
+        [width - 16, height - 16],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -189,91 +177,28 @@ export default class extends Controller {
     const stimulusControllerInstance = this;
     node
       .append("text")
-      .attr("x", (d) => {
-        if (d.name === "Cash Flow") {
-          return (d.x0 + d.x1) / 2;
-        }
-        return d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6;
-      })
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "-0.2em")
-      .attr("text-anchor", (d) => {
-        if (d.name === "Cash Flow") {
-          return "middle";
-        }
-        return d.x0 < width / 2 ? "start" : "end";
-      })
-      .attr("class", "text-xs font-medium text-primary fill-current select-none")
-      .style("text-shadow", "0 1px 3px rgba(0,0,0,0.3)")
+      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .attr("class", "text-xs font-medium text-primary fill-current")
       .each(function (d) {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();
 
         // Node Name on the first line
         textElement.append("tspan")
-          .attr("class", "font-semibold")
           .text(d.name);
 
         // Financial details on the second line
         const financialDetailsTspan = textElement.append("tspan")
           .attr("x", textElement.attr("x"))
           .attr("dy", "1.2em")
-          .attr("class", "font-mono text-secondary/80")
-          .style("font-size", Math.max(10, width * 0.015) + "px"); // Dynamic font size
+          .attr("class", "font-mono text-secondary")
+          .style("font-size", "0.65rem"); // Explicitly set smaller font size
 
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       });
-
-    // Enable zoom and pan
-    svg.call(
-      d3.zoom()
-        .scaleExtent([0.5, 3])
-        .on("start", () => svg.style("cursor", "grabbing"))
-        .on("end", () => svg.style("cursor", "grab"))
-        .on("zoom", (event) => chartGroup.attr("transform", event.transform))
-    )
-    .style("cursor", "grab");
-
-    // Add double-click to reset zoom
-    svg.on("dblclick.zoom", () => {
-      svg.transition().duration(750).call(
-        d3.zoom().transform,
-        d3.zoomIdentity
-      );
-    });
   }
-
-  // Fullscreen toggle for chart container
-  toggleFullscreen() {
-    const el = this.element;
-    const isFullscreen = !!document.fullscreenElement;
-    
-    if (!isFullscreen) {
-      // Add fullscreen styling
-      el.style.position = 'fixed';
-      el.style.top = '0';
-      el.style.left = '0';
-      el.style.width = '100vw';
-      el.style.height = '100vh';
-      el.style.zIndex = '9999';
-      el.style.background = 'var(--color-background)';
-      
-      el.requestFullscreen();
-    } else {
-      // Reset styling
-      el.style.position = '';
-      el.style.top = '';
-      el.style.left = '';
-      el.style.width = '';
-      el.style.height = '';
-      el.style.zIndex = '';
-      el.style.background = '';
-      
-      document.exitFullscreen();
-    }
-   
-    // Redraw chart after fullscreen toggle
-    setTimeout(() => this.#draw(), 100);
-  }
-}
+} 
