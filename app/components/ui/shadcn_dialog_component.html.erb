@@ -1,0 +1,25 @@
+<% if trigger %>
+  <div data-action="click->shadcn-dialog#open">
+    <%= trigger %>
+  </div>
+<% end %>
+
+<div class="<%= overlay_classes %>" data-shadcn-dialog-target="overlay" data-action="click->shadcn-dialog#close">
+  <div class="<%= dialog_classes %>" data-shadcn-dialog-target="dialog">
+    <% if header %>
+      <div class="<%= header_classes %>">
+        <%= header %>
+      </div>
+    <% end %>
+    
+    <div class="<%= content_classes %>">
+      <%= content %>
+    </div>
+    
+    <% if footer %>
+      <div class="<%= footer_classes %>">
+        <%= footer %>
+      </div>
+    <% end %>
+  </div>
+</div> 
