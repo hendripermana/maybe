@@ -270,4 +270,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "pages#dashboard"
+
+  get '/test_sentry', to: ->(env) { raise "This is a test error for Sentry" }
 end
