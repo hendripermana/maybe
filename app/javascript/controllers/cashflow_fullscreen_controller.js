@@ -1,60 +1,147 @@
 import { Controller } from "@hotwired/stimulus";
+import { sankey, sankeyLinkHorizontal } from "d3-sankey";
+import { select } from "d3-selection";
+import { scaleOrdinal } from "d3-scale";
+import { format } from "d3-format";
 
 // Connects to data-controller="cashflow-fullscreen"
 export default class extends Controller {
   static targets = ["dialog", "fullscreenChart", "periodLabel"];
-  static params = ["sankeyData", "currencySymbol", "period"];
+  static values = { 
+    sankeyData: Object, 
+    currencySymbol: String, 
+    period: String 
+  };
+
+  connect() {
+    // Ensure dialog is hidden on load
+    if (this.hasDialogTarget) {
+      this.dialogTarget.style.display = 'none';
+    }
+  }
 
   open() {
+    if (!this.hasSankeyDataValue || !this.sankeyDataValue.links || this.sankeyDataValue.links.length === 0) {
+      console.warn("No sankey data available for fullscreen view");
+      return;
+    }
+
     // Set period label
-    this.periodLabelTarget.textContent = this.periodParam;
+    if (this.hasPeriodLabelTarget) {
+      this.periodLabelTarget.textContent = this.periodValue;
+    }
 
-    // Get the fullscreen chart element
-    const chartElement = this.fullscreenChartTarget;
-    
-    // Set up the Sankey chart data
-    chartElement.setAttribute("data-sankey-chart-data-value", this.sankeyDataParam);
-    chartElement.setAttribute("data-sankey-chart-currency-symbol-value", this.currencySymbolParam);
+    // Show dialog
+    this.dialogTarget.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 
-    // Open the dialog first
-    this.dialogTarget.showModal();
-
-    // Force the Stimulus controller to connect and render after dialog is shown
+    // Render chart in fullscreen with a small delay to ensure dialog is fully rendered
     setTimeout(() => {
-      // Manually trigger a connection event on the chart element
-      const event = new CustomEvent('stimulus:connect', { 
-        bubbles: true, 
-        cancelable: true 
-      });
-      chartElement.dispatchEvent(event);
-      
-      // Also trigger a resize to ensure proper sizing
-      window.dispatchEvent(new Event("resize"));
-    }, 150);
+      this.renderFullscreenChart();
+    }, 100);
   }
 
   close() {
-    this.dialogTarget.close();
+    this.dialogTarget.style.display = 'none';
+    document.body.style.overflow = '';
   }
 
-  // Handle ESC key and dialog backdrop clicks
-  dialogClick(event) {
-    if (event.target === this.dialogTarget) {
-      this.close();
-    }
-  }
+  renderFullscreenChart() {
+    const container = this.fullscreenChartTarget;
+    container.innerHTML = ''; // Clear any existing content
 
-  connect() {
-    // Bind the dialog click handler
-    if (this.hasDialogTarget) {
-      this.dialogTarget.addEventListener("click", this.dialogClick.bind(this));
-    }
-  }
+    const containerRect = container.getBoundingClientRect();
+    const margin = { top: 20, right: 40, bottom: 20, left: 40 };
+    const width = containerRect.width - margin.left - margin.right;
+    const height = containerRect.height - margin.top - margin.bottom;
 
-  disconnect() {
-    // Clean up event listeners
-    if (this.hasDialogTarget) {
-      this.dialogTarget.removeEventListener("click", this.dialogClick.bind(this));
+    if (width <= 0 || height <= 0) {
+      console.warn("Invalid container dimensions for fullscreen chart");
+      return;
     }
+
+    const svg = select(container)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+    const g = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Create sankey generator
+    const sankeyGenerator = sankey()
+      .nodeWidth(20)
+      .nodePadding(15)
+      .extent([[1, 1], [width - 1, height - 1]]);
+
+    // Process data
+    const data = this.sankeyDataValue;
+    const graph = sankeyGenerator(data);
+
+    // Color scale
+    const color = scaleOrdinal()
+      .domain(graph.nodes.map(d => d.name))
+      .range(["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6", "#f97316", "#06b6d4", "#84cc16"]);
+
+    // Format numbers
+    const formatNumber = format(",.0f");
+    const currencySymbol = this.currencySymbolValue || "$";
+
+    // Add links
+    g.append("g")
+      .selectAll("path")
+      .data(graph.links)
+      .join("path")
+      .attr("d", sankeyLinkHorizontal())
+      .attr("stroke", d => color(d.source.name))
+      .attr("stroke-width", d => Math.max(1, d.width))
+      .attr("fill", "none")
+      .attr("opacity", 0.6)
+      .on("mouseover", function(event, d) {
+        select(this).attr("opacity", 0.8);
+      })
+      .on("mouseout", function(event, d) {
+        select(this).attr("opacity", 0.6);
+      })
+      .append("title")
+      .text(d => `${d.source.name} → ${d.target.name}\n${currencySymbol}${formatNumber(d.value)}`);
+
+    // Add nodes
+    const node = g.append("g")
+      .selectAll("g")
+      .data(graph.nodes)
+      .join("g");
+
+    node.append("rect")
+      .attr("x", d => d.x0)
+      .attr("y", d => d.y0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("fill", d => color(d.name))
+      .attr("opacity", 0.8)
+      .attr("rx", 3)
+      .append("title")
+      .text(d => `${d.name}\n${currencySymbol}${formatNumber(d.value)}`);
+
+    // Add node labels
+    node.append("text")
+      .attr("x", d => d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6)
+      .attr("y", d => (d.y1 + d.y0) / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end")
+      .style("font-size", "14px")
+      .style("font-weight", "500")
+      .style("fill", "#374151")
+      .text(d => d.name);
+
+    // Add value labels
+    node.append("text")
+      .attr("x", d => d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6)
+      .attr("y", d => (d.y1 + d.y0) / 2)
+      .attr("dy", "1.5em")
+      .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end")
+      .style("font-size", "12px")
+      .style("fill", "#6b7280")
+      .text(d => `${currencySymbol}${formatNumber(d.value)}`);
   }
 }

@@ -1,9 +1,9 @@
 <%# locals: (sankey_data:, period:) %>
 <div id="cashflow-sankey-chart" 
      data-controller="cashflow-fullscreen"
-     data-cashflow-fullscreen-sankey-data-param="<%= sankey_data.to_json %>"
-     data-cashflow-fullscreen-currency-symbol-param="<%= sankey_data[:currency_symbol] %>"
-     data-cashflow-fullscreen-period-param="<%= period.label %>">
+     data-cashflow-fullscreen-sankey-data-value="<%= sankey_data.to_json %>"
+     data-cashflow-fullscreen-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
+     data-cashflow-fullscreen-period-value="<%= period.label %>">
   <div class="flex justify-between items-center gap-4 px-4 mb-4">
     <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
       Cashflow
