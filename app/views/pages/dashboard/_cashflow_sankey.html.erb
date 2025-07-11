@@ -1,17 +1,33 @@
 <%# locals: (sankey_data:, period:) %>
-<div id="cashflow-sankey-chart">
+<div id="cashflow-sankey-chart" data-controller="cashflow-fullscreen">
   <div class="flex justify-between items-center gap-4 px-4 mb-4">
     <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
       Cashflow
     </h2>
 
-    <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
-      <%= form.select :cashflow_period,
-                Period.as_options,
-                { selected: period.key },
-                data: { "auto-submit-form-target": "auto" },
-                class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
-    <% end %>
+    <div class="flex items-center gap-2">
+      <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
+        <%= form.select :cashflow_period,
+                  Period.as_options,
+                  { selected: period.key },
+                  data: { "auto-submit-form-target": "auto" },
+                  class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
+      <% end %>
+      
+      <% if sankey_data[:links].present? %>
+        <%= render ButtonComponent.new(
+          variant: "icon",
+          icon: "maximize",
+          class: "text-secondary hover:text-primary",
+          data: { 
+            action: "click->cashflow-fullscreen#open",
+            cashflow_fullscreen_sankey_data_param: sankey_data.to_json,
+            cashflow_fullscreen_currency_symbol_param: sankey_data[:currency_symbol],
+            cashflow_fullscreen_period_param: period.name
+          }
+        ) %>
+      <% end %>
+    </div>
   </div>
 
   <% if sankey_data[:links].present? %>
