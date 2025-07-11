@@ -1,37 +1,21 @@
 <%# locals: (sankey_data:, period:) %>
-<div id="cashflow-sankey-chart" data-controller="cashflow-fullscreen">
+<div id="cashflow-sankey-chart">
   <div class="flex justify-between items-center gap-4 px-4 mb-4">
     <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
       Cashflow
     </h2>
 
-    <div class="flex items-center gap-2">
-      <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
-        <%= form.select :cashflow_period,
-                  Period.as_options,
-                  { selected: period.key },
-                  data: { "auto-submit-form-target": "auto" },
-                  class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
-      <% end %>
-      
-      <% if sankey_data[:links].present? %>
-        <%= render ButtonComponent.new(
-          variant: "icon",
-          icon: "external-link",
-          class: "text-secondary hover:text-primary",
-          data: { 
-            action: "click->cashflow-fullscreen#open",
-            cashflow_fullscreen_sankey_data_param: sankey_data.to_json,
-            cashflow_fullscreen_currency_symbol_param: sankey_data[:currency_symbol],
-            cashflow_fullscreen_period_param: period.name
-          }
-        ) %>
-      <% end %>
-    </div>
+    <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
+      <%= form.select :cashflow_period,
+                Period.as_options,
+                { selected: period.key },
+                data: { "auto-submit-form-target": "auto" },
+                class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
+    <% end %>
   </div>
 
   <% if sankey_data[:links].present? %>
-    <div class="w-full h-[500px] lg:h-[600px]">
+    <div class="w-full h-96">
       <div
         data-controller="sankey-chart"
         data-sankey-chart-data-value="<%= sankey_data.to_json %>"
@@ -56,31 +40,5 @@
         ) %>
       </div>
     </div>
-  <% end %>
-
-  <!-- Fullscreen Dialog -->
-  <%= render DialogComponent.new(
-    data: { 
-      cashflow_fullscreen_target: "dialog",
-      dialog_target: "modal",
-      controller: "dialog"
-    },
-    class: "cashflow-fullscreen-dialog"
-  ) do |dialog| %>
-    <% dialog.with_header(title: "Cashflow") do %>
-      <div class="flex items-center gap-2">
-        <span class="text-sm text-secondary" data-cashflow-fullscreen-target="periodLabel">Period</span>
-      </div>
-    <% end %>
-    
-    <% dialog.with_body do %>
-      <div class="w-full h-[70vh] min-h-[500px]">
-        <div
-          data-controller="sankey-chart"
-          data-cashflow-fullscreen-target="fullscreenChart"
-          class="w-full h-full">
-        </div>
-      </div>
-    <% end %>
   <% end %>
 </div>
