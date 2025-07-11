@@ -23,7 +23,7 @@
             action: "click->cashflow-fullscreen#open",
             cashflow_fullscreen_sankey_data_param: sankey_data.to_json,
             cashflow_fullscreen_currency_symbol_param: sankey_data[:currency_symbol],
-            cashflow_fullscreen_period_param: period.name
+            cashflow_fullscreen_period_param: period.label
           }
         ) %>
       <% end %>
