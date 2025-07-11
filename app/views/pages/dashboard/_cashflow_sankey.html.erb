@@ -17,7 +17,7 @@
       <% if sankey_data[:links].present? %>
         <%= render ButtonComponent.new(
           variant: "icon",
-          icon: "maximize",
+          icon: "external-link",
           class: "text-secondary hover:text-primary",
           data: { 
             action: "click->cashflow-fullscreen#open",
@@ -31,7 +31,7 @@
   </div>
 
   <% if sankey_data[:links].present? %>
-    <div class="w-full h-96">
+    <div class="w-full h-[500px] lg:h-[600px]">
       <div
         data-controller="sankey-chart"
         data-sankey-chart-data-value="<%= sankey_data.to_json %>"
@@ -56,5 +56,31 @@
         ) %>
       </div>
     </div>
+  <% end %>
+
+  <!-- Fullscreen Dialog -->
+  <%= render DialogComponent.new(
+    data: { 
+      cashflow_fullscreen_target: "dialog",
+      dialog_target: "modal",
+      controller: "dialog"
+    },
+    class: "cashflow-fullscreen-dialog"
+  ) do |dialog| %>
+    <% dialog.with_header(title: "Cashflow") do %>
+      <div class="flex items-center gap-2">
+        <span class="text-sm text-secondary" data-cashflow-fullscreen-target="periodLabel">Period</span>
+      </div>
+    <% end %>
+    
+    <% dialog.with_body do %>
+      <div class="w-full h-[70vh] min-h-[500px]">
+        <div
+          data-controller="sankey-chart"
+          data-cashflow-fullscreen-target="fullscreenChart"
+          class="w-full h-full">
+        </div>
+      </div>
+    <% end %>
   <% end %>
 </div>

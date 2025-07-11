@@ -32,6 +32,14 @@ export default class extends Controller {
     const width = this.element.clientWidth || 600;
     const height = this.element.clientHeight || 400;
 
+    // Determine if this is a large screen view (fullscreen dialog)
+    const isLargeView = width > 800 || height > 500;
+    
+    // Adjust sizing based on view size
+    const padding = isLargeView ? 32 : 16;
+    const nodeWidth = isLargeView ? 20 : this.nodeWidthValue;
+    const nodePadding = isLargeView ? 30 : this.nodePaddingValue;
+
     const svg = d3
       .select(this.element)
       .append("svg")
@@ -39,11 +47,11 @@ export default class extends Controller {
       .attr("height", height);
 
     const sankeyGenerator = sankey()
-      .nodeWidth(this.nodeWidthValue)
-      .nodePadding(this.nodePaddingValue)
+      .nodeWidth(nodeWidth)
+      .nodePadding(nodePadding)
       .extent([
-        [16, 16],
-        [width - 16, height - 16],
+        [padding, padding],
+        [width - padding, height - padding],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -118,7 +126,7 @@ export default class extends Controller {
       .data(sankeyData.nodes)
       .join("g");
 
-    const cornerRadius = 8;
+    const cornerRadius = isLargeView ? 12 : 8;
 
     node.append("path")
       .attr("d", (d) => {
@@ -177,11 +185,11 @@ export default class extends Controller {
     const stimulusControllerInstance = this;
     node
       .append("text")
-      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + (isLargeView ? 8 : 6) : d.x0 - (isLargeView ? 8 : 6)))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "-0.2em")
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
-      .attr("class", "text-xs font-medium text-primary fill-current")
+      .attr("class", isLargeView ? "text-sm font-medium text-primary fill-current" : "text-xs font-medium text-primary fill-current")
       .each(function (d) {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();
@@ -195,7 +203,7 @@ export default class extends Controller {
           .attr("x", textElement.attr("x"))
           .attr("dy", "1.2em")
           .attr("class", "font-mono text-secondary")
-          .style("font-size", "0.65rem"); // Explicitly set smaller font size
+          .style("font-size", isLargeView ? "0.75rem" : "0.65rem"); // Larger font for fullscreen
 
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
