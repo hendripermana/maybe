@@ -40,12 +40,17 @@ export default class extends Controller {
       .attr("width", width)
       .attr("height", height);
 
+    // Better margin calculation for improved alignment
+    const margin = { top: 20, right: 40, bottom: 20, left: 40 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
       .nodePadding(this.nodePaddingValue)
       .extent([
-        [16, 16],
-        [width - 16, height - 16],
+        [margin.left, margin.top],
+        [width - margin.right, height - margin.bottom],
       ]);
 
     const sankeyData = sankeyGenerator({
