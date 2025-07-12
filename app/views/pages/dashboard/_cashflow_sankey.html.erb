@@ -1,7 +1,8 @@
 <%# locals: (sankey_data:, period:) %>
-<div id="cashflow-sankey-chart">
-  <div class="flex justify-between items-center gap-4 px-4 mb-4">
-    <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
+<%= render Ui::CardComponent.new(variant: :gradient, size: :md, class: "overflow-hidden") do %>
+  <div class="flex justify-between items-center gap-4 mb-6">
+    <h2 class="text-lg font-semibold text-primary inline-flex items-center gap-2">
+      <%= icon("activity", size: "sm", class: "text-blue-500") %>
       Cashflow
     </h2>
 
@@ -10,7 +11,7 @@
                 Period.as_options,
                 { selected: period.key },
                 data: { "auto-submit-form-target": "auto" },
-                class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
+                class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0 hover:border-primary transition-colors duration-200" %>
     <% end %>
   </div>
 
@@ -42,22 +43,26 @@
         class="w-full h-full rounded-lg border border-tertiary bg-gradient-to-br from-container to-container-inset shadow-border-xs"></div>
     </div>
   <% else %>
-    <div class="h-[300px] lg:h-[340px] bg-container py-4 flex flex-col items-center justify-center">
-      <div class="space-y-3 text-center flex flex-col items-center">
+    <div class="h-[300px] lg:h-[340px] flex flex-col items-center justify-center">
+      <div class="space-y-4 text-center flex flex-col items-center">
         <%= render FilledIconComponent.new(
           variant: :container,
           icon: "activity" # cashflow placeholder icon
         ) %>
 
-        <p class="text-sm font-medium text-primary">No cash flow data for this time period</p>
-        <p class="text-secondary text-sm">Add transactions to display cash flow data or expand the time period</p>
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-primary">No cash flow data for this time period</p>
+          <p class="text-secondary text-sm">Add transactions to display cash flow data or expand the time period</p>
+        </div>
+        
         <%= render LinkComponent.new(
           text: "Add transaction",
           icon: "plus",
+          variant: "primary",
           href: new_transaction_path,
           frame: :modal
         ) %>
       </div>
     </div>
   <% end %>
-</div>
+<% end %>

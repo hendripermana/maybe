@@ -1,3 +1,39 @@
-<div <%= html_options %>>
-  <%= content %>
-</div>
+<%# ShadCN-inspired Card component template %>
+<%= content_tag wrapper_tag, **wrapper_options do %>
+  <% if has_header? %>
+    <div class="mb-4">
+      <% if content_for?(:header) %>
+        <%= content_for(:header) %>
+      <% else %>
+        <% if title.present? %>
+          <h3 class="<%= title_classes %>"><%= title %></h3>
+        <% end %>
+        <% if subtitle.present? %>
+          <p class="<%= subtitle_classes %> <%= title.present? ? "mt-1" : "" %>"><%= subtitle %></p>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if has_content? %>
+    <div class="<%= has_footer? ? "mb-4" : "" %>">
+      <% if content_for?(:content) %>
+        <%= content_for(:content) %>
+      <% else %>
+        <% if description.present? %>
+          <p class="<%= description_classes %>"><%= description %></p>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if !has_header? && !has_content? %>
+    <%= content %>
+  <% end %>
+
+  <% if has_footer? %>
+    <div class="mt-auto pt-4 border-t border-tertiary">
+      <%= content_for(:footer) %>
+    </div>
+  <% end %>
+<% end %>

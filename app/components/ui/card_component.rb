@@ -42,27 +42,62 @@ class Ui::CardComponent < ViewComponent::Base
     @frame = frame
     @html_options = html_options
   end
-    @size = size
-    @hover_effect = hover_effect
-    @html_options = html_options
-  end
 
   private
 
   def css_classes
     classes = [
-      "rounded-xl transition-all duration-300",
       VARIANTS[variant],
       SIZES[size]
     ]
     
-    classes << "hover:shadow-xl hover:scale-[1.02]" if hover_effect
     classes << @html_options[:class] if @html_options[:class]
-    
     classes.compact.join(" ")
   end
 
-  def html_options
-    @html_options.except(:class).merge(class: css_classes)
+  def wrapper_tag
+    href ? :a : :div
+  end
+
+  def wrapper_options
+    base_options = {
+      class: css_classes
+    }.merge(@html_options.except(:class))
+
+    if href
+      base_options.merge!(
+        href: href,
+        target: target,
+        data: { turbo_frame: frame }.compact.merge(@html_options[:data] || {})
+      )
+    else
+      base_options[:data] = @html_options[:data] if @html_options[:data]
+    end
+
+    base_options
+  end
+
+  def has_header?
+    title.present? || subtitle.present? || content_for?(:header)
+  end
+
+  def has_content?
+    description.present? || content_for?(:content)
+  end
+
+  def has_footer?
+    content_for?(:footer)
+  end
+
+  def title_classes
+    "text-lg font-semibold text-primary leading-tight"
+  end
+
+  def subtitle_classes
+    "text-sm font-medium text-secondary"
+  end
+
+  def description_classes
+    "text-sm text-subdued leading-relaxed"
   end
 end
