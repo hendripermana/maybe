@@ -41,6 +41,10 @@ if ENV["SENTRY_DSN"].present?
       environment: config.environment
     }
 
+    # Enable debug logging for initial setup
+    config.debug = true
+    config.logger = Rails.logger
+
     # Configure before_send callback to add user context
     config.before_send = lambda do |event, hint|
       # Only process errors in enabled environments
@@ -54,7 +58,15 @@ if ENV["SENTRY_DSN"].present?
         }
       end
       
+      # Log successful event capture
+      Rails.logger.info "Sentry event captured: #{event.event_id}" if Rails.logger
+      
       event
     end
   end
+  
+  # Log successful Sentry initialization
+  Rails.logger.info "Sentry initialized successfully with DSN: #{ENV['SENTRY_DSN'][0..20]}..." if Rails.logger
+else
+  Rails.logger.warn "Sentry not initialized - SENTRY_DSN environment variable not present" if Rails.logger
 end
