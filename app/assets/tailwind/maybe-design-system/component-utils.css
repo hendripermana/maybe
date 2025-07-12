@@ -107,31 +107,3 @@
     @apply bg-white;
   }
 }
-
-/* ShadCN-inspired Card Utilities */
-@utility card-elevated {
-  @apply shadow-border-md hover:shadow-border-lg;
-  transition: all 0.2s ease-in-out;
-}
-
-@utility card-interactive {
-  @apply cursor-pointer transition-all duration-200;
-
-  &:hover {
-    @apply shadow-border-md;
-    transform: translateY(-1px);
-  }
-}
-
-@utility card-gradient {
-  @apply bg-gradient-to-br from-gray-50 to-gray-100;
-  
-  @variant theme-dark {
-    @apply bg-gradient-to-br from-gray-800 to-gray-900;
-  }
-}
-
-@utility card-outlined {
-  @apply border border-secondary hover:border-primary;
-  transition: border-color 0.2s ease-in-out;
-}
