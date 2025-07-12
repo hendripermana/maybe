@@ -10,6 +10,7 @@
 @import './maybe-design-system/text-utils.css';
 @import './maybe-design-system/border-utils.css';
 @import './maybe-design-system/component-utils.css';
+/* @import './maybe-design-system/modern-components.css'; */
 
 @custom-variant theme-dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -221,14 +222,32 @@
   --color-orange-tint-10: --alpha(var(--color-orange-500) / 10%);
 
   /* Border radius overrides */
+  --border-radius-xs: 4px;
+  --border-radius-sm: 6px;
   --border-radius-md: 8px;
-  --border-radius-lg: 10px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 20px;
 
   --shadow-xs: 0px 1px 2px 0px --alpha(var(--color-black) / 6%);
   --shadow-sm: 0px 1px 6px 0px --alpha(var(--color-black) / 6%);
   --shadow-md: 0px 4px 8px -2px --alpha(var(--color-black) / 6%);
   --shadow-lg: 0px 12px 16px -4px --alpha(var(--color-black) / 6%);
   --shadow-xl: 0px 20px 24px -4px --alpha(var(--color-black) / 6%);
+
+  /* Enhanced modern shadows for premium UI */
+  --shadow-glow: 0px 0px 0px 1px --alpha(var(--color-blue-500) / 10%), 0px 1px 2px 0px --alpha(var(--color-black) / 6%);
+  --shadow-elevated: 0px 2px 8px -1px --alpha(var(--color-black) / 8%), 0px 4px 12px -2px --alpha(var(--color-black) / 4%);
+  --shadow-floating: 0px 8px 32px -4px --alpha(var(--color-black) / 12%), 0px 4px 16px -2px --alpha(var(--color-black) / 6%);
+  --shadow-modal: 0px 24px 64px -12px --alpha(var(--color-black) / 20%), 0px 8px 32px -4px --alpha(var(--color-black) / 12%);
+  
+  /* Enhanced border radius for modern look */
+  --border-radius-xs: 4px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 20px;
 
   --animate-stroke-fill: stroke-fill 3s 300ms forwards;
 
@@ -245,7 +264,7 @@
 
 /* Specific override for strong tags in prose under dark mode */
 .prose:where([data-theme=dark], [data-theme=dark] *) strong {
-  color: theme(colors.white) !important;
+  color: var(--color-white) !important;
 }
 
 @layer base {
@@ -264,6 +283,12 @@
     --shadow-md: 0px 4px 8px -2px --alpha(var(--color-white) / 8%);
     --shadow-lg: 0px 12px 16px -4px --alpha(var(--color-white) / 8%);
     --shadow-xl: 0px 20px 24px -4px --alpha(var(--color-white) / 8%);
+
+    /* Enhanced modern shadows for dark mode */
+    --shadow-glow: 0px 0px 0px 1px --alpha(var(--color-blue-400) / 15%), 0px 1px 2px 0px --alpha(var(--color-white) / 8%);
+    --shadow-elevated: 0px 2px 8px -1px --alpha(var(--color-white) / 12%), 0px 4px 12px -2px --alpha(var(--color-white) / 6%);
+    --shadow-floating: 0px 8px 32px -4px --alpha(var(--color-white) / 18%), 0px 4px 16px -2px --alpha(var(--color-white) / 10%);
+    --shadow-modal: 0px 24px 64px -12px --alpha(var(--color-white) / 25%), 0px 8px 32px -4px --alpha(var(--color-white) / 15%);
   }
 
   html {
@@ -443,4 +468,393 @@
       fill: var(--color-white);
     }
   }
+
+  /* Modern styling utilities - compatible version */
+
+  /* Enhanced shadows for modern look */
+  .shadow-elevated {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  .shadow-floating {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .shadow-modal {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Modern card and container styling */
+  .chart-container {
+    background: var(--color-white);
+    border-radius: 12px;
+    border: 1px solid var(--color-gray-200);
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    margin: 0;
+  }
+
+  .chart-container:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .dashboard-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    padding: 0;
+    margin: 0;
+  }
+
+  .card-modern {
+    background: var(--color-white);
+    border-radius: 12px;
+    border: 1px solid var(--color-gray-200);
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+  }
+
+  .card-modern:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  /* Modern button styles */
+  .btn-modern-primary {
+    background: #2563eb;
+    color: white;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-modern-primary:hover {
+    background: #1d4ed8;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn-modern-secondary {
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--color-gray-300);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-modern-secondary:hover {
+    background: var(--color-gray-50);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .btn-modern-ghost {
+    background: transparent;
+    color: var(--color-gray-700);
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-modern-ghost:hover {
+    background: var(--color-gray-100);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Enhanced text hierarchy */
+  .text-primary {
+    color: var(--color-gray-900);
+  }
+
+  .text-secondary {
+    color: var(--color-gray-600);
+  }
+
+  /* Modern input styling */
+  .input-modern {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-300);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .input-modern:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  /* Enhanced navigation styling */
+  .nav-item-modern {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-item-modern:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Enhanced card indicators with better typography */
+  .balance-sheet-indicator {
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  /* Better account row styling */
+  .account-row {
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .account-row:hover {
+    background-color: var(--color-surface-hover);
+    transform: translateX(2px);
+  }
+
+  /* Enhanced shadow for active navigation items */
+  .nav-active-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Dark mode navigation enhancements */
+  [data-theme="dark"] .nav-item-modern:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  [data-theme="dark"] .account-row:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Dark mode support */
+  [data-theme="dark"] .chart-container,
+  [data-theme="dark"] .card-modern {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+  }
+
+  [data-theme="dark"] .btn-modern-secondary {
+    background: var(--color-gray-800);
+    color: var(--color-gray-200);
+    border-color: var(--color-gray-700);
+  }
+
+  [data-theme="dark"] .btn-modern-ghost:hover {
+    background: var(--color-gray-700);
+  }
+
+  [data-theme="dark"] .input-modern {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+    color: var(--color-gray-200);
+  }
+
+  [data-theme="dark"] .text-primary {
+    color: var(--color-gray-100);
+  }
+
+  [data-theme="dark"] .text-secondary {
+    color: var(--color-gray-400);
+  }
+
+  /* Enhanced dark mode fixes */
+  [data-theme="dark"] .bg-white {
+    background: var(--color-gray-800) !important;
+  }
+
+  [data-theme="dark"] .bg-gray-50 {
+    background: var(--color-gray-900) !important;
+  }
+
+  [data-theme="dark"] .bg-gray-100 {
+    background: var(--color-gray-800) !important;
+  }
+
+  [data-theme="dark"] .border-gray-200 {
+    border-color: var(--color-gray-700) !important;
+  }
+
+  [data-theme="dark"] .shadow-elevated {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  [data-theme="dark"] .shadow-floating {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+/* Enhanced navigation and content spacing */
+.dashboard-grid {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  padding: 0;
+  margin: 0;
+}
+
+.chart-container {
+  background: var(--color-white);
+  border-radius: 12px;
+  border: 1px solid var(--color-gray-200);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  margin: 0;
+  margin-bottom: 8px;
+}
+
+.chart-container:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Navigation improvements */
+.nav-item-modern {
+  margin: 4px 8px;
+  min-height: 90px;
+}
+
+/* Dark mode navigation fixes */
+[data-theme="dark"] .nav-item-modern:hover {
+  background: rgba(55, 65, 81, 0.3) !important;
+}
+
+[data-theme="dark"] .bg-gradient-to-br.from-blue-100,
+[data-theme="dark"] .bg-gradient-to-br.from-green-100,
+[data-theme="dark"] .bg-gradient-to-br.from-purple-100,
+[data-theme="dark"] .bg-gradient-to-br.from-gray-100 {
+  background: linear-gradient(135deg, var(--color-gray-700), var(--color-gray-600)) !important;
+  color: var(--color-gray-300) !important;
+}
+
+[data-theme="dark"] .text-gray-600 {
+  color: var(--color-gray-400) !important;
+}
+
+[data-theme="dark"] .text-blue-600 {
+  color: var(--color-blue-300) !important;
+}
+
+[data-theme="dark"] .text-green-600 {
+  color: var(--color-green-300) !important;
+}
+
+[data-theme="dark"] .text-purple-600 {
+  color: var(--color-purple-300) !important;
+}
+
+/* Enhanced content spacing and consistent card heights */
+.chart-container {
+  background: var(--color-white);
+  border-radius: 12px;
+  border: 1px solid var(--color-gray-200);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  margin: 0;
+  min-height: 300px;
+}
+
+.chart-container:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Ensure all balance sheet cards have consistent heights and spacing */
+#balance-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#balance-sheet > div {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+/* Enhanced content spacing and shadow consistency */
+.w-full.space-y-8 {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Fix shadow stacking issues */
+.shadow-elevated {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+.shadow-floating {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Dark mode shadow adjustments */
+[data-theme="dark"] .shadow-elevated {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="dark"] .shadow-floating {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Enhanced balance sheet card improvements */
+.bg-surface-inset {
+  @apply bg-gray-50 dark:bg-gray-700;
+}
+
+.bg-surface-hover {
+  @apply bg-gray-50 dark:bg-gray-700;
+}
+
+.bg-container-inset {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+
+/* Ensure proper scrolling for account lists */
+.balance-sheet-card {
+  @apply flex flex-col;
+  min-height: 400px;
+  max-height: 500px;
+}
+
+.balance-sheet-accounts {
+  @apply flex-1 overflow-y-auto;
+  max-height: 200px;
+}
+
+/* Fix any remaining dark theme issues */
+.chart-container {
+  @apply bg-white dark:bg-gray-800;
+}
+
+.text-primary {
+  @apply text-gray-900 dark:text-white;
+}
+
+.text-secondary {
+  @apply text-gray-600 dark:text-gray-400;
 }

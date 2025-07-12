@@ -1,16 +1,16 @@
 <% content_for :page_header do %>
-  <div class="space-y-1 mb-6 flex gap-4 justify-between items-center lg:items-start">
-    <div class="space-y-1">
-      <h1 class="text-xl lg:text-3xl font-medium text-primary">Welcome back, <%= Current.user.first_name %></h1>
-      <p class="text-sm lg:text-base text-secondary">Here's what's happening with your finances</p>
+  <div class="space-y-1 mb-8 flex gap-4 justify-between items-center lg:items-start">
+    <div class="space-y-2">
+      <h1 class="text-xl lg:text-3xl font-bold text-primary tracking-tight">Welcome back, <%= Current.user.first_name %></h1>
+      <p class="text-sm lg:text-base text-secondary font-medium">Here's what's happening with your finances</p>
     </div>
 
     <%= render LinkComponent.new(
       icon: "plus",
-      text: "New",
+      text: "New Account",
       href: new_account_path,
       frame: :modal,
-      class: "hidden lg:inline-flex"
+      class: "btn-modern-primary hidden lg:inline-flex"
     ) %>
 
     <%= render LinkComponent.new(
@@ -18,25 +18,29 @@
         icon: "plus",
         href: new_account_path,
         frame: :modal,
-        class: "rounded-full lg:hidden"
+        class: "btn-modern-primary rounded-full lg:hidden w-12 h-12 flex items-center justify-center"
       ) %>
   </div>
 <% end %>
 
-<div class="w-full space-y-6 pb-24">
+<div class="w-full space-y-8 pb-24 min-h-screen">
   <% if Current.family.accounts.any? %>
-    <section class="bg-container py-4 rounded-xl shadow-border-xs">
+    <!-- Net Worth Chart Section -->
+    <section class="chart-container bg-white dark:bg-gray-900 shadow-elevated rounded-xl border border-gray-200 dark:border-gray-600 p-6">
       <%= render partial: "pages/dashboard/net_worth_chart", locals: {
         balance_sheet: @balance_sheet,
         period: @period
       } %>
     </section>
-    <section>
+    
+    <!-- Balance Sheet Grid with explicit spacing -->
+    <section class="space-y-6 pt-2">
       <%= render "pages/dashboard/balance_sheet", balance_sheet: @balance_sheet %>
     </section>
 
+    <!-- Cash Flow Sankey Chart with explicit spacing -->
     <%= turbo_frame_tag "cashflow_sankey_section" do %>
-      <section class="bg-container py-4 rounded-xl shadow-border-xs">
+      <section class="chart-container bg-white dark:bg-gray-900 shadow-elevated rounded-xl border border-gray-200 dark:border-gray-600 p-6 mt-2">
         <%= render partial: "pages/dashboard/cashflow_sankey", locals: {
           sankey_data: @cashflow_sankey_data,
           period: @cashflow_period
@@ -44,7 +48,7 @@
       </section>
     <% end %>
   <% else %>
-    <section>
+    <section class="card-modern p-8 bg-container shadow-elevated rounded-xl border border-secondary">
       <%= render "pages/dashboard/no_accounts_graph_placeholder" %>
     </section>
   <% end %>

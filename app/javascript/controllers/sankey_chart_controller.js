@@ -44,7 +44,8 @@ export default class extends Controller {
       .select(this.element)
       .append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .style("background", "transparent"); // Ensure SVG background is transparent to inherit theme
 
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
@@ -98,7 +99,7 @@ export default class extends Controller {
         .attr("stop-color", targetStopColor);
     });
 
-    // Draw links - FIX LINK RENDERING: Use proper sankeyLinkHorizontal
+    // Draw links - Clean approach with subtle hover effects
     svg
       .append("g")
       .attr("fill", "none")
@@ -108,6 +109,22 @@ export default class extends Controller {
       .attr("d", sankeyLinkHorizontal())
       .attr("stroke", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
       .attr("stroke-width", (d) => Math.max(1, d.width))
+      .style("cursor", "pointer")
+      .style("opacity", 0.8)
+      .on("mouseenter", function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .attr("stroke-width", (d) => Math.max(1, d.width * 1.05));
+      })
+      .on("mouseleave", function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("opacity", 0.8)
+          .attr("stroke-width", (d) => Math.max(1, d.width));
+      })
       .append("title")
       .text((d) => `${nodes[d.source.index].name} → ${nodes[d.target.index].name}: ${this.currencySymbolValue}${Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${d.percentage}%)`);
 
@@ -164,14 +181,22 @@ export default class extends Controller {
         return `M ${x0},${y0} L ${x1},${y0} L ${x1},${y1} L ${x0},${y1} Z`;
       })
       .attr("fill", (d) => d.color || "var(--color-gray-400)")
-      .attr("stroke", (d) => {
-        // If a node has an explicit color assigned (even if it's a gray variable),
-        // it gets no stroke. Only truly un-colored nodes (falling back to default fill)
-        // would get a stroke, but our current data structure assigns colors to all nodes.
-        if (d.color) {
-          return "none";
-        }
-        return "var(--color-gray-500)"; // Fallback, likely unused with current data
+      .attr("stroke", "none")
+      .style("cursor", "pointer")
+      .style("opacity", 0.9)
+      .on("mouseenter", function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .attr("transform", "scale(1.02)");
+      })
+      .on("mouseleave", function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("opacity", 0.9)
+          .attr("transform", "scale(1)");
       });
 
     const stimulusControllerInstance = this;
@@ -182,6 +207,8 @@ export default class extends Controller {
       .attr("dy", "0.35em")
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
       .attr("class", "text-xs font-medium text-primary fill-current")
+      .style("user-select", "none")
+      .style("pointer-events", "none")
       .each(function (d) {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();

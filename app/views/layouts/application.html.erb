@@ -44,14 +44,14 @@
 
     <%# DESKTOP - Left navbar %>
     <div class="hidden lg:block">
-      <nav class="h-full flex flex-col shrink-0 w-[84px] py-4 mr-3">
-        <div class="pl-2 mb-3">
+      <nav class="sidebar-modern h-full flex flex-col shrink-0 w-[84px] py-6 mr-4">
+        <div class="pl-2 mb-6">
           <%= link_to root_path, class: "block" do %>
-            <%= image_tag "logomark-color.svg", class: "w-9 h-9 mx-auto" %>
+            <%= image_tag "logomark-color.svg", class: "w-10 h-10 mx-auto hover:scale-110 transition-transform duration-200" %>
           <% end %>
         </div>
 
-        <ul class="space-y-0.5">
+        <ul class="space-y-2 flex-1">
           <% desktop_nav_items.reject { |item| item[:mobile_only] }.each do |nav_item| %>
             <li>
               <%= render "layouts/shared/nav_item", **nav_item %>
@@ -59,11 +59,12 @@
           <% end %>
         </ul>
 
-        <div class="pl-2 mt-auto mx-auto flex flex-col gap-2">
+        <div class="pl-2 mx-auto flex flex-col gap-3">
           <%= render ButtonComponent.new(
             variant: "icon",
             icon: "message-circle-question",
-            data: { action: "intercom#show" }
+            data: { action: "intercom#show" },
+            class: "btn-modern-ghost w-10 h-10 !p-0"
           ) %>
 
           <%= render "users/user_menu", user: Current.user %>
@@ -110,10 +111,10 @@
     <% end %>
 
     <%# SHARED - Main content %>
-    <%= tag.main class: class_names("grow overflow-y-auto px-3 lg:px-10 py-4 w-full mx-auto max-w-5xl"), data: { app_layout_target: "content" } do %>
-      <div class="hidden lg:flex gap-2 items-center justify-between mb-6">
-        <div class="flex items-center gap-2">
-          <%= icon("panel-left", as_button: true, data: { action: "app-layout#toggleLeftSidebar" }) %>
+    <%= tag.main class: class_names("grow overflow-y-auto px-4 lg:px-12 py-6 w-full mx-auto max-w-7xl"), data: { app_layout_target: "content" } do %>
+      <div class="hidden lg:flex gap-3 items-center justify-between mb-8">
+        <div class="flex items-center gap-3">
+          <%= icon("panel-left", as_button: true, data: { action: "app-layout#toggleLeftSidebar" }, class: "btn-modern-ghost w-9 h-9 !p-0") %>
 
           <% if content_for?(:breadcrumbs) %>
             <%= yield :breadcrumbs %>
@@ -121,7 +122,7 @@
             <%= render "layouts/shared/breadcrumbs", breadcrumbs: @breadcrumbs %>
           <% end %>
         </div>
-        <%= icon("panel-right", as_button: true, data: { action: "app-layout#toggleRightSidebar" }) %>
+        <%= icon("panel-right", as_button: true, data: { action: "app-layout#toggleRightSidebar" }, class: "btn-modern-ghost w-9 h-9 !p-0") %>
       </div>
 
       <% if content_for?(:page_header) %>
