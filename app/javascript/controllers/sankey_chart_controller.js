@@ -40,7 +40,7 @@ export default class extends Controller {
       .attr("width", width)
       .attr("height", height);
 
-    // Better margin calculation for alignment
+    // Better margin calculation for improved alignment
     const margin = { top: 20, right: 40, bottom: 20, left: 40 };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
@@ -50,7 +50,7 @@ export default class extends Controller {
       .nodePadding(this.nodePaddingValue)
       .extent([
         [margin.left, margin.top],
-        [margin.left + chartWidth, margin.top + chartHeight],
+        [width - margin.right, height - margin.bottom],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -86,9 +86,9 @@ export default class extends Controller {
         .attr("id", gradientId)
         .attr("gradientUnits", "userSpaceOnUse")
         .attr("x1", link.source.x1)
-        .attr("y1", (link.y0 + link.y1) / 2)
+        .attr("y1", link.y0)
         .attr("x2", link.target.x0)
-        .attr("y2", (link.y0 + link.y1) / 2);
+        .attr("y2", link.y1);
 
       gradient.append("stop")
         .attr("offset", "0%")
@@ -99,31 +99,16 @@ export default class extends Controller {
         .attr("stop-color", targetStopColor);
     });
 
-    // Draw links with better alignment
+    // Draw links with improved alignment
     svg
       .append("g")
       .attr("fill", "none")
       .selectAll("path")
       .data(sankeyData.links)
       .join("path")
-      .attr("d", (d) => {
-        // Improved path calculation for better alignment
-        const sourceX = d.source.x1;
-        const targetX = d.target.x0;
-        const sourceY = (d.y0 + d.y1) / 2;
-        const targetY = (d.y0 + d.y1) / 2;
-        
-        // Create smoother curves with better control points
-        const curvature = 0.5;
-        const xi = d3.interpolateNumber(sourceX, targetX);
-        const x2 = xi(curvature);
-        const x3 = xi(1 - curvature);
-        
-        return `M${sourceX},${d.y0}C${x2},${d.y0} ${x3},${d.y1} ${targetX},${d.y1}L${targetX},${d.y1}C${x3},${d.y1} ${x2},${d.y0} ${sourceX},${d.y0}Z`;
-      })
-      .attr("stroke", "none")
-      .attr("fill", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
-      .attr("opacity", 0.7)
+      .attr("d", sankeyLinkHorizontal())
+      .attr("stroke", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
+      .attr("stroke-width", (d) => Math.max(1, d.width))
       .append("title")
       .text((d) => `${nodes[d.source.index].name} → ${nodes[d.target.index].name}: ${this.currencySymbolValue}${Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${d.percentage}%)`);
 
@@ -216,5 +201,52 @@ export default class extends Controller {
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       });
+  }
+
+  toggleFullscreen() {
+    if (!this.hasContainerTarget) return;
+
+    this.isFullscreen = !this.isFullscreen;
+
+    if (this.isFullscreen) {
+      // Enter fullscreen
+      this.containerTarget.classList.add(
+        "fixed", "inset-0", "z-50", "bg-background", "p-6"
+      );
+      this.containerTarget.classList.remove("h-[500px]", "lg:h-[600px]");
+      this.containerTarget.style.height = "100vh";
+      this.containerTarget.style.width = "100vw";
+      
+      // Show close button
+      if (this.hasCloseBtnTarget) {
+        this.closeBtnTarget.classList.remove("hidden");
+      }
+      
+      // Hide fullscreen button
+      if (this.hasFullscreenBtnTarget) {
+        this.fullscreenBtnTarget.style.display = "none";
+      }
+    } else {
+      // Exit fullscreen
+      this.containerTarget.classList.remove(
+        "fixed", "inset-0", "z-50", "bg-background", "p-6"
+      );
+      this.containerTarget.classList.add("h-[500px]", "lg:h-[600px]");
+      this.containerTarget.style.height = "";
+      this.containerTarget.style.width = "";
+      
+      // Hide close button
+      if (this.hasCloseBtnTarget) {
+        this.closeBtnTarget.classList.add("hidden");
+      }
+      
+      // Show fullscreen button
+      if (this.hasFullscreenBtnTarget) {
+        this.fullscreenBtnTarget.style.display = "";
+      }
+    }
+
+    // Redraw chart with new dimensions
+    setTimeout(() => this.#draw(), 100);
   }
 } 
