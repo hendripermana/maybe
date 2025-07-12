@@ -14,31 +14,11 @@ export default class extends Controller {
   connect() {
     this.resizeObserver = new ResizeObserver(() => this.#draw());
     this.resizeObserver.observe(this.element);
-    // Setup responsive height
-    this.#setupResponsiveHeight();
     this.#draw();
   }
 
   disconnect() {
     this.resizeObserver?.disconnect();
-  }
-
-  #setupResponsiveHeight() {
-    // Set minimum height for proper display
-    const minHeight = 400;
-    const maxHeight = 600;
-    
-    // Calculate responsive height based on container width
-    const containerWidth = this.element.clientWidth || 600;
-    const aspectRatio = 0.6; // Height = 60% of width
-    let calculatedHeight = containerWidth * aspectRatio;
-    
-    // Clamp between min and max
-    calculatedHeight = Math.max(minHeight, Math.min(maxHeight, calculatedHeight));
-    
-    // Apply height to container
-    this.element.style.height = `${calculatedHeight}px`;
-    this.element.style.minHeight = `${minHeight}px`;
   }
 
   #draw() {
@@ -49,38 +29,21 @@ export default class extends Controller {
     // Clear previous SVG
     d3.select(this.element).selectAll("svg").remove();
 
-    // Recalculate responsive height on each draw
-    this.#setupResponsiveHeight();
-
-    const containerRect = this.element.getBoundingClientRect();
-    const width = containerRect.width || 600;
-    const height = containerRect.height || 400;
-
-    // Create responsive margins
-    const margin = {
-      top: Math.max(20, height * 0.05),
-      right: Math.max(40, width * 0.1),
-      bottom: Math.max(20, height * 0.05),
-      left: Math.max(40, width * 0.1)
-    };
+    const width = this.element.clientWidth || 600;
+    const height = this.element.clientHeight || 400;
 
     const svg = d3
       .select(this.element)
       .append("svg")
       .attr("width", width)
-      .attr("height", height)
-      .attr("style", "display: block; margin: 0 auto;"); // Center the SVG
-
-    // Create responsive node dimensions
-    const nodeWidth = Math.max(10, Math.min(this.nodeWidthValue, width * 0.03));
-    const nodePadding = Math.max(10, Math.min(this.nodePaddingValue, height * 0.05));
+      .attr("height", height);
 
     const sankeyGenerator = sankey()
-      .nodeWidth(nodeWidth)
-      .nodePadding(nodePadding)
+      .nodeWidth(this.nodeWidthValue)
+      .nodePadding(this.nodePaddingValue)
       .extent([
-        [margin.left, margin.top],
-        [width - margin.right, height - margin.bottom],
+        [16, 16],
+        [width - 16, height - 16],
       ]);
 
     const sankeyData = sankeyGenerator({
