@@ -14,30 +14,11 @@ export default class extends Controller {
   connect() {
     this.resizeObserver = new ResizeObserver(() => this.#draw());
     this.resizeObserver.observe(this.element);
-    
-    // Listen for window resize events (helpful for fullscreen transitions)
-    this.handleWindowResize = this.handleWindowResize.bind(this);
-    window.addEventListener('resize', this.handleWindowResize);
-    
     this.#draw();
   }
 
   disconnect() {
     this.resizeObserver?.disconnect();
-    window.removeEventListener('resize', this.handleWindowResize);
-  }
-
-  handleWindowResize() {
-    // Debounce resize events
-    clearTimeout(this.resizeTimeout);
-    this.resizeTimeout = setTimeout(() => {
-      this.#draw();
-    }, 100);
-  }
-
-  // Public method for external controllers to trigger redraw
-  redraw() {
-    this.#draw();
   }
 
   #draw() {
@@ -48,33 +29,21 @@ export default class extends Controller {
     // Clear previous SVG
     d3.select(this.element).selectAll("svg").remove();
 
-    const containerWidth = this.element.clientWidth || 600;
-    const containerHeight = this.element.clientHeight || 400;
-    
-    // Calculate responsive dimensions and spacing
-    const isLargeContainer = containerWidth > 1200 || containerHeight > 600;
-    const margin = isLargeContainer ? 40 : 24;
-    
-    const width = containerWidth;
-    const height = Math.max(400, containerHeight);
+    const width = this.element.clientWidth || 600;
+    const height = this.element.clientHeight || 400;
 
     const svg = d3
       .select(this.element)
       .append("svg")
       .attr("width", width)
-      .attr("height", height)
-      .style("display", "block"); // Ensure proper rendering
-
-    // Responsive node settings
-    const nodeWidth = isLargeContainer ? 20 : this.nodeWidthValue;
-    const nodePadding = isLargeContainer ? 30 : this.nodePaddingValue;
+      .attr("height", height);
 
     const sankeyGenerator = sankey()
-      .nodeWidth(nodeWidth)
-      .nodePadding(nodePadding)
+      .nodeWidth(this.nodeWidthValue)
+      .nodePadding(this.nodePaddingValue)
       .extent([
-        [margin, margin],
-        [width - margin, height - margin],
+        [16, 16],
+        [width - 16, height - 16],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -212,8 +181,7 @@ export default class extends Controller {
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "-0.2em")
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
-      .attr("class", "font-medium text-primary fill-current")
-      .style("font-size", isLargeContainer ? "14px" : "12px")
+      .attr("class", "text-xs font-medium text-primary fill-current")
       .each(function (d) {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();
@@ -227,7 +195,7 @@ export default class extends Controller {
           .attr("x", textElement.attr("x"))
           .attr("dy", "1.2em")
           .attr("class", "font-mono text-secondary")
-          .style("font-size", isLargeContainer ? "12px" : "10px"); // Responsive font size
+          .style("font-size", "0.65rem"); // Explicitly set smaller font size
 
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
