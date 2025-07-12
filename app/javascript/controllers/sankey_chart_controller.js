@@ -4,6 +4,7 @@ import { sankey, sankeyLinkHorizontal } from "d3-sankey";
 
 // Connects to data-controller="sankey-chart"
 export default class extends Controller {
+  static targets = ["container", "fullscreenBtn", "closeBtn"];
   static values = {
     data: Object,
     nodeWidth: { type: Number, default: 15 },
@@ -14,6 +15,7 @@ export default class extends Controller {
   connect() {
     this.resizeObserver = new ResizeObserver(() => this.#draw());
     this.resizeObserver.observe(this.element);
+    this.isFullscreen = false;
     this.#draw();
   }
 
