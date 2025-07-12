@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get "brankas/link_url",  to: "brankas#link_url"
   get "brankas/callback",  to: "brankas#callback"
 
+  # Test route for Sentry error reporting
+  get '/test_sentry', to: ->(env) { raise "This is a public test error for Sentry" }
+
   use_doorkeeper
   # MFA routes
   resource :mfa, controller: "mfa", only: [ :new, :create ] do
@@ -270,6 +273,4 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "pages#dashboard"
-
-  get '/test_sentry', to: ->(env) { raise "This is a public test error for Sentry" }, constraints: lambda { |req| true }
 end
