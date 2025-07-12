@@ -25,24 +25,23 @@
 
 <div class="w-full space-y-6 pb-24">
   <% if Current.family.accounts.any? %>
-    <%= render Ui::CardComponent.new(variant: :elevated, size: :md) do %>
+    <section class="bg-container py-4 rounded-xl shadow-border-xs">
       <%= render partial: "pages/dashboard/net_worth_chart", locals: {
         balance_sheet: @balance_sheet,
         period: @period
       } %>
-    <% end %>
-    
+    </section>
     <section>
       <%= render "pages/dashboard/balance_sheet", balance_sheet: @balance_sheet %>
     </section>
 
     <%= turbo_frame_tag "cashflow_sankey_section" do %>
-      <%= render Ui::CardComponent.new(variant: :default, size: :md) do %>
+      <section class="bg-container py-4 rounded-xl shadow-border-xs">
         <%= render partial: "pages/dashboard/cashflow_sankey", locals: {
           sankey_data: @cashflow_sankey_data,
           period: @cashflow_period
         } %>
-      <% end %>
+      </section>
     <% end %>
   <% else %>
     <section>
