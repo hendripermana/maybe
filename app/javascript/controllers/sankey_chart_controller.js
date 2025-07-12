@@ -79,9 +79,7 @@ export default class extends Controller {
         .attr("id", gradientId)
         .attr("gradientUnits", "userSpaceOnUse")
         .attr("x1", link.source.x1)
-        .attr("y1", link.y0)
-        .attr("x2", link.target.x0)
-        .attr("y2", link.y1);
+        .attr("x2", link.target.x0);
 
       gradient.append("stop")
         .attr("offset", "0%")
@@ -99,7 +97,15 @@ export default class extends Controller {
       .selectAll("path")
       .data(sankeyData.links)
       .join("path")
-      .attr("d", sankeyLinkHorizontal())
+      .attr("d", (d) => {
+        const sourceX = d.source.x1;
+        const targetX = d.target.x0;
+        const path = d3.linkHorizontal()({
+          source: [sourceX, d.y0],
+          target: [targetX, d.y1]
+        });
+        return path;
+      })
       .attr("stroke", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .append("title")
@@ -194,52 +200,5 @@ export default class extends Controller {
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       });
-  }
-
-  toggleFullscreen() {
-    if (!this.hasContainerTarget) return;
-
-    this.isFullscreen = !this.isFullscreen;
-
-    if (this.isFullscreen) {
-      // Enter fullscreen
-      this.containerTarget.classList.add(
-        "fixed", "inset-0", "z-50", "bg-background", "p-6"
-      );
-      this.containerTarget.classList.remove("h-[500px]", "lg:h-[600px]");
-      this.containerTarget.style.height = "100vh";
-      this.containerTarget.style.width = "100vw";
-      
-      // Show close button
-      if (this.hasCloseBtnTarget) {
-        this.closeBtnTarget.classList.remove("hidden");
-      }
-      
-      // Hide fullscreen button
-      if (this.hasFullscreenBtnTarget) {
-        this.fullscreenBtnTarget.style.display = "none";
-      }
-    } else {
-      // Exit fullscreen
-      this.containerTarget.classList.remove(
-        "fixed", "inset-0", "z-50", "bg-background", "p-6"
-      );
-      this.containerTarget.classList.add("h-[500px]", "lg:h-[600px]");
-      this.containerTarget.style.height = "";
-      this.containerTarget.style.width = "";
-      
-      // Hide close button
-      if (this.hasCloseBtnTarget) {
-        this.closeBtnTarget.classList.add("hidden");
-      }
-      
-      // Show fullscreen button
-      if (this.hasFullscreenBtnTarget) {
-        this.fullscreenBtnTarget.style.display = "";
-      }
-    }
-
-    // Redraw chart with new dimensions
-    setTimeout(() => this.#draw(), 100);
   }
 } 
