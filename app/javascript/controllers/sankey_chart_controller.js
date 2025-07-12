@@ -14,32 +14,11 @@ export default class extends Controller {
   connect() {
     this.resizeObserver = new ResizeObserver(() => this.#draw());
     this.resizeObserver.observe(this.element);
-    // Setup responsive height and initial draw
-    this.#setupResponsiveHeight();
     this.#draw();
   }
 
   disconnect() {
     this.resizeObserver?.disconnect();
-  }
-
-  #setupResponsiveHeight() {
-    // Set responsive height based on container width
-    const containerWidth = this.element.clientWidth || 600;
-    
-    // Calculate responsive height with aspect ratio
-    const aspectRatio = 0.5; // Height = 50% of width for better proportions
-    let calculatedHeight = containerWidth * aspectRatio;
-    
-    // Set min/max constraints
-    const minHeight = 350;
-    const maxHeight = 500;
-    calculatedHeight = Math.max(minHeight, Math.min(maxHeight, calculatedHeight));
-    
-    // Apply height to container
-    this.element.style.height = `${calculatedHeight}px`;
-    this.element.style.minHeight = `${minHeight}px`;
-    this.element.style.position = 'relative';
   }
 
   #draw() {
@@ -50,44 +29,21 @@ export default class extends Controller {
     // Clear previous SVG
     d3.select(this.element).selectAll("svg").remove();
 
-    // Recalculate responsive dimensions
-    this.#setupResponsiveHeight();
+    const width = this.element.clientWidth || 600;
+    const height = this.element.clientHeight || 400;
 
-    const containerRect = this.element.getBoundingClientRect();
-    const width = containerRect.width || 600;
-    const height = containerRect.height || 400;
-
-    // Calculate responsive margins for better centering
-    const margin = {
-      top: Math.max(24, height * 0.06),
-      right: Math.max(60, width * 0.12),
-      bottom: Math.max(24, height * 0.06),
-      left: Math.max(60, width * 0.12)
-    };
-
-    // Create SVG with proper centering
     const svg = d3
       .select(this.element)
       .append("svg")
       .attr("width", width)
-      .attr("height", height)
-      .style("display", "block")
-      .style("margin", "0 auto");
-
-    // Calculate inner dimensions
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    // Create responsive node dimensions
-    const nodeWidth = Math.max(8, Math.min(this.nodeWidthValue, innerWidth * 0.025));
-    const nodePadding = Math.max(8, Math.min(this.nodePaddingValue, innerHeight * 0.03));
+      .attr("height", height);
 
     const sankeyGenerator = sankey()
-      .nodeWidth(nodeWidth)
-      .nodePadding(nodePadding)
+      .nodeWidth(this.nodeWidthValue)
+      .nodePadding(this.nodePaddingValue)
       .extent([
-        [margin.left, margin.top],
-        [width - margin.right, height - margin.bottom],
+        [16, 16],
+        [width - 16, height - 16],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -221,20 +177,11 @@ export default class extends Controller {
     const stimulusControllerInstance = this;
     node
       .append("text")
-      .attr("x", (d) => {
-        // Better responsive text positioning
-        const textOffset = Math.max(6, width * 0.015);
-        return d.x0 < width / 2 ? d.x1 + textOffset : d.x0 - textOffset;
-      })
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "-0.2em")
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
       .attr("class", "text-xs font-medium text-primary fill-current")
-      .style("font-size", () => {
-        // Responsive font size
-        const baseFontSize = Math.max(10, Math.min(14, width * 0.022));
-        return `${baseFontSize}px`;
-      })
       .each(function (d) {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();
@@ -248,11 +195,7 @@ export default class extends Controller {
           .attr("x", textElement.attr("x"))
           .attr("dy", "1.2em")
           .attr("class", "font-mono text-secondary")
-          .style("font-size", () => {
-            // Smaller responsive font size for financial details
-            const detailFontSize = Math.max(8, Math.min(11, width * 0.018));
-            return `${detailFontSize}px`;
-          });
+          .style("font-size", "0.65rem"); // Explicitly set smaller font size
 
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
