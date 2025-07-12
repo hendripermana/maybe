@@ -1,29 +1,99 @@
 <%# locals: (sankey_data:, period:) %>
-<div id="cashflow-sankey-chart">
-  <div class="flex justify-between items-center gap-4 px-4 mb-4">
+<div id="cashflow-sankey-chart" 
+     data-controller="cashflow-fullscreen" 
+     data-cashflow-fullscreen-target="container"
+     class="relative bg-container rounded-lg border border-secondary">
+  
+  <!-- Header with controls -->
+  <div class="flex justify-between items-center gap-4 px-4 py-3 border-b border-secondary">
     <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
       Cashflow
     </h2>
 
-    <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
-      <%= form.select :cashflow_period,
-                Period.as_options,
-                { selected: period.key },
-                data: { "auto-submit-form-target": "auto" },
-                class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
-    <% end %>
+    <div class="flex items-center gap-3">
+      <!-- Period selector -->
+      <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
+        <%= form.select :cashflow_period,
+                  Period.as_options,
+                  { selected: period.key },
+                  data: { "auto-submit-form-target": "auto" },
+                  class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
+      <% end %>
+
+      <!-- Fullscreen toggle button -->
+      <% if sankey_data[:links].present? %>
+        <button type="button"
+                data-action="click->cashflow-fullscreen#toggleFullscreen"
+                data-cashflow-fullscreen-target="toggleButton"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-secondary hover:bg-hover transition-colors"
+                title="Toggle fullscreen">
+          <svg class="w-4 h-4 text-primary" data-cashflow-fullscreen-target="expandIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+          <svg class="w-4 h-4 text-primary hidden" data-cashflow-fullscreen-target="collapseIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      <% end %>
+    </div>
   </div>
 
+  <!-- Chart container -->
   <% if sankey_data[:links].present? %>
-    <div class="w-full h-96">
-      <div
-        data-controller="sankey-chart"
-        data-sankey-chart-data-value="<%= sankey_data.to_json %>"
-        data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
-        class="w-full h-full"></div>
+    <div class="relative" data-cashflow-fullscreen-target="chartContainer">
+      <!-- Regular view container -->
+      <div class="w-full min-h-[500px] lg:min-h-[600px] p-4" 
+           data-cashflow-fullscreen-target="regularContainer">
+        <div
+          data-controller="sankey-chart"
+          data-sankey-chart-data-value="<%= sankey_data.to_json %>"
+          data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
+          class="w-full h-full"></div>
+      </div>
+
+      <!-- Fullscreen overlay (hidden by default) -->
+      <div class="hidden fixed inset-0 z-50 bg-container"
+           data-cashflow-fullscreen-target="fullscreenOverlay">
+        <!-- Fullscreen header -->
+        <div class="flex justify-between items-center gap-4 px-6 py-4 border-b border-secondary bg-container">
+          <h2 class="text-xl font-semibold text-primary">
+            Cashflow Analysis - <%= period.display_name %>
+          </h2>
+
+          <div class="flex items-center gap-3">
+            <!-- Period selector for fullscreen -->
+            <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
+              <%= form.select :cashflow_period,
+                        Period.as_options,
+                        { selected: period.key },
+                        data: { "auto-submit-form-target": "auto" },
+                        class: "bg-secondary border border-tertiary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
+            <% end %>
+
+            <!-- Close fullscreen button -->
+            <button type="button"
+                    data-action="click->cashflow-fullscreen#toggleFullscreen"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-secondary hover:bg-hover transition-colors"
+                    title="Exit fullscreen">
+              <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Fullscreen chart -->
+        <div class="h-[calc(100vh-5rem)] p-6" data-cashflow-fullscreen-target="fullscreenContainer">
+          <div
+            data-controller="sankey-chart"
+            data-sankey-chart-data-value="<%= sankey_data.to_json %>"
+            data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
+            class="w-full h-full"></div>
+        </div>
+      </div>
     </div>
   <% else %>
-    <div class="h-[300px] lg:h-[340px] bg-container py-4 flex flex-col items-center justify-center">
+    <div class="h-[300px] lg:h-[340px] py-4 flex flex-col items-center justify-center">
       <div class="space-y-3 text-center flex flex-col items-center">
         <%= render FilledIconComponent.new(
           variant: :container,
