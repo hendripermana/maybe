@@ -111,9 +111,13 @@ export default class extends Controller {
     // Find all sankey chart controllers and trigger a redraw
     const chartElements = this.element.querySelectorAll('[data-controller*="sankey-chart"]');
     chartElements.forEach(element => {
-      const controller = this.application.getControllerForElementAndIdentifier(element, 'sankey-chart');
-      if (controller && typeof controller.redraw === 'function') {
-        controller.redraw();
+      try {
+        const controller = this.application.getControllerForElementAndIdentifier(element, 'sankey-chart');
+        if (controller && typeof controller.redraw === 'function') {
+          controller.redraw();
+        }
+      } catch (error) {
+        console.warn('Could not trigger redraw for sankey chart:', error);
       }
     });
   }
