@@ -38,12 +38,17 @@ export default class extends Controller {
       .attr("width", width)
       .attr("height", height);
 
+    // Better margin calculation for alignment
+    const margin = { top: 20, right: 40, bottom: 20, left: 40 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
       .nodePadding(this.nodePaddingValue)
       .extent([
-        [16, 16],
-        [width - 16, height - 16],
+        [margin.left, margin.top],
+        [margin.left + chartWidth, margin.top + chartHeight],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -79,7 +84,9 @@ export default class extends Controller {
         .attr("id", gradientId)
         .attr("gradientUnits", "userSpaceOnUse")
         .attr("x1", link.source.x1)
-        .attr("x2", link.target.x0);
+        .attr("y1", (link.y0 + link.y1) / 2)
+        .attr("x2", link.target.x0)
+        .attr("y2", (link.y0 + link.y1) / 2);
 
       gradient.append("stop")
         .attr("offset", "0%")
@@ -90,7 +97,7 @@ export default class extends Controller {
         .attr("stop-color", targetStopColor);
     });
 
-    // Draw links
+    // Draw links with better alignment
     svg
       .append("g")
       .attr("fill", "none")
@@ -98,16 +105,23 @@ export default class extends Controller {
       .data(sankeyData.links)
       .join("path")
       .attr("d", (d) => {
+        // Improved path calculation for better alignment
         const sourceX = d.source.x1;
         const targetX = d.target.x0;
-        const path = d3.linkHorizontal()({
-          source: [sourceX, d.y0],
-          target: [targetX, d.y1]
-        });
-        return path;
+        const sourceY = (d.y0 + d.y1) / 2;
+        const targetY = (d.y0 + d.y1) / 2;
+        
+        // Create smoother curves with better control points
+        const curvature = 0.5;
+        const xi = d3.interpolateNumber(sourceX, targetX);
+        const x2 = xi(curvature);
+        const x3 = xi(1 - curvature);
+        
+        return `M${sourceX},${d.y0}C${x2},${d.y0} ${x3},${d.y1} ${targetX},${d.y1}L${targetX},${d.y1}C${x3},${d.y1} ${x2},${d.y0} ${sourceX},${d.y0}Z`;
       })
-      .attr("stroke", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
-      .attr("stroke-width", (d) => Math.max(1, d.width))
+      .attr("stroke", "none")
+      .attr("fill", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
+      .attr("opacity", 0.7)
       .append("title")
       .text((d) => `${nodes[d.source.index].name} → ${nodes[d.target.index].name}: ${this.currencySymbolValue}${Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${d.percentage}%)`);
 

@@ -15,7 +15,7 @@
   </div>
 
   <% if sankey_data[:links].present? %>
-    <div class="w-full h-96">
+    <div class="w-full h-[500px] lg:h-[600px]">
       <div
         data-controller="sankey-chart"
         data-sankey-chart-data-value="<%= sankey_data.to_json %>"
