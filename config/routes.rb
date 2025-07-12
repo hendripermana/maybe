@@ -6,8 +6,11 @@ Rails.application.routes.draw do
   get "brankas/link_url",  to: "brankas#link_url"
   get "brankas/callback",  to: "brankas#callback"
 
-  # Test route for Sentry error reporting
-  get '/test_sentry', to: ->(env) { raise "This is a public test error for Sentry" }
+  # Test routes for Sentry error reporting
+  get '/test_sentry', to: 'test_sentry#test_error'
+  get '/test_sentry/:type', to: 'test_sentry#test_error'
+  get '/test_sentry_capture', to: 'test_sentry#test_capture'
+  get '/test_sentry_message', to: 'test_sentry#test_message'
 
   use_doorkeeper
   # MFA routes
