@@ -12,13 +12,43 @@ export default class extends Controller {
   };
 
   connect() {
-    this.resizeObserver = new ResizeObserver(() => this.#draw());
+    this.resizeObserver = new ResizeObserver(() => {
+      // Debounce resize to improve performance
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => this.#draw(), 150);
+    });
     this.resizeObserver.observe(this.element);
+    
+    // Apply responsive height adjustments
+    this.#setupResponsiveHeight();
     this.#draw();
   }
 
   disconnect() {
     this.resizeObserver?.disconnect();
+    clearTimeout(this.resizeTimeout);
+  }
+
+  #setupResponsiveHeight() {
+    const container = this.element.closest('[data-height-sm]');
+    if (!container) return;
+
+    const applyHeight = () => {
+      const isLarge = window.innerWidth >= 1024; // lg breakpoint
+      const heightAttr = isLarge ? 'data-height-lg' : 'data-height-sm';
+      const height = container.getAttribute(heightAttr);
+      
+      if (height) {
+        container.style.height = height;
+      }
+    };
+
+    // Apply initial height
+    applyHeight();
+
+    // Listen for resize events
+    this.mediaQueryList = window.matchMedia('(min-width: 1024px)');
+    this.mediaQueryList.addListener(applyHeight);
   }
 
   #draw() {
@@ -32,18 +62,33 @@ export default class extends Controller {
     const width = this.element.clientWidth || 600;
     const height = this.element.clientHeight || 400;
 
+    // Enhanced responsive margins based on screen size
+    const isMobile = width < 640;
+    const isTablet = width >= 640 && width < 1024;
+    const margin = isMobile ? 12 : isTablet ? 16 : 20;
+    
+    // Better node spacing calculations
+    const nodeCount = nodes.length;
+    const availableHeight = height - (margin * 2);
+    const dynamicNodePadding = Math.max(
+      this.nodePaddingValue, 
+      Math.min(40, availableHeight / nodeCount * 0.15)
+    );
+
     const svg = d3
       .select(this.element)
       .append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .style("background", "transparent")
+      .style("overflow", "visible");
 
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
-      .nodePadding(this.nodePaddingValue)
+      .nodePadding(dynamicNodePadding)
       .extent([
-        [16, 16],
-        [width - 16, height - 16],
+        [margin, margin],
+        [width - margin, height - margin],
       ]);
 
     const sankeyData = sankeyGenerator({

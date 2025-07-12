@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
+# ShadCN-inspired Card component that extends Maybe's design system
 class Ui::CardComponent < ViewComponent::Base
-  attr_reader :variant, :size, :hover_effect
+  attr_reader :variant, :size, :hover_effect, :title, :subtitle, :description, :href, :target, :frame
 
   VARIANTS = {
-    default: "bg-white border border-gray-200 shadow-sm",
-    elevated: "bg-white border border-gray-200 shadow-lg",
-    outlined: "bg-white border-2 border-gray-200",
-    ghost: "bg-transparent border-0 shadow-none"
+    default: "bg-container shadow-border-xs rounded-xl",
+    elevated: "bg-container shadow-border-md hover:shadow-border-lg transition-all duration-200 rounded-xl",
+    outlined: "bg-container border border-secondary hover:border-primary transition-all duration-200 rounded-xl",
+    ghost: "bg-transparent border-0 shadow-none rounded-xl",
+    gradient: "bg-gradient-to-br from-container to-container-inset shadow-border-xs rounded-xl",
+    interactive: "bg-container shadow-border-xs hover:shadow-border-md hover:bg-container-hover cursor-pointer transition-all duration-200 rounded-xl"
   }.freeze
 
   SIZES = {
@@ -16,8 +19,29 @@ class Ui::CardComponent < ViewComponent::Base
     lg: "p-8"
   }.freeze
 
-  def initialize(variant: :default, size: :md, hover_effect: true, **html_options)
+  def initialize(
+    variant: :default, 
+    size: :md, 
+    hover_effect: true, 
+    title: nil,
+    subtitle: nil,
+    description: nil,
+    href: nil,
+    target: nil,
+    frame: nil,
+    **html_options
+  )
     @variant = variant
+    @size = size
+    @hover_effect = hover_effect
+    @title = title
+    @subtitle = subtitle
+    @description = description
+    @href = href
+    @target = target
+    @frame = frame
+    @html_options = html_options
+  end
     @size = size
     @hover_effect = hover_effect
     @html_options = html_options

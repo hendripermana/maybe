@@ -15,12 +15,31 @@
   </div>
 
   <% if sankey_data[:links].present? %>
-    <div class="w-full h-96">
+    <%# Dynamic height based on data complexity and viewport %>
+    <% 
+      node_count = sankey_data[:nodes]&.size || 0
+      link_count = sankey_data[:links]&.size || 0
+      complexity_score = node_count + (link_count * 0.5)
+      
+      # Calculate responsive height
+      base_height = 400
+      mobile_height = [320, base_height + (complexity_score * 8)].max
+      desktop_height = [400, base_height + (complexity_score * 12)].max
+      max_height = 600
+      
+      responsive_height = [mobile_height, max_height].min
+      desktop_responsive_height = [desktop_height, max_height].min
+    %>
+    
+    <div class="w-full transition-all duration-300 ease-in-out" 
+         style="height: <%= responsive_height %>px;"
+         data-height-sm="<%= responsive_height %>"
+         data-height-lg="<%= desktop_responsive_height %>">
       <div
         data-controller="sankey-chart"
         data-sankey-chart-data-value="<%= sankey_data.to_json %>"
         data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
-        class="w-full h-full"></div>
+        class="w-full h-full rounded-lg border border-tertiary bg-gradient-to-br from-container to-container-inset shadow-border-xs"></div>
     </div>
   <% else %>
     <div class="h-[300px] lg:h-[340px] bg-container py-4 flex flex-col items-center justify-center">
