@@ -14,11 +14,28 @@ export default class extends Controller {
   connect() {
     this.resizeObserver = new ResizeObserver(() => this.#draw());
     this.resizeObserver.observe(this.element);
+    this.#setupResponsiveHeight();
     this.#draw();
   }
 
   disconnect() {
     this.resizeObserver?.disconnect();
+  }
+
+  #setupResponsiveHeight() {
+    const { nodes = [], links = [] } = this.dataValue || {};
+    
+    if (!nodes.length || !links.length) return;
+    
+    // Calculate responsive height based on data complexity
+    const nodeCount = nodes.length;
+    const linkCount = links.length;
+    const complexityFactor = Math.max(nodeCount + (linkCount * 0.5), 8);
+    const minHeight = 300;
+    const calculatedHeight = Math.max(complexityFactor * 25, minHeight);
+    
+    // Apply height to container element
+    this.element.style.minHeight = `${calculatedHeight}px`;
   }
 
   #draw() {
@@ -31,6 +48,12 @@ export default class extends Controller {
 
     const width = this.element.clientWidth || 600;
     const height = this.element.clientHeight || 400;
+    
+    // Dynamic margins based on container size
+    const marginTop = Math.max(16, height * 0.04);
+    const marginBottom = Math.max(16, height * 0.04);
+    const marginLeft = Math.max(16, width * 0.03);
+    const marginRight = Math.max(16, width * 0.03);
 
     const svg = d3
       .select(this.element)
@@ -38,12 +61,15 @@ export default class extends Controller {
       .attr("width", width)
       .attr("height", height);
 
+    // Calculate responsive node padding based on height
+    const responsiveNodePadding = Math.max(this.nodePaddingValue, height / 20);
+
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
-      .nodePadding(this.nodePaddingValue)
+      .nodePadding(responsiveNodePadding)
       .extent([
-        [16, 16],
-        [width - 16, height - 16],
+        [marginLeft, marginTop],
+        [width - marginRight, height - marginBottom],
       ]);
 
     const sankeyData = sankeyGenerator({

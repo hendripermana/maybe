@@ -15,7 +15,14 @@
   </div>
 
   <% if sankey_data[:links].present? %>
-    <div class="w-full h-96">
+    <% 
+      # Calculate responsive height based on data complexity
+      node_count = sankey_data[:nodes]&.length || 0
+      link_count = sankey_data[:links]&.length || 0
+      complexity_factor = [node_count + (link_count * 0.5), 8].max
+      chart_height = [complexity_factor * 25, 300].max.round
+    %>
+    <div class="w-full" style="height: <%= chart_height %>px;">
       <div
         data-controller="sankey-chart"
         data-sankey-chart-data-value="<%= sankey_data.to_json %>"

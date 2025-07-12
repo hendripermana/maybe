@@ -107,3 +107,27 @@
     @apply bg-white;
   }
 }
+
+/* ShadCN-inspired Card Utilities */
+@utility card-elevated {
+  @apply shadow-border-md hover:shadow-border-lg;
+  transition: all 0.2s ease-in-out;
+}
+
+@utility card-interactive {
+  @apply cursor-pointer transition-all duration-200;
+
+  &:hover {
+    @apply shadow-border-md;
+    transform: translateY(-1px);
+  }
+}
+
+@utility card-gradient {
+  @apply bg-gradient-to-br from-container to-container-inset;
+}
+
+@utility card-outlined {
+  @apply border border-secondary hover:border-primary;
+  transition: border-color 0.2s ease-in-out;
+}
