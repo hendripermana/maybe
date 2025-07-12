@@ -1,7 +1,7 @@
 if ENV["SENTRY_DSN"].present?
   Sentry.init do |config|
     config.dsn = ENV["SENTRY_DSN"]
-    config.environment = ENV["RAILS_ENV"] || Rails.env
+    config.environment = ENV["RAILS_ENV"]
     config.breadcrumbs_logger = [ :active_support_logger, :http_logger ]
     config.enabled_environments = %w[production]
 
@@ -16,26 +16,5 @@ if ENV["SENTRY_DSN"].present?
     config.profiles_sample_rate = 0.25
 
     config.profiler_class = Sentry::Vernier::Profiler
-
-    # Additional production-ready configuration
-    config.send_default_pii = false
-    config.max_breadcrumbs = 50
-    config.release = ENV["APP_VERSION"] || ENV["HEROKU_SLUG_COMMIT"] || "unknown"
-    
-    # Filter out common non-critical errors
-    config.excluded_exceptions += [
-      'ActionController::RoutingError',
-      'ActionController::InvalidAuthenticityToken',
-      'ActionDispatch::RemoteIp::IpSpoofAttackError',
-      'ActionController::BadRequest',
-      'ActionController::UnknownFormat',
-      'ActionController::NotImplemented'
-    ]
-
-    # Add app identification
-    config.tags = {
-      app: "maybe-finance",
-      environment: config.environment
-    }
   end
 end
