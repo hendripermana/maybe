@@ -7,8 +7,9 @@
 
     <div class="flex items-center gap-3">
       <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
+        <% period_options = Period.as_options + [["ALL", "all"]] %>
         <%= form.select :cashflow_period,
-                  Period.as_options,
+                  period_options,
                   { selected: period.key },
                   data: { "auto-submit-form-target": "auto" },
                   class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
@@ -73,16 +74,25 @@
       <!-- Fullscreen header -->
       <div class="flex items-center justify-between p-4 border-b border-secondary">
         <h2 class="text-xl font-medium text-primary">Cashflow</h2>
-        
-        <!-- Close button -->
-        <button 
-          data-action="click->cashflow-fullscreen#toggleFullscreen"
-          class="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary disabled:pointer-events-none disabled:opacity-50 border border-secondary bg-container hover:bg-container-hover text-primary h-9 w-9"
-          title="Exit fullscreen">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
+        <div class="flex items-center gap-3">
+          <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }, local: true do |form| %>
+            <% period_options = Period.as_options + [["ALL", "all"]] %>
+            <%= form.select :cashflow_period,
+                      period_options,
+                      { selected: (params[:cashflow_period] || period.key) },
+                      data: { "auto-submit-form-target": "auto" },
+                      class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0 min-w-[110px]" %>
+          <% end %>
+          <!-- Close button -->
+          <button 
+            data-action="click->cashflow-fullscreen#toggleFullscreen"
+            class="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary disabled:pointer-events-none disabled:opacity-50 border border-secondary bg-container hover:bg-container-hover text-primary h-9 w-9"
+            title="Exit fullscreen">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Fullscreen chart container -->

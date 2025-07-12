@@ -9,10 +9,15 @@ class PagesController < ApplicationController
 
     period_param = params[:cashflow_period]
     @cashflow_period = if period_param.present?
-      begin
-        Period.from_key(period_param)
-      rescue Period::InvalidKeyError
-        Period.last_30_days
+      if period_param == 'all'
+        # Use the oldest entry date for the family as the start, today as the end
+        Period.custom(start_date: Current.family.oldest_entry_date, end_date: Date.current)
+      else
+        begin
+          Period.from_key(period_param)
+        rescue Period::InvalidKeyError
+          Period.last_30_days
+        end
       end
     else
       Period.last_30_days
