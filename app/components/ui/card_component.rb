@@ -9,7 +9,7 @@ class Ui::CardComponent < ViewComponent::Base
     elevated: "bg-container shadow-border-md hover:shadow-border-lg transition-all duration-200 rounded-xl",
     outlined: "bg-container border border-secondary hover:border-primary transition-all duration-200 rounded-xl",
     ghost: "bg-transparent border-0 shadow-none rounded-xl",
-    gradient: "bg-gradient-to-br from-container to-container-inset shadow-border-xs rounded-xl",
+    gradient: "bg-gradient-to-br from-gray-50 to-gray-100 shadow-border-xs rounded-xl",
     interactive: "bg-container shadow-border-xs hover:shadow-border-md hover:bg-container-hover cursor-pointer transition-all duration-200 rounded-xl"
   }.freeze
 
