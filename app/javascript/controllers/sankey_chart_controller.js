@@ -7,7 +7,7 @@ export default class extends Controller {
   static values = {
     data: Object,
     nodeWidth: { type: Number, default: 15 },
-    nodePadding: { type: Number, default: 25 },
+    nodePadding: { type: Number, default: 20 },
     currencySymbol: { type: String, default: "$" }
   };
 
@@ -21,11 +21,6 @@ export default class extends Controller {
     this.resizeObserver?.disconnect();
   }
 
-  // Public method for fullscreen controller to trigger redraw
-  redraw() {
-    this.#draw();
-  }
-
   #draw() {
     const { nodes = [], links = [] } = this.dataValue || {};
 
@@ -37,9 +32,6 @@ export default class extends Controller {
     const width = this.element.clientWidth || 600;
     const height = this.element.clientHeight || 400;
 
-    // FIX MARGINS: Change from tiny 16px to proper margins
-    const margin = { top: 30, right: 50, bottom: 30, left: 50 };
-
     const svg = d3
       .select(this.element)
       .append("svg")
@@ -50,8 +42,8 @@ export default class extends Controller {
       .nodeWidth(this.nodeWidthValue)
       .nodePadding(this.nodePaddingValue)
       .extent([
-        [margin.left, margin.top],
-        [width - margin.right, height - margin.bottom],
+        [16, 16],
+        [width - 16, height - 16],
       ]);
 
     const sankeyData = sankeyGenerator({
@@ -98,14 +90,22 @@ export default class extends Controller {
         .attr("stop-color", targetStopColor);
     });
 
-    // Draw links - FIX LINK RENDERING: Use proper sankeyLinkHorizontal
+    // Draw links
     svg
       .append("g")
       .attr("fill", "none")
       .selectAll("path")
       .data(sankeyData.links)
       .join("path")
-      .attr("d", sankeyLinkHorizontal())
+      .attr("d", (d) => {
+        const sourceX = d.source.x1;
+        const targetX = d.target.x0;
+        const path = d3.linkHorizontal()({
+          source: [sourceX, d.y0],
+          target: [targetX, d.y1]
+        });
+        return path;
+      })
       .attr("stroke", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .append("title")
@@ -177,9 +177,9 @@ export default class extends Controller {
     const stimulusControllerInstance = this;
     node
       .append("text")
-      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 8 : d.x0 - 8))
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
-      .attr("dy", "0.35em")
+      .attr("dy", "-0.2em")
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
       .attr("class", "text-xs font-medium text-primary fill-current")
       .each(function (d) {
@@ -188,15 +188,14 @@ export default class extends Controller {
 
         // Node Name on the first line
         textElement.append("tspan")
-          .text(d.name)
-          .attr("font-size", "12px");
+          .text(d.name);
 
         // Financial details on the second line
         const financialDetailsTspan = textElement.append("tspan")
           .attr("x", textElement.attr("x"))
-          .attr("dy", "1.4em")
+          .attr("dy", "1.2em")
           .attr("class", "font-mono text-secondary")
-          .attr("font-size", "10px");
+          .style("font-size", "0.65rem"); // Explicitly set smaller font size
 
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
