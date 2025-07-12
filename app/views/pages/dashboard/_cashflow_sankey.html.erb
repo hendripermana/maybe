@@ -1,8 +1,7 @@
 <%# locals: (sankey_data:, period:) %>
-<%= render Ui::CardComponent.new(variant: :gradient, size: :md, class: "overflow-hidden") do %>
-  <div class="flex justify-between items-center gap-4 mb-6">
-    <h2 class="text-lg font-semibold text-primary inline-flex items-center gap-2">
-      <%= icon("activity", size: "sm", class: "text-blue-500") %>
+<div id="cashflow-sankey-chart">
+  <div class="flex justify-between items-center gap-4 px-4 mb-4">
+    <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
       Cashflow
     </h2>
 
@@ -11,58 +10,35 @@
                 Period.as_options,
                 { selected: period.key },
                 data: { "auto-submit-form-target": "auto" },
-                class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0 hover:border-primary transition-colors duration-200" %>
+                class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
     <% end %>
   </div>
 
   <% if sankey_data[:links].present? %>
-    <%# Dynamic height based on data complexity and viewport %>
-    <% 
-      node_count = sankey_data[:nodes]&.size || 0
-      link_count = sankey_data[:links]&.size || 0
-      complexity_score = node_count + (link_count * 0.5)
-      
-      # Calculate responsive height
-      base_height = 400
-      mobile_height = [320, base_height + (complexity_score * 8)].max
-      desktop_height = [400, base_height + (complexity_score * 12)].max
-      max_height = 600
-      
-      responsive_height = [mobile_height, max_height].min
-      desktop_responsive_height = [desktop_height, max_height].min
-    %>
-    
-    <div class="w-full transition-all duration-300 ease-in-out" 
-         style="height: <%= responsive_height %>px;"
-         data-height-sm="<%= responsive_height %>"
-         data-height-lg="<%= desktop_responsive_height %>">
+    <div class="w-full h-96">
       <div
         data-controller="sankey-chart"
         data-sankey-chart-data-value="<%= sankey_data.to_json %>"
         data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
-        class="w-full h-full rounded-lg border border-tertiary bg-gradient-to-br from-container to-container-inset shadow-border-xs"></div>
+        class="w-full h-full"></div>
     </div>
   <% else %>
-    <div class="h-[300px] lg:h-[340px] flex flex-col items-center justify-center">
-      <div class="space-y-4 text-center flex flex-col items-center">
+    <div class="h-[300px] lg:h-[340px] bg-container py-4 flex flex-col items-center justify-center">
+      <div class="space-y-3 text-center flex flex-col items-center">
         <%= render FilledIconComponent.new(
           variant: :container,
           icon: "activity" # cashflow placeholder icon
         ) %>
 
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-primary">No cash flow data for this time period</p>
-          <p class="text-secondary text-sm">Add transactions to display cash flow data or expand the time period</p>
-        </div>
-        
+        <p class="text-sm font-medium text-primary">No cash flow data for this time period</p>
+        <p class="text-secondary text-sm">Add transactions to display cash flow data or expand the time period</p>
         <%= render LinkComponent.new(
           text: "Add transaction",
           icon: "plus",
-          variant: "primary",
           href: new_transaction_path,
           frame: :modal
         ) %>
       </div>
     </div>
   <% end %>
-<% end %>
+</div>
