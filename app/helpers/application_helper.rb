@@ -1,5 +1,6 @@
 module ApplicationHelper
   include Pagy::Frontend
+  include Components::AccordionHelper
 
   def styled_form_with(**options, &block)
     options[:builder] = StyledFormBuilder

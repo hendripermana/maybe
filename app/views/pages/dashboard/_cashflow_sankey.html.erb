@@ -1,72 +1,42 @@
 <%# locals: (sankey_data:, period:) %>
-<div id="cashflow-sankey-chart" data-controller="cashflow-fullscreen" class="chart-container">
-  <div class="flex justify-between items-center gap-4 mb-6">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-elevated">
-        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-        </svg>
-      </div>
-      <div>
-        <h2 class="text-lg font-semibold text-primary">Cash Flow</h2>
-        <p class="text-sm text-secondary">Visualizing your money movement</p>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-3">
-      <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" } do |form| %>
-        <% period_options = Period.as_options + [["ALL", "all"]] %>
-        <%= form.select :cashflow_period,
-                  period_options,
-                  { selected: period.key },
-                  data: { "auto-submit-form-target": "auto" },
-                  class: "input-modern text-sm min-w-[120px]" %>
-      <% end %>
-
-      <!-- Fullscreen toggle button -->
-      <button 
-        data-cashflow-fullscreen-target="toggleButton"
-        data-action="click->cashflow-fullscreen#toggleFullscreen"
-        class="btn-modern-ghost h-9 w-9 !p-0 flex items-center justify-center"
-        title="Toggle fullscreen">
-        <!-- Expand icon -->
-        <svg data-cashflow-fullscreen-target="expandIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
-        </svg>
-        <!-- Collapse icon (initially hidden) -->
-        <svg data-cashflow-fullscreen-target="collapseIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-    </div>
-  </div>
-
+<div id="cashflow-sankey-chart" class="chart-container dashboard-section">
   <!-- Regular container -->
-  <div data-cashflow-fullscreen-target="regularContainer" class="w-full">
+  <div data-cashflow-fullscreen-target="regularContainer" class="w-full regular-chart-container">
     <% if sankey_data[:links].present? %>
-      <div class="w-full h-[500px] lg:h-[600px] rounded-lg border border-gray-700/50 dark:border-gray-600/50 bg-surface-inset/30 dark:bg-gray-800/30 p-4">
+      <div class="relative w-full h-full">
+        <!-- Loading overlay (initially hidden) -->
+        <div id="sankey-loading" class="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg z-10" style="display: none;">
+          <div class="flex flex-col items-center space-y-3">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p class="text-sm text-muted-foreground">Loading cash flow analysis...</p>
+          </div>
+        </div>
+        
         <div
           data-controller="sankey-chart"
           data-sankey-chart-data-value="<%= sankey_data.to_json %>"
           data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
           data-cashflow-fullscreen-target="chartContainer"
-          class="w-full h-full rounded-md hover:bg-surface-hover/20 dark:hover:bg-gray-700/20 transition-colors duration-300"></div>
+          class="w-full h-full sankey-svg-container chart-transition"
+          style="height: 540px;">
+        </div>
       </div>
     <% else %>
-      <div class="h-[300px] lg:h-[340px] bg-container dark:bg-[#1a1a1a] py-4 flex flex-col items-center justify-center">
-        <div class="space-y-3 text-center flex flex-col items-center">
-          <%= render FilledIconComponent.new(
-            variant: :container,
-            icon: "activity" # cashflow placeholder icon
-          ) %>
+      <div class="h-full flex flex-col items-center justify-center" style="height: 540px;">
+        <div class="space-y-4 text-center flex flex-col items-center">
+          <%= icon "activity", size: "lg", class: "text-muted-foreground" %>
 
-          <p class="text-sm font-medium text-primary">No cash flow data for this time period</p>
-          <p class="text-secondary text-sm">Add transactions to display cash flow data or expand the time period</p>
-          <%= render LinkComponent.new(
+          <div>
+            <p class="text-sm font-medium text-foreground">No cash flow data for this time period</p>
+            <p class="text-muted-foreground text-sm">Add transactions to display cash flow data or expand the time period</p>
+          </div>
+          
+          <%= render Ui::ButtonComponent.new(
             text: "Add transaction",
             icon: "plus",
             href: new_transaction_path,
-            frame: :modal
+            variant: :default,
+            size: :sm
           ) %>
         </div>
       </div>
@@ -76,18 +46,16 @@
   <!-- Fullscreen overlay -->
   <div 
     data-cashflow-fullscreen-target="fullscreenOverlay"
-    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden">
+    class="fullscreen-overlay hidden">
     
-    <div data-cashflow-fullscreen-target="fullscreenContainer" class="modal-modern w-full h-full !rounded-none flex flex-col">
+    <div data-cashflow-fullscreen-target="fullscreenContainer" class="fullscreen-container bg-background">
       <!-- Fullscreen header -->
-      <div class="flex items-center justify-between p-6 border-b border-secondary/50 dark:border-gray-600/50">
+      <div class="flex items-center justify-between p-6 border-b border-border bg-card">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
+          <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+            <%= icon "activity", size: "sm", class: "text-white" %>
           </div>
-          <h2 class="text-xl font-semibold text-primary">Cash Flow Analysis</h2>
+          <h2 class="text-xl font-semibold text-foreground">Cash Flow Analysis</h2>
         </div>
         <div class="flex items-center gap-3">
           <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }, local: true do |form| %>
@@ -101,43 +69,40 @@
           <!-- Close button -->
           <button 
             data-action="click->cashflow-fullscreen#toggleFullscreen"
-            class="btn-modern-ghost h-9 w-9 !p-0 flex items-center justify-center"
+            class="btn-modern-ghost h-9 w-9 p-0 flex items-center justify-center rounded-md border border-border hover:bg-accent transition-colors"
             title="Exit fullscreen">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
+            <%= icon "x", size: "sm", class: "text-foreground" %>
           </button>
         </div>
       </div>
 
       <!-- Fullscreen chart container -->
-      <div class="flex-1 p-6 bg-gradient-to-br from-container to-container-hover dark:from-[#1a1a1a] dark:to-gray-800">
+      <div class="fullscreen-chart-container">
         <% if sankey_data[:links].present? %>
-          <div class="w-full h-full bg-container dark:bg-[#1a1a1a] rounded-xl border border-gray-700/50 dark:border-gray-600/50 shadow-elevated p-4">
+          <div class="w-full h-full bg-card rounded-xl border border-border shadow-sm p-6">
             <div
               data-controller="sankey-chart"
               data-sankey-chart-data-value="<%= sankey_data.to_json %>"
               data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
-              class="w-full h-full"></div>
+              class="w-full h-full sankey-svg-container chart-transition"
+              style="min-height: 600px;">
+            </div>
           </div>
         <% else %>
-          <div class="h-full bg-container dark:bg-[#1a1a1a] rounded-xl border border-gray-700/50 dark:border-gray-600/50 shadow-elevated py-8 flex flex-col items-center justify-center">
+          <div class="h-full bg-card rounded-xl border border-border shadow-sm py-8 flex flex-col items-center justify-center">
             <div class="space-y-4 text-center flex flex-col items-center">
-              <%= render FilledIconComponent.new(
-                variant: :container,
-                icon: "activity"
-              ) %>
+              <%= icon "activity", size: "lg", class: "text-muted-foreground" %>
 
               <div class="space-y-2">
-                <p class="text-lg font-semibold text-primary">No cash flow data for this time period</p>
-                <p class="text-secondary">Add transactions to display cash flow data or expand the time period</p>
+                <p class="text-lg font-semibold text-foreground">No cash flow data for this time period</p>
+                <p class="text-muted-foreground">Add transactions to display cash flow data or expand the time period</p>
               </div>
-              <%= render LinkComponent.new(
+              <%= render Ui::ButtonComponent.new(
                 text: "Add transaction",
                 icon: "plus",
                 href: new_transaction_path,
-                frame: :modal,
-                class: "btn-modern-primary"
+                variant: :default,
+                size: :sm
               ) %>
             </div>
           </div>

@@ -12,53 +12,133 @@ export default class extends Controller {
   };
 
   connect() {
-    this.resizeObserver = new ResizeObserver(() => this.#draw());
+    console.log("🔥 Sankey chart controller connected!");
+    console.log("📊 Data value:", this.dataValue);
+    console.log("💱 Currency:", this.currencySymbolValue);
+    
+    // Prevent multiple instances rendering at the same time
+    if (this.isDrawing) {
+      console.log("⏳ Chart already drawing, skipping...");
+      return;
+    }
+    
+    this.resizeObserver = new ResizeObserver(() => {
+      // Debounce resize events
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => this.#draw(), 100);
+    });
     this.resizeObserver.observe(this.element);
-    this.#draw();
+    
+    // Small delay to ensure element is properly sized
+    setTimeout(() => this.#draw(), 50);
+  }
+
+  showLoading() {
+    const loadingElement = document.getElementById('sankey-loading');
+    if (loadingElement) {
+      loadingElement.style.display = 'flex';
+    }
+  }
+
+  hideLoading() {
+    const loadingElement = document.getElementById('sankey-loading');
+    if (loadingElement) {
+      loadingElement.style.display = 'none';
+    }
   }
 
   disconnect() {
+    clearTimeout(this.resizeTimeout);
     this.resizeObserver?.disconnect();
+    this.isDrawing = false;
   }
 
   // Public method for fullscreen controller to trigger redraw
   redraw() {
-    this.#draw();
+    // Small delay to ensure container sizing is updated
+    setTimeout(() => this.#draw(), 100);
   }
 
   #draw() {
+    if (this.isDrawing) {
+      console.log("⏳ Already drawing, skipping duplicate call");
+      return;
+    }
+    
+    this.isDrawing = true;
+    console.log("🎨 Drawing sankey chart...");
+    
     const { nodes = [], links = [] } = this.dataValue || {};
+    console.log("📈 Nodes:", nodes.length, "Links:", links.length);
 
-    if (!nodes.length || !links.length) return;
+    if (!nodes.length || !links.length) {
+      console.log("❌ No data available for sankey chart");
+      this.hideLoading();
+      this.isDrawing = false;
+      return;
+    }
 
     // Clear previous SVG
     d3.select(this.element).selectAll("svg").remove();
 
-    const width = this.element.clientWidth || 600;
-    const height = this.element.clientHeight || 400;
+    // Get actual dimensions, ensuring it fills the container properly like a magical creature
+    const containerRect = this.element.getBoundingClientRect();
+    
+    // Use the FULL available space from the container - be the shape of the container
+    const availableWidth = this.element.offsetWidth || containerRect.width || 600;
+    const availableHeight = this.element.offsetHeight || containerRect.height || 540;
+    
+    // Chart should be exactly the size of its container (like the magical creature)
+    const width = availableWidth;
+    const height = availableHeight;
+    
+    console.log("📏 Chart dimensions (creature size):", width, "x", height);
+    console.log("📦 Container dimensions (room size):", availableWidth, "x", availableHeight);
 
-    // FIX MARGINS: Change from tiny 16px to proper margins
-    const margin = { top: 30, right: 50, bottom: 30, left: 50 };
+    // Minimal margins to maximize chart area - creature fills almost the entire space
+    const margin = { 
+      top: 20,
+      right: 60, 
+      bottom: 20, 
+      left: 60 
+    };
+    
+    // Calculate the actual drawing area
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+    
+    console.log("📐 Margins (minimal):", margin);
+    console.log("📏 Inner dimensions (creature body):", innerWidth, "x", innerHeight);
 
     const svg = d3
       .select(this.element)
       .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .style("background", "transparent"); // Ensure SVG background is transparent to inherit theme
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .style("background", "transparent")
+      .style("overflow", "visible")
+      .style("width", "100%")
+      .style("height", "100%")
+      .style("max-width", "none")
+      .style("max-height", "none");
 
     const sankeyGenerator = sankey()
       .nodeWidth(this.nodeWidthValue)
       .nodePadding(this.nodePaddingValue)
       .extent([
         [margin.left, margin.top],
-        [width - margin.right, height - margin.bottom],
+        [margin.left + innerWidth, margin.top + innerHeight],
       ]);
 
     const sankeyData = sankeyGenerator({
       nodes: nodes.map((d) => Object.assign({}, d)),
       links: links.map((d) => Object.assign({}, d)),
     });
+
+    console.log("✅ Sankey data processed, rendering...");
+
+    // Hide loading once we start rendering
+    this.hideLoading();
 
     // Define gradients for links
     const defs = svg.append("defs");
@@ -99,8 +179,8 @@ export default class extends Controller {
         .attr("stop-color", targetStopColor);
     });
 
-    // Draw links - Clean approach with subtle hover effects
-    svg
+    // Draw links - Clean approach with enhanced hover effects
+    const linkElements = svg
       .append("g")
       .attr("fill", "none")
       .selectAll("path")
@@ -110,23 +190,38 @@ export default class extends Controller {
       .attr("stroke", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .style("cursor", "pointer")
-      .style("opacity", 0.8)
+      .style("opacity", 0.7) // Start visible instead of 0
       .on("mouseenter", function(event, d) {
+        // Highlight this link
         d3.select(this)
           .transition()
-          .duration(200)
+          .duration(150) // Faster animation
           .style("opacity", 1)
-          .attr("stroke-width", (d) => Math.max(1, d.width * 1.05));
+          .attr("stroke-width", (d) => Math.max(2, d.width * 1.1));
+        
+        // Dim other links
+        linkElements.filter(link => link !== d)
+          .transition()
+          .duration(150)
+          .style("opacity", 0.3);
       })
       .on("mouseleave", function(event, d) {
-        d3.select(this)
+        // Reset all links
+        linkElements
           .transition()
-          .duration(200)
-          .style("opacity", 0.8)
+          .duration(200) // Faster reset
+          .style("opacity", 0.7) // Back to default visible state
           .attr("stroke-width", (d) => Math.max(1, d.width));
       })
       .append("title")
       .text((d) => `${nodes[d.source.index].name} → ${nodes[d.target.index].name}: ${this.currencySymbolValue}${Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${d.percentage}%)`);
+
+    // Animate links appearing - faster animation
+    linkElements
+      .transition()
+      .duration(600) // Faster from 1000ms
+      .delay((d, i) => i * 25) // Faster stagger from 50ms
+      .style("opacity", 0.7); // End at visible state
 
     // Draw nodes
     const node = svg
@@ -137,7 +232,7 @@ export default class extends Controller {
 
     const cornerRadius = 8;
 
-    node.append("path")
+    const nodeRects = node.append("path")
       .attr("d", (d) => {
         const x0 = d.x0;
         const y0 = d.y0;
@@ -183,24 +278,35 @@ export default class extends Controller {
       .attr("fill", (d) => d.color || "var(--color-gray-400)")
       .attr("stroke", "none")
       .style("cursor", "pointer")
-      .style("opacity", 0.9)
+      .style("opacity", 0)
+      .style("transform", "scale(0.8)")
       .on("mouseenter", function(event, d) {
         d3.select(this)
           .transition()
           .duration(200)
           .style("opacity", 1)
-          .attr("transform", "scale(1.02)");
+          .style("transform", "scale(1.05)")
+          .attr("filter", "drop-shadow(0 4px 8px rgba(0,0,0,0.1))");
       })
       .on("mouseleave", function(event, d) {
         d3.select(this)
           .transition()
           .duration(200)
           .style("opacity", 0.9)
-          .attr("transform", "scale(1)");
+          .style("transform", "scale(1)")
+          .attr("filter", "none");
       });
 
+    // Animate nodes appearing - faster animation
+    nodeRects
+      .transition()
+      .duration(500) // Faster from 800ms
+      .delay((d, i) => i * 50) // Faster stagger from 100ms
+      .style("opacity", 0.9)
+      .style("transform", "scale(1)");
+
     const stimulusControllerInstance = this;
-    node
+    const nodeLabels = node
       .append("text")
       .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 8 : d.x0 - 8))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
@@ -209,6 +315,7 @@ export default class extends Controller {
       .attr("class", "text-xs font-medium text-primary fill-current")
       .style("user-select", "none")
       .style("pointer-events", "none")
+      .style("opacity", 0)
       .each(function (d) {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();
@@ -228,5 +335,15 @@ export default class extends Controller {
         financialDetailsTspan.append("tspan")
           .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       });
+
+    // Animate labels appearing - faster animation
+    nodeLabels
+      .transition()
+      .duration(400) // Faster from 600ms
+      .delay((d, i) => 200 + i * 50) // Start earlier and faster stagger
+      .style("opacity", 1);
+
+    console.log("🎉 Sankey chart rendered successfully!");
+    this.isDrawing = false; // Reset flag when done
   }
 } 

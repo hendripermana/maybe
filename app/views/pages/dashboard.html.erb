@@ -23,33 +23,109 @@
   </div>
 <% end %>
 
-<div class="w-full pb-24 min-h-screen">
+<div class="dashboard-page w-full min-h-screen space-y-6">
   <% if Current.family.accounts.any? %>
+    <!-- Dashboard Stats Overview -->
+    <section>
+      <%= render Dashboard::StatsComponent.new(balance_sheet: @balance_sheet) %>
+    </section>
+    
     <!-- Net Worth Chart Section -->
-    <section class="chart-container bg-container dark:bg-[#1a1a1a] shadow-elevated rounded-xl border border-secondary dark:border-gray-600 p-6 mb-6">
-      <%= render partial: "pages/dashboard/net_worth_chart", locals: {
-        balance_sheet: @balance_sheet,
-        period: @period
-      } %>
+    <section>
+      <div class="bg-card text-card-foreground border rounded-xl shadow-sm overflow-hidden min-h-[500px]">
+        <div class="p-6 border-b border-border">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                <%= icon("trending-up", size: "sm") %>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-foreground">Net Worth Trend</h3>
+                <p class="text-sm text-muted-foreground">Track your financial growth over time</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <%= form_with(url: root_path, method: :get, data: { controller: "auto-submit-form" }, html: { class: "m-0" }) do |form|
+                form.select :period,
+                          Period.as_options,
+                          { selected: @period.key },
+                          data: { "auto-submit-form-target": "auto" },
+                          class: "input-modern text-xs h-9 min-w-[100px] px-3"
+              end %>
+            </div>
+          </div>
+        </div>
+        <div class="p-6" style="height: 400px;">
+          <%= render partial: "pages/dashboard/net_worth_chart", locals: { balance_sheet: @balance_sheet, period: @period } %>
+        </div>
+      </div>
     </section>
     
     <!-- Balance Sheet Grid (Assets & Liabilities) -->
-    <section class="mt-6 mb-6">
-      <%= render "pages/dashboard/balance_sheet", balance_sheet: @balance_sheet %>
+    <section>
+      <div class="space-y-6">
+        <%= render partial: "pages/dashboard/balance_sheet", locals: { balance_sheet: @balance_sheet } %>
+      </div>
     </section>
 
-    <!-- Cash Flow Sankey Chart (tanpa margin bawah) -->
+    <!-- Cash Flow Sankey Chart -->
     <%= turbo_frame_tag "cashflow_sankey_section" do %>
-      <section class="chart-container bg-container dark:bg-[#1a1a1a] shadow-elevated rounded-xl border border-secondary dark:border-gray-600 p-6">
-        <%= render partial: "pages/dashboard/cashflow_sankey", locals: {
-          sankey_data: @cashflow_sankey_data,
-          period: @cashflow_period
-        } %>
+      <section data-controller="cashflow-fullscreen">
+        <div class="bg-card text-card-foreground border rounded-xl shadow-sm overflow-hidden">
+          <div class="p-6 border-b border-border">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                  <%= icon("activity", size: "sm") %>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-foreground">Cash Flow Analysis</h3>
+                  <p class="text-sm text-muted-foreground">Visualize your money movement</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <%= form_with(url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }) do |form|
+                  period_options = Period.as_options + [["ALL", "all"]]
+                  form.select :cashflow_period,
+                            period_options,
+                            { selected: @cashflow_period.key },
+                            data: { "auto-submit-form-target": "auto" },
+                            class: "input-modern text-xs h-9 min-w-[100px] px-3"
+                end %>
+                
+                <!-- Fullscreen toggle button -->
+                <button 
+                  data-cashflow-fullscreen-target="toggleButton"
+                  data-action="click->cashflow-fullscreen#toggleFullscreen"
+                  class="btn-modern-ghost h-9 w-9 p-0 flex items-center justify-center rounded-md border border-border hover:bg-accent transition-colors"
+                  title="Toggle fullscreen">
+                  <!-- Expand icon -->
+                  <span data-cashflow-fullscreen-target="expandIcon">
+                    <%= icon "external-link", size: "sm", class: "text-foreground" %>
+                  </span>
+                  <!-- Collapse icon (initially hidden) -->
+                  <span data-cashflow-fullscreen-target="collapseIcon" class="hidden">
+                    <%= icon "x", size: "sm", class: "text-foreground" %>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-section" style="height: 580px; padding: 24px; padding-top: 0;">
+            <%= render partial: "pages/dashboard/cashflow_sankey", locals: { sankey_data: @cashflow_sankey_data, period: @cashflow_period } %>
+          </div>
+        </div>
       </section>
     <% end %>
   <% else %>
-    <section class="card-modern p-8 bg-container dark:bg-[#1a1a1a] shadow-elevated rounded-xl border border-secondary dark:border-gray-600">
-      <%= render "pages/dashboard/no_accounts_graph_placeholder" %>
+    <section>
+      <%= render Ui::CardComponent.new(
+        variant: :elevated,
+        size: :lg,
+        class: "text-center"
+      ) do %>
+        <%= render "pages/dashboard/no_accounts_graph_placeholder" %>
+      <% end %>
     </section>
   <% end %>
 </div>

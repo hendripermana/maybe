@@ -1,4 +1,86 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+}
 
 @import "./maybe-design-system.css";
 
@@ -172,4 +254,151 @@
   &::-webkit-scrollbar-thumb:hover {
     background: #a6a6a6;
   }
+}
+
+/* Sankey Chart Styles - Make it like a magical creature that adapts to any container */
+.chart-container {
+  position: relative;
+  overflow: visible !important; /* Allow chart to expand without being cut */
+  width: 100%;
+  height: 100%;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.chart-container svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible !important; /* Critical: prevent cut-offs */
+}
+
+/* Fullscreen overlay styles */
+.fullscreen-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.fullscreen-container {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.fullscreen-chart-container {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 1.5rem !important;
+}
+
+.fullscreen-chart-container .chart-container {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 600px !important;
+}
+
+/* Prevent body scroll when fullscreen */
+body.fullscreen-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+html.fullscreen-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+/* Regular chart container sizing - creature's house */
+.regular-chart-container {
+  height: 540px !important;
+  width: 100% !important;
+  overflow: visible !important; /* Allow creature to expand */
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.regular-chart-container .chart-container {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+/* Dashboard section container fixes */
+.dashboard-section {
+  overflow: visible !important; /* Critical: allow chart to expand */
+  width: 100%;
+  height: 100%;
+  padding: 0 !important;
+}
+
+.dashboard-section .chart-container {
+  position: relative;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  overflow: visible !important;
+}
+
+/* Fix potential scroll bars and ensure responsiveness */
+.sankey-svg-container {
+  overflow: visible !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Fix white space at bottom - ensure proper page ending */
+.dashboard-page {
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 0 !important; /* Remove all bottom padding */
+  margin-bottom: 0 !important;
+}
+
+.dashboard-page section:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Global fixes for white space */
+body {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Override main padding for dashboard pages */
+main:has(.dashboard-page) {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Ensure no extra space is added by any container */
+.space-y-6 > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Animation improvements */
+.chart-transition {
+  transition: all 0.3s ease-in-out !important;
+}
+
+/* Fix white space at bottom */
+.dashboard-page {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.dashboard-page section:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 2rem !important;
 }

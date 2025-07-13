@@ -1,6 +1,7 @@
 {
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.3"
+		"@biomejs/biome": "^1.9.3",
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"name": "maybe",
 	"version": "1.0.0",

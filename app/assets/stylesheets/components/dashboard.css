@@ -1,0 +1,188 @@
+/* Modern Dashboard Styles with ShadCN Design Principles */
+
+/* Dashboard Grid Improvements */
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Enhanced Card Animations */
+.dashboard-card {
+  transition: all 0.3s ease-out;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Progressive Enhancement for Charts */
+.chart-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-container::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chart-container:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced Progress Bars */
+.progress-segment {
+  transition: all 0.5s ease-out;
+  position: relative;
+}
+
+.progress-segment::after {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.2);
+  content: '';
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.progress-segment:hover {
+  opacity: 0.8;
+}
+
+.progress-segment:hover::after {
+  opacity: 1;
+}
+
+/* Trend Indicators */
+.trend-positive {
+  color: #059669;
+}
+
+.trend-negative {
+  color: #dc2626;
+}
+
+.trend-neutral {
+  color: #6b7280;
+}
+
+/* Dark mode trend colors */
+@media (prefers-color-scheme: dark) {
+  .trend-positive {
+    color: #34d399;
+  }
+  
+  .trend-negative {
+    color: #f87171;
+  }
+  
+  .trend-neutral {
+    color: #9ca3af;
+  }
+}
+
+/* Enhanced Empty States */
+.empty-state {
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 5rem;
+  height: 5rem;
+  background: linear-gradient(135deg, #f3f4f6, rgba(243, 244, 246, 0.5));
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Loading States */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f3f4f6, #e5e7eb, #f3f4f6);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Smooth Focus States */
+.dashboard-interactive:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .chart-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Dark Mode Improvements */
+@media (prefers-color-scheme: dark) {
+  .chart-container::before {
+    background: linear-gradient(
+      135deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.02) 50%,
+      transparent 100%
+    );
+  }
+  
+  .empty-state-icon {
+    background: linear-gradient(135deg, #374151, rgba(55, 65, 81, 0.5));
+  }
+  
+  .loading-shimmer {
+    background: linear-gradient(90deg, #374151, #4b5563, #374151);
+  }
+  
+  .dashboard-interactive:focus {
+    box-shadow: 0 0 0 2px #60a5fa, 0 0 0 4px rgba(96, 165, 250, 0.2);
+  }
+}

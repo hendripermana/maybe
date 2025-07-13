@@ -1,0 +1,14 @@
+<%# Dashboard Stats Overview Template %>
+<div <%= html_options %>>
+  <% stats_data.each do |stat| %>
+    <%= render Dashboard::CardComponent.new(
+      title: stat[:title],
+      value: stat[:value],
+      description: stat[:description],
+      icon_name: stat[:icon],
+      variant: stat[:variant],
+      trend: stat[:trend],
+      loading: stat[:loading]
+    ) %>
+  <% end %>
+</div>
