@@ -6,7 +6,7 @@
   <div class="flex justify-between items-start gap-4 mb-6">
     <div class="space-y-3">
       <div class="space-y-2">
-        <p class="text-3xl font-bold text-foreground <%= "animate-pulse" if balance_sheet.syncing? %>">
+        <p class="text-3xl font-bold text-foreground <%= "loading-shimmer" if balance_sheet.syncing? %>">
           <%= series.trend.current.format %>
         </p>
 

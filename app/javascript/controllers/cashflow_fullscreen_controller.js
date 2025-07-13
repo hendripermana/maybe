@@ -46,6 +46,13 @@ export default class extends Controller {
     
     // Store original overflow style
     this.originalBodyOverflow = document.body.style.overflow;
+
+    // Restore fullscreen state if it was active before Turbo Frame update
+    if (window.sessionStorage.getItem('maybe-cashflow-fullscreen') === 'true') {
+      setTimeout(() => {
+        this.enterFullscreen();
+      }, 50);
+    }
   }
 
   disconnect() {
@@ -67,7 +74,13 @@ export default class extends Controller {
     return currentState;
   }
 
-  toggleFullscreen() {
+  toggleFullscreen(event) {
+    // Prevent event bubbling to avoid double-triggering
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     console.log("🔄 Toggle fullscreen clicked! Current state:", this.isFullscreen);
     console.log("Has targets:", {
       fullscreenOverlay: this.hasFullscreenOverlayTarget,
@@ -112,6 +125,9 @@ export default class extends Controller {
       return;
     }
     
+    // Persist fullscreen state
+    window.sessionStorage.setItem('maybe-cashflow-fullscreen', 'true');
+
     // Hide regular container and show fullscreen overlay
     this.fullscreenOverlayTarget.classList.remove('hidden');
     
@@ -151,6 +167,9 @@ export default class extends Controller {
       return;
     }
     
+    // Remove fullscreen state
+    window.sessionStorage.removeItem('maybe-cashflow-fullscreen');
+
     // Animate out
     this.fullscreenOverlayTarget.style.transition = 'opacity 0.15s ease-in, transform 0.15s ease-in';
     this.fullscreenOverlayTarget.style.opacity = '0';
@@ -187,6 +206,7 @@ export default class extends Controller {
 
   handleEscapeKey(event) {
     if (event.key === 'Escape' && this.isFullscreen) {
+      event.preventDefault();
       this.exitFullscreen();
     }
   }

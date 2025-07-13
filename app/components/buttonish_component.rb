@@ -1,15 +1,15 @@
 class ButtonishComponent < ViewComponent::Base
   VARIANTS = {
     primary: {
-      container_classes: "text-inverse bg-inverse hover:bg-inverse-hover disabled:bg-gray-500 theme-dark:disabled:bg-gray-400",
+      container_classes: "text-inverse bg-inverse hover:bg-inverse-hover disabled:bg-gray-500 [data-theme=dark]:disabled:bg-gray-400",
       icon_classes: "fg-inverse"
     },
     secondary: {
-      container_classes: "text-primary bg-gray-50 theme-dark:bg-gray-700 hover:bg-gray-100 theme-dark:hover:bg-gray-600 disabled:bg-gray-200 theme-dark:disabled:bg-gray-600",
+      container_classes: "text-primary bg-gray-50 [data-theme=dark]:bg-gray-700 hover:bg-gray-100 [data-theme=dark]:hover:bg-gray-600 disabled:bg-gray-200 [data-theme=dark]:disabled:bg-gray-600",
       icon_classes: "fg-primary"
     },
     destructive: {
-      container_classes: "text-inverse bg-red-500 theme-dark:bg-red-400 hover:bg-red-600 theme-dark:hover:bg-red-500 disabled:bg-red-200 theme-dark:disabled:bg-red-600",
+      container_classes: "text-inverse bg-red-500 [data-theme=dark]:bg-red-400 hover:bg-red-600 [data-theme=dark]:hover:bg-red-500 disabled:bg-red-200 [data-theme=dark]:disabled:bg-red-600",
       icon_classes: "fg-white"
     },
     outline: {
@@ -17,15 +17,15 @@ class ButtonishComponent < ViewComponent::Base
       icon_classes: "fg-gray"
     },
     outline_destructive: {
-      container_classes: "text-destructive border border-secondary bg-transparent hover:bg-gray-100 theme-dark:hover:bg-gray-700",
+      container_classes: "text-destructive border border-secondary bg-transparent hover:bg-gray-100 [data-theme=dark]:hover:bg-gray-700",
       icon_classes: "fg-gray"
     },
     ghost: {
-      container_classes: "text-primary bg-transparent hover:bg-gray-100 theme-dark:hover:bg-gray-700",
+      container_classes: "text-primary bg-transparent hover:bg-gray-100 [data-theme=dark]:hover:bg-gray-700",
       icon_classes: "fg-gray"
     },
     icon: {
-      container_classes: "hover:bg-gray-100 theme-dark:hover:bg-gray-700",
+      container_classes: "hover:bg-gray-100 [data-theme=dark]:hover:bg-gray-700",
       icon_classes: "fg-gray"
     },
     icon_inverse: {

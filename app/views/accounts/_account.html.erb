@@ -11,7 +11,8 @@
             <span>
               <%= account.name %>
             </span>
-            <span class="text-red-500 animate-pulse">
+            <span class="text-red-500 loading-dots">
+              <div></div><div></div><div></div>
               (deletion in progress...)
             </span>
           </p>
@@ -33,7 +34,7 @@
       <% if account.draft? %>
         <!-- Balance hidden for draft accounts -->
       <% elsif account.syncing? %>
-        <div class="w-16 h-6 bg-loader rounded-full animate-pulse"></div>
+        <div class="w-16 h-6 loading-skeleton"></div>
       <% else %>
         <p class="text-sm font-medium <%= account.active? ? "text-primary" : "text-subdued" %>">
           <%= format_money account.balance_money %>

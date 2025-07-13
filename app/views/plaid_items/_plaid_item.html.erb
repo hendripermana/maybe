@@ -20,12 +20,15 @@
           <div class="flex items-center gap-2">
             <%= tag.p plaid_item.name, class: "font-medium text-primary" %>
             <% if plaid_item.scheduled_for_deletion? %>
-              <p class="text-destructive text-sm animate-pulse">(deletion in progress...)</p>
+              <p class="text-destructive text-sm loading-dots">
+                <div></div><div></div><div></div>
+                (deletion in progress...)
+              </p>
             <% end %>
           </div>
           <% if plaid_item.syncing? %>
             <div class="text-secondary flex items-center gap-1">
-              <%= icon "loader", size: "sm", class: "animate-pulse" %>
+              <div class="loading-spinner-sm"></div>
               <%= tag.span t(".syncing") %>
             </div>
           <% elsif plaid_item.requires_update? %>

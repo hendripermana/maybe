@@ -36,7 +36,7 @@
         <div class="p-6 border-b border-border">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+              <div class="p-2 rounded-lg bg-blue-100 text-blue-600 [data-theme=dark]:bg-blue-900/30 [data-theme=dark]:text-blue-400">
                 <%= icon("trending-up", size: "sm") %>
               </div>
               <div>
@@ -75,7 +75,7 @@
           <div class="p-6 border-b border-border">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
-                <div class="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                <div class="p-2 rounded-lg bg-blue-100 text-blue-600 [data-theme=dark]:bg-blue-900/30 [data-theme=dark]:text-blue-400">
                   <%= icon("activity", size: "sm") %>
                 </div>
                 <div>
@@ -84,14 +84,22 @@
                 </div>
               </div>
               <div class="flex items-center space-x-2">
-                <%= form_with(url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }) do |form|
-                  period_options = Period.as_options + [["ALL", "all"]]
-                  form.select :cashflow_period,
-                            period_options,
-                            { selected: @cashflow_period.key },
-                            data: { "auto-submit-form-target": "auto" },
-                            class: "input-modern text-xs h-9 min-w-[100px] px-3"
-                end %>
+                <%= form_with(url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }) do %>
+                  <div class="relative flex items-center">
+                    <select name="cashflow_period"
+                      data-auto-submit-form-target="auto"
+                      class="btn-modern-ghost h-9 rounded-md border border-border bg-card text-foreground text-xs min-w-[100px] px-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary appearance-none flex items-center"
+                      style="-webkit-appearance: none; -moz-appearance: none; appearance: none;">
+                      <% (Period.as_options + [["ALL", "all"]]).each do |label, value| %>
+                        <option value="<%= value %>" <%= 'selected' if value == @cashflow_period.key %>><%= label %></option>
+                      <% end %>
+                    </select>
+                    <!-- Custom chevron icon -->
+                    <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                  </div>
+                <% end %>
                 
                 <!-- Fullscreen toggle button -->
                 <button 
@@ -111,7 +119,7 @@
               </div>
             </div>
           </div>
-          <div class="dashboard-section" style="height: 580px; padding: 24px; padding-top: 0;">
+          <div class="dashboard-section min-h-[540px]">
             <%= render partial: "pages/dashboard/cashflow_sankey", locals: { sankey_data: @cashflow_sankey_data, period: @cashflow_period } %>
           </div>
         </div>

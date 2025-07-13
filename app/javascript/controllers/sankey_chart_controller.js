@@ -59,6 +59,12 @@ export default class extends Controller {
     setTimeout(() => this.#draw(), 100);
   }
 
+  // Public method for AJAX filter updates
+  updateData(newData) {
+    this.dataValue = newData;
+    this.redraw();
+  }
+
   #draw() {
     if (this.isDrawing) {
       console.log("⏳ Already drawing, skipping duplicate call");

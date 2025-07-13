@@ -1,7 +1,7 @@
 <%# locals: (sankey_data:, period:) %>
 <div id="cashflow-sankey-chart" class="chart-container dashboard-section">
   <!-- Regular container -->
-  <div data-cashflow-fullscreen-target="regularContainer" class="w-full regular-chart-container">
+  <div data-cashflow-fullscreen-target="regularContainer" class="w-full regular-chart-container bg-card rounded-xl">
     <% if sankey_data[:links].present? %>
       <div class="relative w-full h-full">
         <!-- Loading overlay (initially hidden) -->
@@ -11,7 +11,6 @@
             <p class="text-sm text-muted-foreground">Loading cash flow analysis...</p>
           </div>
         </div>
-        
         <div
           data-controller="sankey-chart"
           data-sankey-chart-data-value="<%= sankey_data.to_json %>"
@@ -42,28 +41,27 @@
       </div>
     <% end %>
   </div>
-
   <!-- Fullscreen overlay -->
   <div 
     data-cashflow-fullscreen-target="fullscreenOverlay"
-    class="fullscreen-overlay hidden">
-    
-    <div data-cashflow-fullscreen-target="fullscreenContainer" class="fullscreen-container bg-background">
+    class="fullscreen-overlay hidden fixed inset-0 z-50 w-screen h-screen flex items-center justify-center bg-black"
+    style="top:0;left:0;">
+    <div data-cashflow-fullscreen-target="fullscreenContainer" class="fullscreen-container bg-background w-full h-full flex flex-col">
       <!-- Fullscreen header -->
       <div class="flex items-center justify-between p-6 border-b border-border bg-card">
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-            <%= icon "activity", size: "sm", class: "text-white" %>
+            <%= icon "activity", size: "sm", class: "text-inverse" %>
           </div>
           <h2 class="text-xl font-semibold text-foreground">Cash Flow Analysis</h2>
         </div>
         <div class="flex items-center gap-3">
-          <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }, local: true do |form| %>
+          <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form cashflow-filter", cashflow_filter_target: "form", action: "submit->cashflow-filter#submit change->cashflow-filter#submit" , turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }, local: true do |form| %>
             <% period_options = Period.as_options + [["ALL", "all"]] %>
             <%= form.select :cashflow_period,
                       period_options,
                       { selected: (params[:cashflow_period] || period.key) },
-                      data: { "auto-submit-form-target": "auto" },
+                      data: { "auto-submit-form-target": "auto", cashflow_filter_target: "select" },
                       class: "input-modern text-sm min-w-[120px]" %>
           <% end %>
           <!-- Close button -->
@@ -75,9 +73,8 @@
           </button>
         </div>
       </div>
-
       <!-- Fullscreen chart container -->
-      <div class="fullscreen-chart-container">
+      <div class="fullscreen-chart-container flex-1 flex items-center justify-center w-full h-full">
         <% if sankey_data[:links].present? %>
           <div class="w-full h-full bg-card rounded-xl border border-border shadow-sm p-6">
             <div
@@ -85,14 +82,13 @@
               data-sankey-chart-data-value="<%= sankey_data.to_json %>"
               data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
               class="w-full h-full sankey-svg-container chart-transition"
-              style="min-height: 600px;">
+              style="min-height: 600px; height: 100%;">
             </div>
           </div>
         <% else %>
           <div class="h-full bg-card rounded-xl border border-border shadow-sm py-8 flex flex-col items-center justify-center">
             <div class="space-y-4 text-center flex flex-col items-center">
               <%= icon "activity", size: "lg", class: "text-muted-foreground" %>
-
               <div class="space-y-2">
                 <p class="text-lg font-semibold text-foreground">No cash flow data for this time period</p>
                 <p class="text-muted-foreground">Add transactions to display cash flow data or expand the time period</p>

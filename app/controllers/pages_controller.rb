@@ -9,7 +9,7 @@ class PagesController < ApplicationController
 
     period_param = params[:cashflow_period]
     @cashflow_period = if period_param.present?
-      if period_param == 'all'
+      if period_param == "all"
         # Use the oldest entry date for the family as the start, today as the end
         Period.custom(start_date: Current.family.oldest_entry_date, end_date: Date.current)
       else
@@ -30,6 +30,13 @@ class PagesController < ApplicationController
     @cashflow_sankey_data = build_cashflow_sankey_data(income_totals, expense_totals, family_currency)
 
     @breadcrumbs = [ [ "Home", root_path ], [ "Dashboard", nil ] ]
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: @cashflow_sankey_data
+      end
+    end
   end
 
   def changelog

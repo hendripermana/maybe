@@ -918,15 +918,27 @@
 
 /* Enhanced balance sheet card improvements */
 .bg-surface-inset {
-  @apply bg-gray-50 dark:bg-gray-700;
+  @apply bg-gray-50;
+}
+
+[data-theme="dark"] .bg-surface-inset {
+  @apply bg-gray-700;
 }
 
 .bg-surface-hover {
-  @apply bg-gray-50 dark:bg-gray-700;
+  @apply bg-gray-50;
+}
+
+[data-theme="dark"] .bg-surface-hover {
+  @apply bg-gray-700;
 }
 
 .bg-container-inset {
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-gray-100;
+}
+
+[data-theme="dark"] .bg-container-inset {
+  @apply bg-gray-700;
 }
 
 /* Ensure proper scrolling for account lists - removed height constraints */
@@ -941,15 +953,13 @@
   max-height: none;
 }
 
-/* Fix any remaining dark theme issues */
+/* Chart container theme fixes */
 .chart-container {
-  @apply bg-white dark:bg-[#1a1a1a];
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
 }
 
-.text-primary {
-  @apply text-gray-900 dark:text-white;
-}
-
-.text-secondary {
-  @apply text-gray-600 dark:text-gray-400;
+[data-theme="dark"] .chart-container {
+  background: var(--color-gray-900);
+  border-color: var(--color-gray-700);
 }
