@@ -23,24 +23,24 @@
   </div>
 <% end %>
 
-<div class="w-full space-y-8 pb-24 min-h-screen">
+<div class="w-full pb-24 min-h-screen">
   <% if Current.family.accounts.any? %>
     <!-- Net Worth Chart Section -->
-    <section class="chart-container bg-white dark:bg-gray-900 shadow-elevated rounded-xl border border-gray-200 dark:border-gray-600 p-6">
+    <section class="chart-container bg-container dark:bg-[#1a1a1a] shadow-elevated rounded-xl border border-secondary dark:border-gray-600 p-6 mb-6">
       <%= render partial: "pages/dashboard/net_worth_chart", locals: {
         balance_sheet: @balance_sheet,
         period: @period
       } %>
     </section>
     
-    <!-- Balance Sheet Grid with explicit spacing -->
-    <section class="space-y-6 pt-2">
+    <!-- Balance Sheet Grid (Assets & Liabilities) -->
+    <section class="mt-6 mb-6">
       <%= render "pages/dashboard/balance_sheet", balance_sheet: @balance_sheet %>
     </section>
 
-    <!-- Cash Flow Sankey Chart with explicit spacing -->
+    <!-- Cash Flow Sankey Chart (tanpa margin bawah) -->
     <%= turbo_frame_tag "cashflow_sankey_section" do %>
-      <section class="chart-container bg-white dark:bg-gray-900 shadow-elevated rounded-xl border border-gray-200 dark:border-gray-600 p-6 mt-2">
+      <section class="chart-container bg-container dark:bg-[#1a1a1a] shadow-elevated rounded-xl border border-secondary dark:border-gray-600 p-6">
         <%= render partial: "pages/dashboard/cashflow_sankey", locals: {
           sankey_data: @cashflow_sankey_data,
           period: @cashflow_period
@@ -48,7 +48,7 @@
       </section>
     <% end %>
   <% else %>
-    <section class="card-modern p-8 bg-container shadow-elevated rounded-xl border border-secondary">
+    <section class="card-modern p-8 bg-container dark:bg-[#1a1a1a] shadow-elevated rounded-xl border border-secondary dark:border-gray-600">
       <%= render "pages/dashboard/no_accounts_graph_placeholder" %>
     </section>
   <% end %>

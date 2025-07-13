@@ -44,16 +44,16 @@
   <!-- Regular container -->
   <div data-cashflow-fullscreen-target="regularContainer" class="w-full">
     <% if sankey_data[:links].present? %>
-      <div class="w-full h-[500px] lg:h-[600px] rounded-lg border border-gray-200/50 dark:border-gray-700/50 bg-gray-50/30 dark:bg-gray-800/30 p-4">
+      <div class="w-full h-[500px] lg:h-[600px] rounded-lg border border-gray-700/50 dark:border-gray-600/50 bg-surface-inset/30 dark:bg-gray-800/30 p-4">
         <div
           data-controller="sankey-chart"
           data-sankey-chart-data-value="<%= sankey_data.to_json %>"
           data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
           data-cashflow-fullscreen-target="chartContainer"
-          class="w-full h-full rounded-md hover:bg-gray-100/20 dark:hover:bg-gray-700/20 transition-colors duration-300"></div>
+          class="w-full h-full rounded-md hover:bg-surface-hover/20 dark:hover:bg-gray-700/20 transition-colors duration-300"></div>
       </div>
     <% else %>
-      <div class="h-[300px] lg:h-[340px] bg-container py-4 flex flex-col items-center justify-center">
+      <div class="h-[300px] lg:h-[340px] bg-container dark:bg-[#1a1a1a] py-4 flex flex-col items-center justify-center">
         <div class="space-y-3 text-center flex flex-col items-center">
           <%= render FilledIconComponent.new(
             variant: :container,
@@ -80,7 +80,7 @@
     
     <div data-cashflow-fullscreen-target="fullscreenContainer" class="modal-modern w-full h-full !rounded-none flex flex-col">
       <!-- Fullscreen header -->
-      <div class="flex items-center justify-between p-6 border-b border-secondary/50">
+      <div class="flex items-center justify-between p-6 border-b border-secondary/50 dark:border-gray-600/50">
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,9 +111,9 @@
       </div>
 
       <!-- Fullscreen chart container -->
-      <div class="flex-1 p-6 bg-gradient-to-br from-container to-container-hover">
+      <div class="flex-1 p-6 bg-gradient-to-br from-container to-container-hover dark:from-[#1a1a1a] dark:to-gray-800">
         <% if sankey_data[:links].present? %>
-          <div class="w-full h-full bg-container rounded-xl border border-secondary/50 shadow-elevated p-4">
+          <div class="w-full h-full bg-container dark:bg-[#1a1a1a] rounded-xl border border-gray-700/50 dark:border-gray-600/50 shadow-elevated p-4">
             <div
               data-controller="sankey-chart"
               data-sankey-chart-data-value="<%= sankey_data.to_json %>"
@@ -121,7 +121,7 @@
               class="w-full h-full"></div>
           </div>
         <% else %>
-          <div class="h-full bg-container rounded-xl border border-secondary/50 shadow-elevated py-8 flex flex-col items-center justify-center">
+          <div class="h-full bg-container dark:bg-[#1a1a1a] rounded-xl border border-gray-700/50 dark:border-gray-600/50 shadow-elevated py-8 flex flex-col items-center justify-center">
             <div class="space-y-4 text-center flex flex-col items-center">
               <%= render FilledIconComponent.new(
                 variant: :container,
