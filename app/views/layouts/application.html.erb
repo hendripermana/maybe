@@ -129,7 +129,11 @@
         <%= yield :page_header %>
       <% end %>
 
+<<<<<<< HEAD
       <div class="<%= 'pb-0' if controller_name == 'pages' && action_name == 'dashboard' %>">
+=======
+      <div class="<%= 'dashboard-main-content' if controller_name == 'pages' && action_name == 'dashboard' %>">
+>>>>>>> feature/modernation-design
         <%= yield %>
       </div>
     <% end %>

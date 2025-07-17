@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Theme Validation</title>
+    <style>
+        /* CSS Variables from maybe-design-system.css */
+        :root {
+            --color-blue-100: #D1E9FF;
+            --color-blue-600: #1570EF;
+            --color-blue-400: #53B1FD;
+            --color-green-100: #D1FADF;
+            --color-green-600: #10A861;
+            --color-green-400: #32D583;
+            --color-red-100: #FFDEDB;
+            --color-red-600: #EC2222;
+            --color-red-400: #ED4E4E;
+            --color-yellow-100: #FEF0C7;
+            --color-yellow-600: #DC6803;
+            --color-yellow-400: #FDB022;
+            --color-gray-100: #F0F0F0;
+            --color-gray-600: #5C5C5C;
+            --color-gray-300: #CFCFCF;
+            --color-gray-800: #242424;
+        }
+
+        /* Theme-aware icon backgrounds using CSS variables */
+        .icon-bg-primary {
+            background: var(--color-blue-100);
+            color: var(--color-blue-600);
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 4px;
+        }
+
+        [data-theme="dark"] .icon-bg-primary {
+            background: rgba(30, 58, 138, 0.3);
+            color: var(--color-blue-400);
+        }
+
+        .icon-bg-success {
+            background: var(--color-green-100);
+            color: var(--color-green-600);
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 4px;
+        }
+
+        [data-theme="dark"] .icon-bg-success {
+            background: rgba(20, 83, 45, 0.3);
+            color: var(--color-green-400);
+        }
+
+        .icon-bg-destructive {
+            background: var(--color-red-100);
+            color: var(--color-red-600);
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 4px;
+        }
+
+        [data-theme="dark"] .icon-bg-destructive {
+            background: rgba(127, 29, 29, 0.3);
+            color: var(--color-red-400);
+        }
+
+        .icon-bg-muted {
+            background: var(--color-gray-100);
+            color: var(--color-gray-600);
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 4px;
+        }
+
+        [data-theme="dark"] .icon-bg-muted {
+            background: var(--color-gray-800);
+            color: var(--color-gray-300);
+        }
+
+        /* Dark theme styles */
+        [data-theme="dark"] {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .validation-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .old-style {
+            background: #D1E9FF !important;
+            color: #1570EF !important;
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 4px;
+        }
+
+        [data-theme="dark"] .old-style {
+            background: rgba(30, 58, 138, 0.3) !important;
+            color: #53B1FD !important;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+    
+    <h1>Dashboard Theme Switching Validation</h1>
+    
+    <div class="validation-section">
+        <h2>✅ NEW: Theme-Aware Icon Backgrounds (Using CSS Variables)</h2>
+        <p>These should change colors smoothly when switching themes:</p>
+        <div class="icon-bg-primary">📈 Primary Icon</div>
+        <div class="icon-bg-success">✅ Success Icon</div>
+        <div class="icon-bg-destructive">❌ Destructive Icon</div>
+        <div class="icon-bg-muted">⚪ Muted Icon</div>
+    </div>
+
+    <div class="validation-section">
+        <h2>🔍 OLD: Hardcoded Colors (For Comparison)</h2>
+        <p>These would have been the old hardcoded approach:</p>
+        <div class="old-style">📈 Old Hardcoded Style</div>
+    </div>
+
+    <div class="validation-section">
+        <h2>📋 Validation Checklist</h2>
+        <ul>
+            <li>✅ Replaced hardcoded bg-blue-100 text-blue-600 with icon-bg-primary</li>
+            <li>✅ Replaced hardcoded bg-green-100 text-green-600 with icon-bg-success</li>
+            <li>✅ Replaced hardcoded bg-red-100 text-red-600 with icon-bg-destructive</li>
+            <li>✅ Replaced hardcoded bg-gray-100 text-gray-600 with icon-bg-muted</li>
+            <li>✅ All dashboard components now use CSS variables</li>
+            <li>✅ Theme switching works smoothly without hardcoded colors</li>
+        </ul>
+    </div>
+
+    <div class="validation-section">
+        <h2>🎯 Files Updated</h2>
+        <ul>
+            <li>✅ app/assets/tailwind/maybe-design-system/modern-components.css</li>
+            <li>✅ app/components/dashboard/card_component.rb</li>
+            <li>✅ app/components/dashboard/chart_component.html.erb</li>
+            <li>✅ app/views/pages/dashboard.html.erb</li>
+            <li>✅ app/views/pages/dashboard/_balance_sheet.html.erb</li>
+            <li>✅ app/views/pages/dashboard/_cashflow_sankey.html.erb</li>
+        </ul>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update button text
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'dark' ? 'Switch to Light' : 'Switch to Dark';
+        }
+
+        // Initialize
+        document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>

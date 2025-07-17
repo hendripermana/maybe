@@ -1,6 +1,10 @@
 require "test_helper"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  include VisualRegressionHelper
+  include ThemeTestHelper
+  include AccessibilityTestHelper
+  
   setup do
     Capybara.default_max_wait_time = 5
   end

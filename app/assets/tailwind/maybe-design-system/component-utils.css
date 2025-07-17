@@ -1,109 +1,54 @@
-/* Button Backgrounds */
+/* Button Backgrounds using CSS Variables */
 @utility button-bg-primary {
-  @apply bg-gray-900;
-  /* Maps to fg-primary light */
-
-  @variant theme-dark {
-    @apply bg-white;
-    /* Maps to fg-primary dark */
-  }
+  background: var(--color-primary);
 }
 
 @utility button-bg-primary-hover {
-  @apply bg-gray-800;
-  /* Maps to fg-primary-variant light */
-
-  @variant theme-dark {
-    @apply bg-gray-50;
-    /* Maps to fg-primary-variant dark */
-  }
+  background: var(--color-primary-hover);
 }
 
 @utility button-bg-secondary {
-  @apply bg-gray-50; /* Maps to fg-secondary light */
-
-  @variant theme-dark {
-    @apply bg-gray-700; /* Maps to fg-secondary dark */
-  }
+  background: var(--color-secondary);
 }
 
 @utility button-bg-secondary-hover {
-  @apply bg-gray-100; /* Maps to fg-secondary-variant light */
-
-  @variant theme-dark {
-    @apply bg-gray-600; /* Maps to fg-secondary-variant dark */
-  }
+  background: var(--color-secondary-hover);
 }
 
 @utility button-bg-disabled {
-  @apply bg-gray-50;
-
-  @variant theme-dark {
-    @apply bg-gray-700;
-  }
+  background: var(--color-muted);
+  opacity: 0.5;
 }
 
 @utility button-bg-destructive {
-  @apply bg-red-500;
-
-  @variant theme-dark {
-    @apply bg-red-400;
-  }
+  background: var(--color-destructive);
 }
 
 @utility button-bg-destructive-hover {
-  @apply bg-red-600;
-
-  @variant theme-dark {
-    @apply bg-red-500;
-  }
+  background: var(--color-destructive-hover);
 }
 
 @utility button-bg-ghost-hover {
-  @apply bg-gray-50;
-
-  @variant theme-dark {
-    @apply bg-gray-800 fg-inverse;
-  }
+  background: var(--color-surface-hover);
 }
 
 @utility button-bg-outline-hover {
-  @apply bg-gray-100;
-
-  @variant theme-dark {
-    @apply bg-gray-700;
-  }
+  background: var(--color-surface-hover);
 }
 
-/* Tab Styles */
+/* Tab Styles using CSS Variables */
 @utility tab-item-active {
-  @apply bg-white;
-
-  @variant theme-dark {
-    @apply bg-gray-700;
-  }
+  background: var(--color-container);
 }
 
 @utility tab-item-hover {
-  @apply bg-gray-200;
-
-  @variant theme-dark {
-    @apply bg-gray-800;
-  }
+  background: var(--color-surface-hover);
 }
 
 @utility tab-bg-group {
-  @apply bg-gray-50;
-
-  @variant theme-dark {
-    @apply bg-alpha-black-700;
-  }
+  background: var(--color-surface);
 }
 
 @utility bg-nav-indicator {
-  @apply bg-black;
-
-  @variant theme-dark {
-    @apply bg-white;
-  }
+  background: var(--color-text-primary);
 }

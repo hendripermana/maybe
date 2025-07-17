@@ -5,7 +5,11 @@
     <div class="col-span-4 flex items-center gap-4">
       <%= image_tag "https://logo.synthfinance.com/ticker/#{holding.ticker}", class: "w-9 h-9 rounded-full", loading: "lazy" %>
 
+<<<<<<< HEAD
       <div class="space-y-0.5">
+=======
+      <div class="space-y-1">
+>>>>>>> feature/modernation-design
         <%= link_to holding.name, holding_path(holding), data: { turbo_frame: :drawer }, class: "hover:underline" %>
 
         <% if holding.amount %>

@@ -22,6 +22,8 @@ require "minitest/mock"
 require "minitest/autorun"
 require "mocha/minitest"
 require "aasm/minitest"
+require "vcr"
+require "webmock"
 
 VCR.configure do |config|
   config.cassette_library_dir = "test/vcr_cassettes"
@@ -77,3 +79,10 @@ module ActiveSupport
 end
 
 Dir[Rails.root.join("test", "interfaces", "**", "*.rb")].each { |f| require f }
+
+# Load support files in specific order to handle dependencies
+require_relative "support/theme_test_helper"
+require_relative "support/accessibility_test_helper" 
+require_relative "support/visual_regression_helper"
+require_relative "support/ui_testing_config"
+require_relative "support/component_test_case"

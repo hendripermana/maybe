@@ -1,91 +1,48 @@
 @utility bg-surface {
-  @apply bg-gray-50;
-
-  @variant theme-dark {
-    @apply bg-black;
-  }
+  background: var(--color-surface);
 }
 
 @utility bg-surface-hover {
-  @apply bg-gray-100;
-
-  @variant theme-dark {
-    @apply bg-gray-900;
-  }
+  background: var(--color-surface-hover);
 }
 
 @utility bg-surface-inset {
-  @apply bg-gray-100;
-
-  @variant theme-dark {
-    @apply bg-gray-800;
-  }
+  background: var(--color-surface-inset);
 }
 
 @utility bg-surface-inset-hover {
-  @apply bg-gray-200;
-
-  @variant theme-dark {
-    @apply bg-gray-800;
-  }
+  background: var(--color-surface-inset);
 }
 
 @utility bg-container {
-  @apply bg-white;
-
-  @variant theme-dark {
-    @apply bg-gray-900;
-  }
+  background: var(--color-container);
 }
 
 @utility bg-container-hover {
-  @apply bg-gray-50;
-
-  @variant theme-dark {
-    @apply bg-gray-800;
-  }
+  background: var(--color-container-hover);
 }
 
 @utility bg-container-inset {
-  @apply bg-gray-50;
-
-  @variant theme-dark {
-    @apply bg-gray-800;
-  }
+  background: var(--color-container-inset);
 }
 
 @utility bg-container-inset-hover {
-  @apply bg-gray-100;
-
-  @variant theme-dark {
-    @apply bg-gray-700;
-  }
+  background: var(--color-container-inset);
 }
 
 @utility bg-inverse {
-  @apply bg-gray-800;
-
-  @variant theme-dark {
-    @apply bg-white;
-  }
+  background: var(--color-text-primary);
 }
 
 @utility bg-inverse-hover {
-  @apply bg-gray-700;
-
-  @variant theme-dark {
-    @apply bg-gray-100;
-  }
+  background: var(--color-text-secondary);
 }
 
 @utility bg-overlay {
-  background-color: --alpha(var(--color-gray-100) / 50%);
-
-  @variant theme-dark {
-    background-color: var(--color-alpha-black-900);
-  }
+  background-color: var(--color-alpha-black-500);
 }
 
 @utility bg-loader {
-  @apply bg-surface-inset animate-pulse;
+  background: var(--color-surface-inset);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

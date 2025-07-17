@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme System Test - Maybe Finance</title>
+    <link rel="stylesheet" href="/assets/application.css">
+    <style>
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-background);
+            color: var(--color-foreground);
+            margin: 0;
+            padding: var(--spacing-6);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: var(--spacing-6);
+        }
+        
+        .test-section {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-elevated);
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-4);
+            margin-top: var(--spacing-4);
+        }
+        
+        .color-swatch {
+            padding: var(--spacing-4);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            text-align: center;
+            font-size: var(--font-size-sm);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing-4);
+            right: var(--spacing-4);
+            z-index: 50;
+        }
+        
+        h1, h2 {
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-4);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: var(--radius-full);
+            margin-right: var(--spacing-2);
+        }
+        
+        .status-success { background: var(--color-success); }
+        .status-warning { background: var(--color-warning); }
+        .status-destructive { background: var(--color-destructive); }
+        .status-info { background: var(--color-info); }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button class="btn-modern-primary" onclick="toggleTheme()">
+            Toggle Theme
+        </button>
+    </div>
+
+    <div class="test-container">
+        <div class="test-section">
+            <h1>CSS Variable Theme System Test</h1>
+            <p class="text-secondary">
+                This page tests the comprehensive CSS variable system for theme consistency.
+                Click the "Toggle Theme" button to switch between light and dark modes.
+            </p>
+            <div style="margin-top: var(--spacing-4);">
+                <span class="status-indicator status-success"></span>
+                <span class="text-secondary">Current theme: </span>
+                <strong id="current-theme">light</strong>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Color System Test</h2>
+            <div class="test-grid">
+                <div class="color-swatch" style="background: var(--color-background); color: var(--color-foreground);">
+                    Background<br>
+                    <code>--color-background</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-surface); color: var(--color-text-primary);">
+                    Surface<br>
+                    <code>--color-surface</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-container); color: var(--color-text-primary);">
+                    Container<br>
+                    <code>--color-container</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-primary); color: var(--color-primary-foreground);">
+                    Primary<br>
+                    <code>--color-primary</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-secondary); color: var(--color-secondary-foreground);">
+                    Secondary<br>
+                    <code>--color-secondary</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-muted); color: var(--color-muted-foreground);">
+                    Muted<br>
+                    <code>--color-muted</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Status Colors Test</h2>
+            <div class="test-grid">
+                <div class="color-swatch" style="background: var(--color-success); color: white;">
+                    Success<br>
+                    <code>--color-success</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-warning); color: white;">
+                    Warning<br>
+                    <code>--color-warning</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-destructive); color: white;">
+                    Destructive<br>
+                    <code>--color-destructive</code>
+                </div>
+                <div class="color-swatch" style="background: var(--color-info); color: white;">
+                    Info<br>
+                    <code>--color-info</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Text Hierarchy Test</h2>
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+                <div style="color: var(--color-text-primary); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">
+                    Primary Text (--color-text-primary)
+                </div>
+                <div style="color: var(--color-text-secondary); font-size: var(--font-size-lg);">
+                    Secondary Text (--color-text-secondary)
+                </div>
+                <div style="color: var(--color-text-tertiary); font-size: var(--font-size-base);">
+                    Tertiary Text (--color-text-tertiary)
+                </div>
+                <div style="color: var(--color-text-subdued); font-size: var(--font-size-sm);">
+                    Subdued Text (--color-text-subdued)
+                </div>
+                <div style="color: var(--color-text-link); font-size: var(--font-size-base);">
+                    Link Text (--color-text-link)
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Component Test</h2>
+            <div class="test-grid">
+                <button class="btn-modern-primary">Primary Button</button>
+                <button class="btn-modern-secondary">Secondary Button</button>
+                <button class="btn-modern-ghost">Ghost Button</button>
+                <button class="btn-modern-destructive">Destructive Button</button>
+            </div>
+            
+            <div style="margin-top: var(--spacing-4);">
+                <input type="text" class="input-modern" placeholder="Modern input field" style="width: 100%; max-width: 300px;">
+            </div>
+            
+            <div style="margin-top: var(--spacing-4);">
+                <div class="card-modern" style="padding: var(--spacing-4); max-width: 300px;">
+                    <h3 style="margin: 0 0 var(--spacing-2) 0; color: var(--color-text-primary);">Modern Card</h3>
+                    <p style="margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                        This card uses CSS variables for consistent theming.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Shadow System Test</h2>
+            <div class="test-grid">
+                <div style="padding: var(--spacing-4); background: var(--color-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-elevated);">
+                    Elevated Shadow<br>
+                    <code>--shadow-elevated</code>
+                </div>
+                <div style="padding: var(--spacing-4); background: var(--color-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-floating);">
+                    Floating Shadow<br>
+                    <code>--shadow-floating</code>
+                </div>
+                <div style="padding: var(--spacing-4); background: var(--color-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-modal);">
+                    Modal Shadow<br>
+                    <code>--shadow-modal</code>
+                </div>
+                <div style="padding: var(--spacing-4); background: var(--color-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-glow);">
+                    Glow Shadow<br>
+                    <code>--shadow-glow</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Chart Container Test</h2>
+            <div class="chart-container">
+                <h3 style="margin: 0 0 var(--spacing-4) 0; color: var(--color-text-primary);">Sample Chart Container</h3>
+                <div style="height: 200px; background: var(--color-surface); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary);">
+                    Chart content would go here
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Add transition class
+            html.classList.add('theme-transitioning');
+            
+            // Set new theme
+            html.setAttribute('data-theme', newTheme);
+            
+            // Update indicator
+            document.getElementById('current-theme').textContent = newTheme;
+            
+            // Remove transition class after animation
+            setTimeout(() => {
+                html.classList.remove('theme-transitioning');
+            }, 300);
+        }
+
+        // Add transition styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .theme-transitioning,
+            .theme-transitioning * {
+                transition: background-color 0.3s ease, 
+                           color 0.3s ease, 
+                           border-color 0.3s ease, 
+                           box-shadow 0.3s ease !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize theme indicator
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            document.getElementById('current-theme').textContent = currentTheme;
+        });
+    </script>
+</body>
+</html>

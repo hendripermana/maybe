@@ -6,5 +6,9 @@
       <div class="w-0.5 rounded-full <%= i < (effective_weight / 10.0).ceil ? '' : 'opacity-20' %>" style="background-color: <%= color %>; height: <%= i % 2 == 0 ? '0.5rem' : '0.25rem' %>"></div>
     <% end %>
   </div>
+<<<<<<< HEAD
   <span class="text-xs text-primary dark:text-white font-mono tabular-nums"><%= number_to_percentage(effective_weight, precision: 1) %></span>
+=======
+  <span class="text-primary font-mono tabular-nums"><%= number_to_percentage(effective_weight, precision: 1) %></span>
+>>>>>>> feature/modernation-design
 </div>

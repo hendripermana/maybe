@@ -20,25 +20,10 @@
   }
 }
 
-/* Enhanced Card Animations */
-.dashboard-card {
-  transition: all 0.3s ease-out;
-}
+/* Dashboard card styles consolidated in modern-components.css */
 
-.dashboard-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.1), 
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Progressive Enhancement for Charts */
-.chart-container {
-  position: relative;
-  overflow: hidden;
-}
-
-.chart-container::before {
+/* Progressive Enhancement for Charts - Using CSS variables */
+.dashboard-page .chart-container::before {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -46,18 +31,18 @@
   background: linear-gradient(
     135deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.05) 50%,
+    var(--color-alpha-white-50) 50%,
     transparent 100%
   );
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.chart-container:hover::before {
+.dashboard-page .chart-container:hover::before {
   opacity: 1;
 }
 
-/* Enhanced Progress Bars */
+/* Enhanced Progress Bars using CSS variables */
 .progress-segment {
   transition: all 0.5s ease-out;
   position: relative;
@@ -66,7 +51,7 @@
 .progress-segment::after {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-alpha-white-200);
   content: '';
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -80,35 +65,20 @@
   opacity: 1;
 }
 
-/* Trend Indicators */
+/* Trend Indicators using CSS variables */
 .trend-positive {
-  color: #059669;
+  color: var(--color-success);
 }
 
 .trend-negative {
-  color: #dc2626;
+  color: var(--color-destructive);
 }
 
 .trend-neutral {
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
-/* Dark mode trend colors */
-@media (prefers-color-scheme: dark) {
-  .trend-positive {
-    color: #34d399;
-  }
-  
-  .trend-negative {
-    color: #f87171;
-  }
-  
-  .trend-neutral {
-    color: #9ca3af;
-  }
-}
-
-/* Enhanced Empty States */
+/* Enhanced Empty States using CSS variables */
 .empty-state {
   padding: 4rem 0;
   display: flex;
@@ -120,17 +90,17 @@
 .empty-state-icon {
   width: 5rem;
   height: 5rem;
-  background: linear-gradient(135deg, #f3f4f6, rgba(243, 244, 246, 0.5));
-  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--color-surface), var(--color-surface-hover));
+  border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
 }
 
-/* Loading States */
+/* Loading States using CSS variables */
 .loading-shimmer {
-  background: linear-gradient(90deg, #f3f4f6, #e5e7eb, #f3f4f6);
+  background: linear-gradient(90deg, var(--color-surface), var(--color-surface-hover), var(--color-surface));
   background-size: 200% 100%;
   animation: shimmer 2s ease-in-out infinite;
 }
@@ -144,10 +114,10 @@
   }
 }
 
-/* Smooth Focus States */
+/* Smooth Focus States using CSS variables */
 .dashboard-interactive:focus {
   outline: none;
-  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 2px var(--color-ring), 0 0 0 4px var(--color-alpha-blue-200);
 }
 
 /* Responsive Enhancements */
@@ -157,32 +127,30 @@
     gap: 1rem;
   }
   
-  .chart-container {
+  .dashboard-page .chart-container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
 }
 
-/* Dark Mode Improvements */
-@media (prefers-color-scheme: dark) {
-  .chart-container::before {
-    background: linear-gradient(
-      135deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.02) 50%,
-      transparent 100%
-    );
-  }
-  
-  .empty-state-icon {
-    background: linear-gradient(135deg, #374151, rgba(55, 65, 81, 0.5));
-  }
-  
-  .loading-shimmer {
-    background: linear-gradient(90deg, #374151, #4b5563, #374151);
-  }
-  
-  .dashboard-interactive:focus {
-    box-shadow: 0 0 0 2px #60a5fa, 0 0 0 4px rgba(96, 165, 250, 0.2);
-  }
+/* Dark Mode Improvements using CSS variables */
+[data-theme="dark"] .dashboard-page .chart-container::before {
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--color-alpha-white-25) 50%,
+    transparent 100%
+  );
+}
+
+[data-theme="dark"] .empty-state-icon {
+  background: linear-gradient(135deg, var(--color-surface), var(--color-surface-hover));
+}
+
+[data-theme="dark"] .loading-shimmer {
+  background: linear-gradient(90deg, var(--color-surface), var(--color-surface-hover), var(--color-surface));
+}
+
+[data-theme="dark"] .dashboard-interactive:focus {
+  box-shadow: 0 0 0 2px var(--color-ring), 0 0 0 4px var(--color-alpha-blue-200);
 }

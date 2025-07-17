@@ -32,11 +32,19 @@
     
     <!-- Net Worth Chart Section -->
     <section>
+<<<<<<< HEAD
       <div class="bg-card text-card-foreground border rounded-xl shadow-sm overflow-hidden min-h-[500px]">
         <div class="p-6 border-b border-border">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="p-2 rounded-lg bg-blue-100 text-blue-600 [data-theme=dark]:bg-blue-900/30 [data-theme=dark]:text-blue-400">
+=======
+      <%= render Ui::CardComponent.new(variant: :elevated, size: :lg, class: "overflow-hidden min-h-[500px]") do %>
+        <div class="p-6 border-b border-border">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="p-2 rounded-lg icon-bg-primary">
+>>>>>>> feature/modernation-design
                 <%= icon("trending-up", size: "sm") %>
               </div>
               <div>
@@ -50,7 +58,11 @@
                           Period.as_options,
                           { selected: @period.key },
                           data: { "auto-submit-form-target": "auto" },
+<<<<<<< HEAD
                           class: "input-modern text-xs h-9 min-w-[100px] px-3"
+=======
+                          class: "input-modern text-sm h-9 min-w-[100px] px-3"
+>>>>>>> feature/modernation-design
               end %>
             </div>
           </div>
@@ -58,7 +70,11 @@
         <div class="p-6" style="height: 400px;">
           <%= render partial: "pages/dashboard/net_worth_chart", locals: { balance_sheet: @balance_sheet, period: @period } %>
         </div>
+<<<<<<< HEAD
       </div>
+=======
+      <% end %>
+>>>>>>> feature/modernation-design
     </section>
     
     <!-- Balance Sheet Grid (Assets & Liabilities) -->
@@ -71,11 +87,19 @@
     <!-- Cash Flow Sankey Chart -->
     <%= turbo_frame_tag "cashflow_sankey_section" do %>
       <section data-controller="cashflow-fullscreen">
+<<<<<<< HEAD
         <div class="bg-card text-card-foreground border rounded-xl shadow-sm overflow-hidden">
           <div class="p-6 border-b border-border">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
                 <div class="p-2 rounded-lg bg-blue-100 text-blue-600 [data-theme=dark]:bg-blue-900/30 [data-theme=dark]:text-blue-400">
+=======
+        <%= render Ui::CardComponent.new(variant: :elevated, size: :lg, class: "overflow-hidden") do %>
+          <div class="p-6 border-b border-border">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="p-2 rounded-lg icon-bg-primary">
+>>>>>>> feature/modernation-design
                   <%= icon("activity", size: "sm") %>
                 </div>
                 <div>
@@ -88,7 +112,11 @@
                   <div class="relative flex items-center">
                     <select name="cashflow_period"
                       data-auto-submit-form-target="auto"
+<<<<<<< HEAD
                       class="btn-modern-ghost h-9 rounded-md border border-border bg-card text-foreground text-xs min-w-[100px] px-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary appearance-none flex items-center"
+=======
+                      class="btn-modern-ghost h-9 rounded-md border border-border bg-card text-foreground text-sm min-w-[100px] px-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary appearance-none flex items-center"
+>>>>>>> feature/modernation-design
                       style="-webkit-appearance: none; -moz-appearance: none; appearance: none;">
                       <% (Period.as_options + [["ALL", "all"]]).each do |label, value| %>
                         <option value="<%= value %>" <%= 'selected' if value == @cashflow_period.key %>><%= label %></option>
@@ -122,7 +150,11 @@
           <div class="dashboard-section min-h-[540px]">
             <%= render partial: "pages/dashboard/cashflow_sankey", locals: { sankey_data: @cashflow_sankey_data, period: @cashflow_period } %>
           </div>
+<<<<<<< HEAD
         </div>
+=======
+        <% end %>
+>>>>>>> feature/modernation-design
       </section>
     <% end %>
   <% else %>

@@ -8,7 +8,7 @@
         </div>
       <% end %>
       <div class="space-y-1">
-        <h3 class="text-sm font-medium text-muted-foreground"><%= title %></h3>
+        <h3 class="font-medium text-muted-foreground"><%= title %></h3>
         <% if value %>
           <div class="text-2xl font-bold <%= loading ? "loading-shimmer" : "" %>">
             <%= value %>
@@ -19,8 +19,8 @@
     
     <% if trend %>
       <div class="flex items-center space-x-1 <%= trend_variant_class %>">
-        <%= helpers.icon(trend_icon, size: "xs") %>
-        <span class="text-sm font-medium">
+        <%= helpers.icon(trend_icon, size: "sm") %>
+        <span class="font-medium">
           <%= trend[:percentage] %>%
         </span>
       </div>
@@ -28,7 +28,7 @@
   </div>
   
   <% if description %>
-    <p class="text-sm text-muted-foreground">
+    <p class="text-muted-foreground">
       <%= description %>
     </p>
   <% end %>
