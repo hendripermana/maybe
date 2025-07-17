@@ -1,0 +1,89 @@
+<%# locals: (balance_sheet:, **args) %>
+
+<div class="space-y-4" id="balance-sheet">
+  <% balance_sheet.classification_groups.each do |classification_group| %>
+    <%= render Ui::CardComponent.new(variant: :elevated, size: :lg, class: "flex flex-col") do %>
+      <div class="flex items-center gap-4 mb-6 flex-shrink-0">
+        <div class="w-12 h-12 icon-bg-primary rounded-xl flex items-center justify-center shadow-floating flex-shrink-0">
+          <%= icon(classification_group.icon, class: "w-6 h-6") %>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h2 class="text-lg font-semibold text-primary flex items-center gap-2">
+            <span class="<%= "loading-shimmer" if classification_group.syncing? %>">
+              <%= classification_group.name %>
+            </span>
+          </h2>
+          <% if classification_group.account_groups.any? %>
+            <p class="text-2xl font-bold text-primary mt-1"><%= classification_group.total_money.format(precision: 0) %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <% if classification_group.account_groups.any? %>
+        <div class="flex-1 flex flex-col space-y-4">
+          <!-- Colorful indicators in one line with proper colors -->
+          <div class="flex flex-wrap gap-4 font-medium">
+            <% classification_group.account_groups.each do |account_group| %>
+              <span class="flex items-center gap-2">
+                <div class="h-3 w-3 rounded-full flex-shrink-0" style="background-color: <%= account_group.color %>;"></div>
+                <span style="color: <%= account_group.color %>; font-weight: 600;"><%= account_group.name %></span>
+                <span class="text-secondary"><%= number_to_percentage(account_group.weight, precision: 0) %></span>
+              </span>
+            <% end %>
+          </div>
+
+          <!-- Progress bar with proper colors -->
+          <div class="flex gap-1 h-2 rounded-full overflow-hidden bg-surface-inset shadow-inner flex-shrink-0">
+            <% classification_group.account_groups.each do |account_group| %>
+              <div class="h-full transition-all duration-300 hover:opacity-80" style="width: <%= account_group.weight %>%; background-color: <%= account_group.color %>;"></div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="space-y-2 mt-6">
+          <% classification_group.account_groups.each do |account_group| %>
+            <%= render_accordion do %>
+              <% accordion_title do %>
+                <div class="flex items-baseline justify-between w-full">
+                  <h3 class="text-md font-semibold text-primary"><%= account_group.name %></h3>
+                  <p class="text-md font-semibold text-primary"><%= account_group.total_money.format %></p>
+                </div>
+              <% end %>
+
+              <% accordion_description do %>
+                <div class="-mt-4">
+                  <%= render(Ui::DataTableComponent.new(
+                    headers: {
+                    "Account" => "w-2/3",
+                    "Weight"  => "text-right",
+                    "Value"   => "text-right"
+                  },
+                    rows: account_table_rows(account_group.accounts, total: account_group.total_money, group_color: account_group.color)
+                  )) %>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="py-12 flex flex-col items-center">
+          <div class="w-16 h-16 bg-gradient-to-br from-surface-inset to-surface-inset-hover rounded-2xl flex items-center justify-center mb-4">
+            <%= render FilledIconComponent.new(
+              variant: :container,
+              icon: classification_group.icon,
+            ) %>
+          </div>
+          <h3 class="text-lg font-semibold text-primary mb-2">No <%= classification_group.name %> yet</h3>
+          <p class="text-secondary text-center max-w-sm"><%= "Add your #{classification_group.name} accounts to see a full breakdown" %></p>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<%# Custom style for hiding ruler when details are open %>
+<style>
+  details[open] + .group-ruler {
+    display: none;
+  }
+</style>

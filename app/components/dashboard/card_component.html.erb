@@ -1,0 +1,41 @@
+<%# Dashboard Card Component Template %>
+<div <%= html_options %>>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <% if icon_name %>
+        <div class="p-2 rounded-lg <%= icon_variant_class %>">
+          <%= helpers.icon(icon_name, size: "sm") %>
+        </div>
+      <% end %>
+      <div class="space-y-1">
+        <h3 class="font-medium text-muted-foreground"><%= title %></h3>
+        <% if value %>
+          <div class="text-2xl font-bold <%= loading ? "loading-shimmer" : "" %>">
+            <%= value %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <% if trend %>
+      <div class="flex items-center space-x-1 <%= trend_variant_class %>">
+        <%= helpers.icon(trend_icon, size: "sm") %>
+        <span class="font-medium">
+          <%= trend[:percentage] %>%
+        </span>
+      </div>
+    <% end %>
+  </div>
+  
+  <% if description %>
+    <p class="text-muted-foreground">
+      <%= description %>
+    </p>
+  <% end %>
+  
+  <% if content? %>
+    <div class="mt-4">
+      <%= content %>
+    </div>
+  <% end %>
+</div>

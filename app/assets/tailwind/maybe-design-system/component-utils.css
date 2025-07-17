@@ -1,0 +1,54 @@
+/* Button Backgrounds using CSS Variables */
+@utility button-bg-primary {
+  background: var(--color-primary);
+}
+
+@utility button-bg-primary-hover {
+  background: var(--color-primary-hover);
+}
+
+@utility button-bg-secondary {
+  background: var(--color-secondary);
+}
+
+@utility button-bg-secondary-hover {
+  background: var(--color-secondary-hover);
+}
+
+@utility button-bg-disabled {
+  background: var(--color-muted);
+  opacity: 0.5;
+}
+
+@utility button-bg-destructive {
+  background: var(--color-destructive);
+}
+
+@utility button-bg-destructive-hover {
+  background: var(--color-destructive-hover);
+}
+
+@utility button-bg-ghost-hover {
+  background: var(--color-surface-hover);
+}
+
+@utility button-bg-outline-hover {
+  background: var(--color-surface-hover);
+}
+
+/* Tab Styles using CSS Variables */
+@utility tab-item-active {
+  background: var(--color-container);
+}
+
+@utility tab-item-hover {
+  background: var(--color-surface-hover);
+}
+
+@utility tab-bg-group {
+  background: var(--color-surface);
+}
+
+@utility bg-nav-indicator {
+  background: var(--color-text-primary);
+}

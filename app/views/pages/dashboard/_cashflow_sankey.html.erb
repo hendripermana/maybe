@@ -1,0 +1,111 @@
+<%# locals: (sankey_data:, period:) %>
+<div id="cashflow-sankey-chart" class="chart-container dashboard-section">
+  <!-- Regular container -->
+  <div data-cashflow-fullscreen-target="regularContainer" class="w-full regular-chart-container">
+    <% if sankey_data[:links].present? %>
+      <div class="relative w-full h-full">
+        <!-- Loading overlay (initially hidden) -->
+        <div id="sankey-loading" class="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg z-10" style="display: none;">
+          <div class="flex flex-col items-center space-y-3">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p class="text-muted-foreground">Loading cash flow analysis...</p>
+          </div>
+        </div>
+        <div
+          data-controller="sankey-chart"
+          data-sankey-chart-data-value="<%= sankey_data.to_json %>"
+          data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
+          data-cashflow-fullscreen-target="chartContainer"
+          class="w-full h-full sankey-svg-container chart-transition"
+          style="height: 540px;">
+        </div>
+      </div>
+    <% else %>
+      <div class="h-full flex flex-col items-center justify-center" style="height: 540px;">
+        <div class="space-y-4 text-center flex flex-col items-center">
+          <%= icon "activity", size: "lg", class: "text-muted-foreground" %>
+
+          <div>
+            <p class="font-medium text-foreground">No cash flow data for this time period</p>
+            <p class="text-muted-foreground">Add transactions to display cash flow data or expand the time period</p>
+          </div>
+          
+          <%= render Ui::ButtonComponent.new(
+            text: "Add transaction",
+            icon: "plus",
+            href: new_transaction_path,
+            variant: :default,
+            size: :sm
+          ) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <!-- Fullscreen overlay -->
+  <div 
+    data-cashflow-fullscreen-target="fullscreenOverlay"
+    class="fullscreen-overlay hidden fixed inset-0 z-50 w-screen h-screen flex items-center justify-center bg-background/95 backdrop-blur-sm"
+    style="top:0;left:0;">
+    <%= render Ui::CardComponent.new(variant: :elevated, size: :sm, class: "w-full h-full flex flex-col rounded-none") do %>
+      <!-- Fullscreen header -->
+      <%= render Ui::CardComponent.new(variant: :outlined, size: :md, class: "rounded-none border-x-0 border-t-0") do %>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="p-2 rounded-lg icon-bg-primary">
+              <%= icon "activity", size: "sm" %>
+            </div>
+            <h2 class="text-xl font-semibold text-foreground">Cash Flow Analysis</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form cashflow-filter", cashflow_filter_target: "form", action: "submit->cashflow-filter#submit change->cashflow-filter#submit" , turbo_frame: "cashflow_sankey_section" }, html: { class: "m-0" }, local: true do |form| %>
+              <% period_options = Period.as_options + [["ALL", "all"]] %>
+              <%= form.select :cashflow_period,
+                        period_options,
+                        { selected: (params[:cashflow_period] || period.key) },
+                        data: { "auto-submit-form-target": "auto", cashflow_filter_target: "select" },
+                        class: "input-modern min-w-[120px]" %>
+            <% end %>
+            <!-- Close button -->
+            <button 
+              data-action="click->cashflow-fullscreen#toggleFullscreen"
+              class="btn-modern-ghost h-9 w-9 p-0 flex items-center justify-center"
+              title="Exit fullscreen">
+              <%= icon "x", size: "sm", class: "text-foreground" %>
+            </button>
+          </div>
+        </div>
+      <% end %>
+      <!-- Fullscreen chart container -->
+      <div class="fullscreen-chart-container flex-1 flex items-center justify-center w-full h-full">
+        <% if sankey_data[:links].present? %>
+          <%= render Ui::CardComponent.new(variant: :default, size: :lg, class: "w-full h-full") do %>
+            <div
+              data-controller="sankey-chart"
+              data-sankey-chart-data-value="<%= sankey_data.to_json %>"
+              data-sankey-chart-currency-symbol-value="<%= sankey_data[:currency_symbol] %>"
+              class="w-full h-full sankey-svg-container chart-transition"
+              style="min-height: 600px; height: 100%;">
+            </div>
+          <% end %>
+        <% else %>
+          <%= render Ui::CardComponent.new(variant: :default, size: :lg, class: "h-full py-8 flex flex-col items-center justify-center") do %>
+            <div class="space-y-4 text-center flex flex-col items-center">
+              <%= icon "activity", size: "lg", class: "text-muted-foreground" %>
+              <div class="space-y-2">
+                <p class="text-lg font-semibold text-foreground">No cash flow data for this time period</p>
+                <p class="text-muted-foreground">Add transactions to display cash flow data or expand the time period</p>
+              </div>
+              <%= render Ui::ButtonComponent.new(
+                text: "Add transaction",
+                icon: "plus",
+                href: new_transaction_path,
+                variant: :default,
+                size: :sm
+              ) %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

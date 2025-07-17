@@ -1,0 +1,6 @@
+<%= render DialogComponent.new do |dialog| %>
+  <% dialog.with_header(title: t(".new")) %>
+  <% dialog.with_body do %>
+    <%= render "form", tag: @tag %>
+  <% end %>
+<% end %>

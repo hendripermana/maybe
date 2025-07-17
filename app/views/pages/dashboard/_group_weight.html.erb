@@ -1,0 +1,10 @@
+<%# locals: (weight:, color:, justify: 'end') %>
+<% effective_weight = weight.presence || 0 %>
+<div class="flex items-center justify-<%= justify %> gap-1.5 w-full">
+  <div class="flex gap-px flex-shrink-0 h-3 items-end">
+    <% 10.times do |i| %>
+      <div class="w-0.5 rounded-full <%= i < (effective_weight / 10.0).ceil ? '' : 'opacity-20' %>" style="background-color: <%= color %>; height: <%= i % 2 == 0 ? '0.5rem' : '0.25rem' %>"></div>
+    <% end %>
+  </div>
+  <span class="text-primary font-mono tabular-nums"><%= number_to_percentage(effective_weight, precision: 1) %></span>
+</div>

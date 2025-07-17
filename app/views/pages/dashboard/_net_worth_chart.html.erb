@@ -1,0 +1,41 @@
+<%# locals: (balance_sheet:, period:, **args) %>
+
+<div id="net-worth-chart">
+  <% series = balance_sheet.net_worth_series(period: period) %>
+  
+  <div class="flex justify-between items-start gap-4 mb-6">
+    <div class="space-y-3">
+      <div class="space-y-2">
+        <p class="text-3xl font-bold text-foreground <%= "loading-shimmer" if balance_sheet.syncing? %>">
+          <%= series.trend.current.format %>
+        </p>
+
+        <% if series.trend.nil? %>
+          <p class="text-muted-foreground">Data not available</p>
+        <% else %>
+          <%= render partial: "shared/trend_change", locals: { trend: series.trend, comparison_label: period.comparison_label } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <% if series.any? %>
+    <div
+      id="netWorthChart"
+      class="w-full h-full min-h-[300px] rounded-lg"
+      data-controller="time-series-chart"
+      data-time-series-chart-data-value="<%= series.to_json %>"
+      style="height: 320px;">
+    </div>
+  <% else %>
+    <div class="w-full h-full min-h-[300px] flex items-center justify-center">
+      <div class="text-center space-y-3">
+        <%= icon "chart-line", size: "lg", class: "text-muted-foreground" %>
+        <div>
+          <p class="font-medium text-foreground">No data available</p>
+          <p class="text-muted-foreground">Add accounts to start tracking your net worth</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,18 @@
+<div class="py-16 flex flex-col items-center text-center">
+  <div class="w-20 h-20 bg-gradient-to-br from-muted to-muted/50 rounded-2xl flex items-center justify-center mb-6">
+    <%= icon "layers", size: "lg", class: "text-muted-foreground" %>
+  </div>
+  
+  <h3 class="text-lg font-semibold text-foreground mb-2">No accounts yet</h3>
+  <p class="text-muted-foreground text-center max-w-sm mb-6">
+    Connect your financial accounts to start tracking your net worth and see detailed insights
+  </p>
+  
+  <%= render Ui::ButtonComponent.new(
+    text: "Add account",
+    icon: "plus",
+    href: new_account_path,
+    variant: :default,
+    size: :md
+  ) %>
+</div>

@@ -1,0 +1,40 @@
+<div <%= html_options %>>
+  <% if rows.any? %>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <tr>
+            <% headers.each do |header, header_class| %>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider <%= header_class %>">
+                <%= header.is_a?(Hash) ? header.keys.first : header %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+          <% rows.each_with_index do |row, index| %>
+            <% cells   = row.is_a?(Hash) ? row[:cells] : row %>
+            <% row_cls = row.is_a?(Hash) ? row[:class] : nil %>
+            <% data_at = row.is_a?(Hash) ? row[:data]  : {} %>
+            <tr class="transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 <%= index.even? ? 'bg-white dark:bg-slate-950' : 'bg-slate-50 dark:bg-slate-900' %> <%= row_cls %>" <%= data_at&.map { |k, v| "data-#{k}='#{v}'" }.join(' ') %>>
+              <% cells.each_with_index do |cell, index| %>
+                <td class="px-4 py-3 text-sm text-slate-800 dark:text-slate-200 <%= headers.values[index] %>">
+                  <%= cell %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="py-12 text-center">
+      <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full mx-auto flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400 font-medium"><%= empty_message %></p>
+    </div>
+  <% end %>
+</div>

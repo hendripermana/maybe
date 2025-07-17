@@ -1,0 +1,48 @@
+/* Custom shadow borders using CSS variables for theme consistency */
+@utility shadow-border-xs {
+  box-shadow: var(--shadow-xs), 0px 0px 0px 1px var(--color-border);
+}
+
+@utility shadow-border-sm {
+  box-shadow: var(--shadow-sm), 0px 0px 0px 1px var(--color-border);
+}
+
+@utility shadow-border-md {
+  box-shadow: var(--shadow-md), 0px 0px 0px 1px var(--color-border);
+}
+
+@utility shadow-border-lg {
+  box-shadow: var(--shadow-lg), 0px 0px 0px 1px var(--color-border);
+}
+
+@utility shadow-border-xl {
+  box-shadow: var(--shadow-xl), 0px 0px 0px 1px var(--color-border);
+}
+
+@utility border-primary {
+  border-color: var(--color-border);
+}
+
+@utility border-secondary {
+  border-color: var(--color-border);
+}
+
+@utility border-tertiary {
+  border-color: var(--color-border);
+}
+
+@utility border-divider {
+  border-color: var(--color-border);
+}
+
+@utility border-subdued {
+  border-color: var(--color-border);
+}
+
+@utility border-solid {
+  border-color: var(--color-text-primary);
+}
+
+@utility border-destructive {
+  border-color: var(--color-destructive);
+}

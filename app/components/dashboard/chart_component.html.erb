@@ -1,0 +1,58 @@
+<%# Dashboard Chart Component Template %>
+<div <%= html_options %>>
+  <!-- Chart Header -->
+  <div class="p-6 border-b border-border">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 rounded-lg icon-bg-primary">
+          <%= helpers.icon(header_icon, size: "sm") %>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-foreground"><%= title %></h3>
+          <% if subtitle %>
+            <p class="text-sm text-muted-foreground"><%= subtitle %></p>
+          <% end %>
+        </div>
+      </div>
+      
+      <% if actions %>
+        <div class="flex items-center space-x-2">
+          <%= actions %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Chart Content -->
+  <div class="p-6">
+    <% chart_content = render_chart_content %>
+    <% if chart_content %>
+      <div class="w-full" style="<%= chart_container_style %>">
+        <%= chart_content %>
+      </div>
+    <% elsif data.present? %>
+      <div class="w-full" style="<%= chart_container_style %>">
+        <!-- Chart placeholder - specific chart implementation goes here -->
+        <div class="w-full h-full flex items-center justify-center bg-muted/10 rounded-lg border-2 border-dashed border-muted">
+          <div class="text-center space-y-2">
+            <%= helpers.icon(header_icon, size: "lg", class: "text-muted-foreground") %>
+            <p class="text-sm font-medium text-muted-foreground">Chart will render here</p>
+            <p class="text-xs text-muted-foreground">Implement specific chart logic</p>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="w-full" style="<%= chart_container_style %>">
+        <div class="w-full h-full flex items-center justify-center">
+          <div class="text-center space-y-3">
+            <%= helpers.icon("chart-no-axes-column", size: "lg", class: "text-muted-foreground") %>
+            <div>
+              <p class="text-sm font-medium text-foreground">No data available</p>
+              <p class="text-xs text-muted-foreground">Chart data is not available for the selected period</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

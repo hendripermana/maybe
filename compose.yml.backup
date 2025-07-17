@@ -1,0 +1,328 @@
+# ===========================================================================
+# Example Docker Compose file
+# ===========================================================================
+#
+# ... (rest of your original header and setup comments remain unchanged)
+#
+
+x-db-env: &db_env
+  POSTGRES_USER: ${POSTGRES_USER:-maybe_user}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-maybe_password}
+  POSTGRES_DB: ${POSTGRES_DB:-maybe_production}
+
+x-rails-env: &rails_env
+  <<: *db_env
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  SELF_HOSTED: "true"
+  RAILS_FORCE_SSL: "false"
+  RAILS_ASSUME_SSL: "false"
+  DB_HOST: db
+  DB_PORT: 5432
+  REDIS_URL: redis://redis:6379/1
+  APP_DOMAIN: ${APP_DOMAIN:-finance.permana.icu}
+  # Performance settings for 4 CPU, 24GB RAM server
+  WEB_CONCURRENCY: ${WEB_CONCURRENCY:-4}
+  RAILS_MAX_THREADS: ${RAILS_MAX_THREADS:-8}
+  SIDEKIQ_POOL_SIZE: ${SIDEKIQ_POOL_SIZE:-15}
+  REDIS_POOL_SIZE: ${REDIS_POOL_SIZE:-10}
+  # ActionMailer configuration
+  SMTP_ADDRESS: ${SMTP_ADDRESS:-smtp.resend.com}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USERNAME: ${SMTP_USERNAME:-resend}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_TLS_ENABLED: ${SMTP_TLS_ENABLED:-true}
+  EMAIL_SENDER: ${EMAIL_SENDER:-notif@permana.icu}
+  # NOTE: enabling OpenAI will incur costs when you use AI-related features in the app (chat, rules).  Make sure you have set appropriate spend limits on your account before adding this.
+  OPENAI_ACCESS_TOKEN: ${OPENAI_ACCESS_TOKEN}
+  SKYLIGHT_AUTHENTICATION: ${SKYLIGHT_AUTHENTICATION}
+  SKYLIGHT_ENABLE: "true"
+  YABEDA_PROMETHEUS_MMAP_DIR: "/rails/tmp/prometheus"
+
+services:
+  web:
+    build: 
+      context: .
+      args:
+        BUILD_COMMIT_SHA: ${BUILD_COMMIT_SHA}
+    image: maybe-local:latest
+    volumes:
+      - app-storage:/rails/storage
+      - prometheus-metrics:/rails/tmp/prometheus
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      <<: *rails_env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - maybe_net
+
+  worker:
+    build: 
+      context: .
+      args:
+        BUILD_COMMIT_SHA: ${BUILD_COMMIT_SHA}
+    image: maybe-local:latest
+    command: bundle exec sidekiq
+    restart: unless-stopped
+    volumes:
+      - app-storage:/rails/storage
+      - ./tmp:/rails/tmp
+      - prometheus-metrics:/rails/tmp/prometheus
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *rails_env
+    networks:
+      - maybe_net
+
+  metrics-exporter:
+    image: prom/prometheus:v2.37.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.listen-address=0.0.0.0:9394
+    ports:
+      - "127.0.0.1:9394:9394"
+    volumes:
+      - prometheus-metrics:/prometheus
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./config/postgres:/docker-entrypoint-initdb.d:ro
+    environment:
+      <<: *db_env
+      # Prevent external monitoring connections
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Block external access attempts from netdata monitoring
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks:
+      - maybe_net
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    command: >
+      redis-server 
+      --maxmemory 512mb 
+      --maxmemory-policy allkeys-lru 
+      --save 60 1000
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Apply memory overcommit fix
+    networks:
+      - maybe_net
+
+  # ------------------------------
+  # Monitoring services start here
+  # ------------------------------
+
+  # Node Exporter untuk system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "127.0.0.1:9100:9100"
+    command:
+      - '--path.rootfs=/host'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /:/host:ro,rslave
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  # cAdvisor untuk container metrics
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  # Postgres Exporter untuk database metrics
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres-exporter
+    ports:
+      - "127.0.0.1:9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-maybe_user}:${POSTGRES_PASSWORD:-maybe_password}@db:5432/${POSTGRES_DB:-maybe_production}?sslmode=disable"
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  # Redis Exporter untuk Redis metrics
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis-exporter
+    ports:
+      - "127.0.0.1:9121:9121"
+    environment:
+      REDIS_ADDR: "redis://redis:6379"
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  # Prometheus untuk metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ../monitoring/configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../monitoring/configs/prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    restart: unless-stopped
+    networks:
+      - maybe_net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # AlertManager untuk alerting
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - "127.0.0.1:9093:9093"
+    volumes:
+      - ../monitoring/configs/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  # Grafana untuk visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "127.0.0.1:3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ../monitoring/configs/grafana/provisioning:/etc/grafana/provisioning:ro
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  # Loki untuk log aggregation
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "127.0.0.1:3100:3100"
+    volumes:
+      - ../monitoring/configs/loki.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+  
+
+  # Promtail untuk log collection
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ../monitoring/configs/promtail.yml:/etc/promtail/config.yml:ro
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/config.yml
+    restart: unless-stopped
+    networks:
+      - maybe_net
+
+volumes:
+  app-storage:
+    external: true
+  postgres-data:
+    external: true
+  redis-data:
+    external: true
+  prometheus-data:
+    driver: local
+  prometheus-metrics:
+    driver: local
+  grafana-data:
+    driver: local
+  alertmanager-data:
+    driver: local
+  loki-data:
+    driver: local
+
+networks:
+  maybe_net:
+    driver: bridge
+
+# ------------------------------------------------------------
+  # CATATAN MIGRASI:
+  # Volume eksternal ini TIDAK akan otomatis tersedia di VM baru.
+  # Pastikan kamu melakukan backup dengan rclone atau tar:
+  #
+  # Contoh backup:
+  #   docker run --rm -v postgres-data:/volume -v $(pwd):/backup alpine sh -c "cd /volume && tar czvf /backup/postgres-data.tar.gz ."
+  #
+  # Upload ke Cloudflare R2 via rclone:
+  #   rclone copy postgres-data.tar.gz R2:maybe-backup/
+  #
+  # Di VM baru, restore dengan:
+  #   docker volume create postgres-data
+  #   docker run --rm -v postgres-data:/volume -v $(pwd):/backup alpine sh -c "cd /volume && tar xzvf /backup/postgres-data.tar.gz"
+  #
+  # Lakukan untuk semua volume eksternal (redis-data, app-storage)
+  # ------------------------------------------------------------

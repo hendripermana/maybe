@@ -1,0 +1,156 @@
+/* Modern Dashboard Styles with ShadCN Design Principles */
+
+/* Dashboard Grid Improvements */
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Dashboard card styles consolidated in modern-components.css */
+
+/* Progressive Enhancement for Charts - Using CSS variables */
+.dashboard-page .chart-container::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--color-alpha-white-50) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dashboard-page .chart-container:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced Progress Bars using CSS variables */
+.progress-segment {
+  transition: all 0.5s ease-out;
+  position: relative;
+}
+
+.progress-segment::after {
+  position: absolute;
+  inset: 0;
+  background: var(--color-alpha-white-200);
+  content: '';
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.progress-segment:hover {
+  opacity: 0.8;
+}
+
+.progress-segment:hover::after {
+  opacity: 1;
+}
+
+/* Trend Indicators using CSS variables */
+.trend-positive {
+  color: var(--color-success);
+}
+
+.trend-negative {
+  color: var(--color-destructive);
+}
+
+.trend-neutral {
+  color: var(--color-text-secondary);
+}
+
+/* Enhanced Empty States using CSS variables */
+.empty-state {
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 5rem;
+  height: 5rem;
+  background: linear-gradient(135deg, var(--color-surface), var(--color-surface-hover));
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Loading States using CSS variables */
+.loading-shimmer {
+  background: linear-gradient(90deg, var(--color-surface), var(--color-surface-hover), var(--color-surface));
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Smooth Focus States using CSS variables */
+.dashboard-interactive:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-ring), 0 0 0 4px var(--color-alpha-blue-200);
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard-page .chart-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Dark Mode Improvements using CSS variables */
+[data-theme="dark"] .dashboard-page .chart-container::before {
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--color-alpha-white-25) 50%,
+    transparent 100%
+  );
+}
+
+[data-theme="dark"] .empty-state-icon {
+  background: linear-gradient(135deg, var(--color-surface), var(--color-surface-hover));
+}
+
+[data-theme="dark"] .loading-shimmer {
+  background: linear-gradient(90deg, var(--color-surface), var(--color-surface-hover), var(--color-surface));
+}
+
+[data-theme="dark"] .dashboard-interactive:focus {
+  box-shadow: 0 0 0 2px var(--color-ring), 0 0 0 4px var(--color-alpha-blue-200);
+}
