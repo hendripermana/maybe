@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="<%= current_theme %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @page_title %> | Maybe Finance UI/UX Demo</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <!-- D3.js for Sankey chart -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+  <script src="/js/main.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <header class="layout-header">
+      <div class="container">
+        <div class="header">
+          <a href="/" class="header-logo">Maybe Finance</a>
+          <nav class="header-nav">
+            <a href="/" class="header-nav-link <%= 'active' if @page_title == 'Dashboard' %>">Dashboard</a>
+            <a href="/transactions" class="header-nav-link <%= 'active' if @page_title == 'Transactions' %>">Transactions</a>
+            <a href="/budgets" class="header-nav-link <%= 'active' if @page_title == 'Budgets' %>">Budgets</a>
+            <a href="/settings" class="header-nav-link <%= 'active' if @page_title == 'Settings' %>">Settings</a>
+          </nav>
+          <form id="theme-toggle-form" action="/toggle_theme" method="post">
+            <button type="submit" class="theme-toggle" aria-label="Toggle theme">
+              <% if current_theme == 'light' %>
+                🌙
+              <% else %>
+                ☀️
+              <% end %>
+            </button>
+          </form>
+        </div>
+      </div>
+    </header>
+    
+    <main class="layout-content">
+      <%= yield %>
+    </main>
+    
+    <footer class="layout-footer">
+      <div class="container">
+        <div class="text-center">
+          <p>UI/UX Modernization Demo - Based on completed tasks</p>
+          <p class="mt-2">Current theme: <%= current_theme %></p>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

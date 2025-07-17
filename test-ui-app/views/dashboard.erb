@@ -1,0 +1,165 @@
+<div class="dashboard-page">
+  <div class="container">
+    <h1 class="mb-6">Dashboard</h1>
+    
+    <section class="mb-8">
+      <h2 class="mb-4">Financial Overview</h2>
+      
+      <!-- Optimized chart container - Task #9 -->
+      <div class="chart-container mb-6">
+        <div class="chart-header">
+          <h3 class="chart-title">Cash Flow</h3>
+          <div class="chart-actions">
+            <button class="btn btn-ghost btn-sm chart-fullscreen-btn">Fullscreen</button>
+          </div>
+        </div>
+        <div class="chart-content">
+          <div id="sankey-chart" class="sankey-chart"></div>
+        </div>
+      </div>
+      
+      <!-- Dashboard grid with standardized card components - Task #7 -->
+      <div class="dashboard-grid">
+        <!-- Card 1 -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Net Worth</h3>
+            <p class="card-description">Your total assets minus liabilities</p>
+          </div>
+          <div class="card-content">
+            <div class="text-center">
+              <span style="font-size: 2rem; font-weight: 600;">$125,430</span>
+              <p class="mt-2" style="color: var(--color-success);">+$2,500 (2.1%)</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Monthly Income</h3>
+            <p class="card-description">Average over last 3 months</p>
+          </div>
+          <div class="card-content">
+            <div class="text-center">
+              <span style="font-size: 2rem; font-weight: 600;">$8,250</span>
+              <p class="mt-2" style="color: var(--color-success);">+$250 (3.1%)</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 3 -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Monthly Expenses</h3>
+            <p class="card-description">Average over last 3 months</p>
+          </div>
+          <div class="card-content">
+            <div class="text-center">
+              <span style="font-size: 2rem; font-weight: 600;">$5,830</span>
+              <p class="mt-2" style="color: var(--color-destructive);">+$120 (2.1%)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="mb-8">
+      <h2 class="mb-4">Account Balances</h2>
+      
+      <!-- Another row of cards -->
+      <div class="dashboard-grid">
+        <!-- Card 4 -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Checking Account</h3>
+            <p class="card-description">Bank of America</p>
+          </div>
+          <div class="card-content">
+            <div class="text-center">
+              <span style="font-size: 1.5rem; font-weight: 600;">$4,250</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 5 -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Savings Account</h3>
+            <p class="card-description">Ally Bank</p>
+          </div>
+          <div class="card-content">
+            <div class="text-center">
+              <span style="font-size: 1.5rem; font-weight: 600;">$15,750</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 6 -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Investment Account</h3>
+            <p class="card-description">Vanguard</p>
+          </div>
+          <div class="card-content">
+            <div class="text-center">
+              <span style="font-size: 1.5rem; font-weight: 600;">$105,430</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="mb-8">
+      <h2 class="mb-4">Recent Transactions</h2>
+      
+      <!-- Card with transaction list -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Last 5 Transactions</h3>
+        </div>
+        <div class="card-content">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="text-align: left; padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Date</th>
+                <th style="text-align: left; padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Description</th>
+                <th style="text-align: right; padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Jul 15, 2025</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Grocery Store</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border); text-align: right; color: var(--color-destructive);">-$85.42</td>
+              </tr>
+              <tr>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Jul 14, 2025</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Gas Station</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border); text-align: right; color: var(--color-destructive);">-$45.00</td>
+              </tr>
+              <tr>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Jul 13, 2025</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Restaurant</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border); text-align: right; color: var(--color-destructive);">-$65.80</td>
+              </tr>
+              <tr>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Jul 12, 2025</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border);">Paycheck</td>
+                <td style="padding: var(--spacing-2); border-bottom: 1px solid var(--color-border); text-align: right; color: var(--color-success);">+$2,500.00</td>
+              </tr>
+              <tr>
+                <td style="padding: var(--spacing-2);">Jul 10, 2025</td>
+                <td style="padding: var(--spacing-2);">Online Shopping</td>
+                <td style="padding: var(--spacing-2); text-align: right; color: var(--color-destructive);">-$120.35</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer">
+          <a href="/transactions" class="btn btn-secondary btn-sm">View All Transactions</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
