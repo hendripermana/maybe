@@ -1,0 +1,22 @@
+<div class="space-y-8 p-4">
+  <div>
+    <h3 class="text-lg font-medium mb-2">With Default Label</h3>
+    <%= render UI::ProgressBarComponent.new(value: 65, max: 100, show_label: true) %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">With Custom Label</h3>
+    <%= render UI::ProgressBarComponent.new(value: 65, max: 100, show_label: true, label: "Budget Progress") %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">With Different Variants</h3>
+    <%= render UI::ProgressBarComponent.new(value: 30, max: 100, variant: :success, show_label: true, label: "Under Budget") %>
+    <div class="mt-4">
+      <%= render UI::ProgressBarComponent.new(value: 85, max: 100, variant: :warning, show_label: true, label: "Almost at Budget") %>
+    </div>
+    <div class="mt-4">
+      <%= render UI::ProgressBarComponent.new(value: 110, max: 100, variant: :danger, show_label: true, label: "Over Budget") %>
+    </div>
+  </div>
+</div>

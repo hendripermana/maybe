@@ -1,0 +1,16 @@
+<div class="space-y-8 p-4">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Small</h3>
+    <%= render UI::ProgressBarComponent.new(value: 50, max: 100, size: :sm) %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">Medium (Default)</h3>
+    <%= render UI::ProgressBarComponent.new(value: 50, max: 100, size: :md) %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">Large</h3>
+    <%= render UI::ProgressBarComponent.new(value: 50, max: 100, size: :lg) %>
+  </div>
+</div>

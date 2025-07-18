@@ -1,0 +1,35 @@
+<div class="space-y-8 p-4">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Uninitialized Budget</h3>
+    <% 
+      budget = OpenStruct.new(id: 1)
+      category = OpenStruct.new(
+        id: 7, 
+        name: "Transportation", 
+        color: "#9C27B0", 
+        lucide_icon: "car",
+        parent_id: nil
+      )
+      
+      budget_category = OpenStruct.new(
+        id: 7,
+        budget: budget,
+        category: category,
+        budgeted_spending: 0,
+        actual_spending: 12000,
+        available_to_spend: 0,
+        initialized?: false,
+        percent_of_budget_spent: 0,
+        budgeted_spending_money: Money.new(0, "USD"),
+        actual_spending_money: Money.new(12000, "USD"),
+        available_to_spend_money: Money.new(0, "USD"),
+        median_monthly_expense_money: Money.new(15000, "USD")
+      )
+      
+      def budget_category.subcategory?
+        false
+      end
+    %>
+    <%= render UI::BudgetCardComponent.new(budget_category: budget_category) %>
+  </div>
+</div>

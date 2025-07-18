@@ -1,0 +1,10 @@
+<div class="<%= container_classes %>" role="progressbar" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100">
+  <div class="<%= progress_classes %>" style="width: <%= percent %>%"></div>
+</div>
+
+<% if @options[:show_label] %>
+  <div class="flex justify-between text-xs text-muted-foreground mt-1">
+    <span><%= @options[:label] || "Progress" %></span>
+    <span><%= percent %>%</span>
+  </div>
+<% end %>

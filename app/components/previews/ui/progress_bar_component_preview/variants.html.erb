@@ -1,0 +1,21 @@
+<div class="space-y-8 p-4">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Default</h3>
+    <%= render UI::ProgressBarComponent.new(value: 40, max: 100, variant: :default, show_label: true) %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">Success</h3>
+    <%= render UI::ProgressBarComponent.new(value: 60, max: 100, variant: :success, show_label: true) %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">Warning</h3>
+    <%= render UI::ProgressBarComponent.new(value: 80, max: 100, variant: :warning, show_label: true) %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">Danger</h3>
+    <%= render UI::ProgressBarComponent.new(value: 100, max: 100, variant: :danger, show_label: true) %>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<%# locals: (budget_category:) %>
+
+<%= turbo_frame_tag dom_id(budget_category), class: "w-full" do %>
+  <%= render UI::BudgetCardComponent.new(budget_category: budget_category) %>
+<% end %>

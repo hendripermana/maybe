@@ -1,0 +1,116 @@
+<div class="space-y-8 p-4">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Parent Category</h3>
+    <% 
+      budget = OpenStruct.new(id: 1)
+      category = OpenStruct.new(
+        id: 4, 
+        name: "Food", 
+        color: "#2196F3", 
+        lucide_icon: "coffee",
+        parent_id: nil
+      )
+      
+      budget_category = OpenStruct.new(
+        id: 4,
+        budget: budget,
+        category: category,
+        budgeted_spending: 30000,
+        actual_spending: 25000,
+        available_to_spend: 5000,
+        initialized?: true,
+        percent_of_budget_spent: 83,
+        budgeted_spending_money: Money.new(30000, "USD"),
+        actual_spending_money: Money.new(25000, "USD"),
+        available_to_spend_money: Money.new(5000, "USD")
+      )
+      
+      def budget_category.subcategory?
+        false
+      end
+    %>
+    <%= render UI::BudgetCardComponent.new(budget_category: budget_category) %>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">Subcategory</h3>
+    <% 
+      budget = OpenStruct.new(id: 1)
+      parent_category = OpenStruct.new(id: 4)
+      category = OpenStruct.new(
+        id: 5, 
+        name: "Groceries", 
+        color: "#4CAF50", 
+        lucide_icon: "shopping-cart",
+        parent_id: 4
+      )
+      
+      budget_category = OpenStruct.new(
+        id: 5,
+        budget: budget,
+        category: category,
+        budgeted_spending: 20000,
+        actual_spending: 18000,
+        available_to_spend: 2000,
+        initialized?: true,
+        percent_of_budget_spent: 90,
+        budgeted_spending_money: Money.new(20000, "USD"),
+        actual_spending_money: Money.new(18000, "USD"),
+        available_to_spend_money: Money.new(2000, "USD")
+      )
+      
+      def budget_category.subcategory?
+        true
+      end
+    %>
+    <div class="ml-8 flex items-center">
+      <div class="text-muted-foreground mr-2">
+        <%= icon "corner-down-right" %>
+      </div>
+      <div class="w-full">
+        <%= render UI::BudgetCardComponent.new(budget_category: budget_category) %>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-medium mb-2">Another Subcategory</h3>
+    <% 
+      budget = OpenStruct.new(id: 1)
+      parent_category = OpenStruct.new(id: 4)
+      category = OpenStruct.new(
+        id: 6, 
+        name: "Dining Out", 
+        color: "#FF9800", 
+        lucide_icon: "utensils",
+        parent_id: 4
+      )
+      
+      budget_category = OpenStruct.new(
+        id: 6,
+        budget: budget,
+        category: category,
+        budgeted_spending: 10000,
+        actual_spending: 7000,
+        available_to_spend: 3000,
+        initialized?: true,
+        percent_of_budget_spent: 70,
+        budgeted_spending_money: Money.new(10000, "USD"),
+        actual_spending_money: Money.new(7000, "USD"),
+        available_to_spend_money: Money.new(3000, "USD")
+      )
+      
+      def budget_category.subcategory?
+        true
+      end
+    %>
+    <div class="ml-8 flex items-center">
+      <div class="text-muted-foreground mr-2">
+        <%= icon "corner-down-right" %>
+      </div>
+      <div class="w-full">
+        <%= render UI::BudgetCardComponent.new(budget_category: budget_category) %>
+      </div>
+    </div>
+  </div>
+</div>
