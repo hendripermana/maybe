@@ -1,0 +1,198 @@
+<div class="responsive-transaction-filters">
+  <!-- Mobile Filter Layout -->
+  <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+    <!-- Search Input - Full Width on Mobile -->
+    <div class="w-full sm:max-w-xs">
+      <%= render Ui::SearchInputComponent.new(
+        placeholder: "Search transactions...",
+        name: "q",
+        value: filters[:q],
+        data: { action: "input->form#submit" }
+      ) %>
+    </div>
+    
+    <!-- Filter Controls - Row on Mobile, Flex End on Larger Screens -->
+    <div class="flex items-center justify-between sm:justify-end gap-2">
+      <!-- Date Range Selector - Touch Friendly -->
+      <div class="relative">
+        <button type="button" 
+                class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                data-controller="disclosure"
+                data-action="disclosure#toggle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Date Range
+        </button>
+        
+        <!-- Date Range Dropdown - Positioned Absolutely -->
+        <div class="absolute right-0 z-10 mt-2 w-72 origin-top-right rounded-md bg-card border border-border shadow-lg hidden"
+             data-disclosure-target="content">
+          <div class="p-4 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Start Date -->
+              <div class="space-y-2">
+                <label for="start_date" class="text-sm font-medium leading-none">Start Date</label>
+                <input type="date" 
+                       id="start_date" 
+                       name="start_date" 
+                       value="<%= filters[:start_date] %>" 
+                       class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+              </div>
+              
+              <!-- End Date -->
+              <div class="space-y-2">
+                <label for="end_date" class="text-sm font-medium leading-none">End Date</label>
+                <input type="date" 
+                       id="end_date" 
+                       name="end_date" 
+                       value="<%= filters[:end_date] %>" 
+                       class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+              </div>
+            </div>
+            
+            <!-- Quick Date Presets -->
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" 
+                      class="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      data-action="click->form#setDateRange"
+                      data-range="this-month">
+                This Month
+              </button>
+              <button type="button" 
+                      class="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      data-action="click->form#setDateRange"
+                      data-range="last-month">
+                Last Month
+              </button>
+              <button type="button" 
+                      class="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      data-action="click->form#setDateRange"
+                      data-range="last-3-months">
+                Last 3 Months
+              </button>
+              <button type="button" 
+                      class="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      data-action="click->form#setDateRange"
+                      data-range="this-year">
+                This Year
+              </button>
+            </div>
+            
+            <!-- Apply Button -->
+            <div class="flex justify-end">
+              <button type="button" 
+                      class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                      data-action="click->form#submit click->disclosure#toggle">
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- More Filters Button - Touch Friendly -->
+      <div class="relative">
+        <button type="button" 
+                class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                data-controller="disclosure"
+                data-action="disclosure#toggle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          Filters
+          <% if has_active_filters? %>
+            <span class="ml-2 inline-flex items-center justify-center rounded-full bg-primary w-5 h-5 text-xs font-medium text-primary-foreground"><%= active_filters.size %></span>
+          <% end %>
+        </button>
+        
+        <!-- Filters Dropdown - Positioned Absolutely -->
+        <div class="absolute right-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-card border border-border shadow-lg hidden"
+             data-disclosure-target="content">
+          <div class="p-4 space-y-4">
+            <!-- Amount Range -->
+            <div class="space-y-2">
+              <label class="text-sm font-medium leading-none">Amount Range</label>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                  <input type="number" 
+                         name="min_amount" 
+                         placeholder="Min" 
+                         value="<%= filters[:min_amount] %>" 
+                         class="flex h-10 w-full rounded-md border border-input bg-background pl-8 pr-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                </div>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                  <input type="number" 
+                         name="max_amount" 
+                         placeholder="Max" 
+                         value="<%= filters[:max_amount] %>" 
+                         class="flex h-10 w-full rounded-md border border-input bg-background pl-8 pr-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Categories -->
+            <div class="space-y-2">
+              <label for="category_ids" class="text-sm font-medium leading-none">Categories</label>
+              <select name="category_ids[]" 
+                      id="category_ids" 
+                      multiple 
+                      class="flex h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                <% Current.family.categories.alphabetically.each do |category| %>
+                  <option value="<%= category.id %>" <%= 'selected' if filters[:category_ids]&.include?(category.id.to_s) %>><%= category.name %></option>
+                <% end %>
+              </select>
+            </div>
+            
+            <!-- Accounts -->
+            <div class="space-y-2">
+              <label for="account_ids" class="text-sm font-medium leading-none">Accounts</label>
+              <select name="account_ids[]" 
+                      id="account_ids" 
+                      multiple 
+                      class="flex h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                <% Current.family.accounts.alphabetically.each do |account| %>
+                  <option value="<%= account.id %>" <%= 'selected' if filters[:account_ids]&.include?(account.id.to_s) %>><%= account.name %></option>
+                <% end %>
+              </select>
+            </div>
+            
+            <!-- Apply Button -->
+            <div class="flex justify-end">
+              <button type="button" 
+                      class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                      data-action="click->form#submit click->disclosure#toggle">
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Active Filters Display - Scrollable on Mobile -->
+  <% if has_active_filters? %>
+    <div class="mt-3 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+      <% active_filters.each do |filter| %>
+        <%= render Ui::FilterBadgeComponent.new(
+          label: filter[:label],
+          value: filter[:value],
+          param_name: filter[:param_name],
+          data: { action: "click->form#removeFilter" }
+        ) %>
+      <% end %>
+      
+      <button type="button" 
+              class="inline-flex items-center justify-center rounded-md text-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              data-action="click->form#clearFilters">
+        Clear all
+      </button>
+    </div>
+  <% end %>
+</div>

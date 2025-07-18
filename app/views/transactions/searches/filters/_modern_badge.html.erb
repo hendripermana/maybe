@@ -1,0 +1,36 @@
+<%# locals: (param_key:, param_value:) %>
+
+<% label = case param_key
+           when "start_date"
+             "From: #{param_value}"
+           when "end_date"
+             "To: #{param_value}"
+           when "search"
+             "Search: #{param_value}"
+           when "amount"
+             param_value
+           when "accounts"
+             "Account: #{param_value}"
+           when "account_ids"
+             account = Current.family.accounts.find_by(id: param_value)
+             "Account: #{account&.name || param_value}"
+           when "categories"
+             "Category: #{param_value}"
+           when "merchants"
+             "Merchant: #{param_value}"
+           when "types"
+             "Type: #{param_value}"
+           when "tags"
+             "Tag: #{param_value}"
+           when "active_accounts_only"
+             "Active accounts only"
+           else
+             "#{param_key.humanize}: #{param_value}"
+           end %>
+
+<%= render FilterBadgeComponent.new(
+  label: label,
+  param_key: param_key,
+  param_value: param_value,
+  clear_url: clear_filter_transactions_path(param_key: param_key, param_value: param_value)
+) %>

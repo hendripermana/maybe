@@ -1,0 +1,41 @@
+<%= form_with url: transactions_path,
+              id: "transactions-search",
+              scope: :q,
+              method: :get,
+              data: { controller: "auto-submit-form" } do |form| %>
+  <%= hidden_field_tag :per_page, params[:per_page] %>
+
+  <div class="flex gap-2 mb-4">
+    <div class="grow">
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+        </div>
+        <%= form.text_field :search, 
+          value: @q[:search], 
+          placeholder: "Search transactions...", 
+          class: "flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          data: { "auto-submit-form-target": "auto" } 
+        %>
+      </div>
+    </div>
+
+    <%= render MenuComponent.new(variant: "button", no_padding: true) do |menu| %>
+      <% menu.with_button(
+        id: "transaction-filters-button",
+        type: "button",
+        text: "Filter",
+        variant: "outline",
+        icon: "list-filter",
+        data: { menu_target: "button" }
+      ) %>
+
+      <% menu.with_custom_content do %>
+        <%= render "transactions/searches/menu", form: form %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,117 @@
+<%= turbo_frame_tag dom_id(entry) do %>
+  <%= turbo_frame_tag dom_id(transaction) do %>
+    <div class="<%= container_classes %>" data-transaction-item-target="container">
+      <!-- Checkbox and Transaction Name/Details - Responsive Column -->
+      <div class="<%= name_column_classes %> flex items-center gap-3">
+        <!-- Checkbox with larger touch target -->
+        <div class="relative min-w-[24px] min-h-[24px] flex items-center justify-center">
+          <%= check_box_tag dom_id(entry, "selection"),
+              disabled: transfer?,
+              class: "checkbox checkbox--light focus:ring-2 focus:ring-primary-500 w-5 h-5", # Larger checkbox for touch
+              data: {
+                id: entry.id,
+                "bulk-select-target": "row",
+                action: "bulk-select#toggleRowSelection"
+              } %>
+        </div>
+
+        <!-- Transaction Info with Responsive Layout -->
+        <div class="max-w-full min-w-0">
+          <div class="flex items-center gap-2">
+            <!-- Merchant Logo or Icon -->
+            <% if has_merchant_logo? %>
+              <%= image_tag merchant_logo_url,
+                  class: "w-8 h-8 rounded-full object-cover", # Larger for touch
+                  loading: "lazy",
+                  alt: "#{transaction.merchant.name} logo" %>
+            <% else %>
+              <%= render FilledIconComponent.new(
+                variant: :text,
+                text: entry.name,
+                size: "md", # Larger for touch
+                rounded: true
+              ) %>
+            <% end %>
+
+            <!-- Transaction Details with Responsive Layout -->
+            <div class="truncate min-w-0 flex-1">
+              <div class="space-y-0.5">
+                <!-- Transaction Name and Indicators -->
+                <div class="flex items-center gap-1 min-w-0">
+                  <div class="truncate flex-shrink min-w-0">
+                    <%= link_to(
+                          entry.name,
+                          transaction_path,
+                          data: {
+                            turbo_frame: "drawer",
+                            turbo_prefetch: false
+                          },
+                          class: "hover:underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 rounded-sm py-1" # Added padding for touch
+                        ) %>
+                  </div>
+
+                  <!-- Special Indicators -->
+                  <div class="flex items-center gap-1 flex-shrink-0">
+                    <% if one_time? %>
+                      <span class="text-orange-500" title="One-time <%= entry.amount.negative? ? "income" : "expense" %> (excluded from averages)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M12 2 L15.09 8.26 L22 9.27 L17 14.14 L18.18 21.02 L12 17.77 L5.82 21.02 L7 14.14 L2 9.27 L8.91 8.26 L12 2"></path>
+                        </svg>
+                      </span>
+                    <% end %>
+
+                    <% if transaction.transfer.present? %>
+                      <span class="text-blue-500" title="Transfer transaction">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M18 8L22 12L18 16"></path>
+                          <path d="M6 16L2 12L6 8"></path>
+                          <path d="M2 12H22"></path>
+                        </svg>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+
+                <!-- Account Name - Hidden on Small Mobile, Visible on Larger Screens -->
+                <div class="text-muted-foreground text-xs font-normal hidden sm:block">
+                  <% if transfer? %>
+                    <span>
+                      <%= transaction.loan_payment? ? "Loan Payment" : "Transfer" %> • <%= entry.account.name %>
+                    </span>
+                  <% else %>
+                    <%= link_to entry.account.name,
+                        account_path_with_focus,
+                        data: { turbo_frame: "_top" },
+                        class: "hover:underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 rounded-sm" %>
+                  <% end %>
+                </div>
+                
+                <!-- Category Badge - Visible on Mobile, Hidden on Larger Screens -->
+                <div class="block md:hidden mt-1">
+                  <%= render "transactions/transaction_category", transaction: transaction %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Column - Hidden on Mobile, Visible on Larger Screens -->
+      <div class="hidden md:flex items-center gap-1 col-span-2">
+        <%= render "transactions/transaction_category", transaction: transaction %>
+      </div>
+
+      <!-- Amount Column - Responsive -->
+      <div class="col-span-4 md:col-span-4 lg:col-span-2 ml-auto text-right">
+        <%= content_tag :p, formatted_amount, class: amount_classes %>
+      </div>
+
+      <!-- Balance Column - Hidden on Mobile and Medium, Visible on Large Screens -->
+      <% if view_ctx != "global" %>
+        <div class="col-span-2 justify-self-end hidden lg:block">
+          <%= tag.p balance_amount, class: balance_classes %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

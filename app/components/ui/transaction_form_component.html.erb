@@ -1,0 +1,152 @@
+<div class="transaction-form-container">
+  <%= form_with(
+    model: entry,
+    url: url,
+    method: method,
+    class: "space-y-6",
+    data: { controller: "transaction-form" }
+  ) do |f| %>
+    <% if entry.errors.any? %>
+      <div class="rounded-lg border border-destructive bg-destructive/10 p-4">
+        <div class="font-medium text-destructive">
+          Please correct the following errors:
+        </div>
+        <ul class="mt-2 list-disc pl-5 text-sm text-destructive">
+          <% entry.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <section>
+      <%= f.hidden_field :nature, value: params[:nature] || "outflow" %>
+      <%= f.hidden_field :entryable_type, value: "Transaction" %>
+      
+      <div class="flex border-b border-border">
+        <button type="button" 
+                class="px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px <%= params[:nature] != 'inflow' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground' %>"
+                data-action="click->transaction-form#changeType"
+                data-type="outflow">
+          Expense
+        </button>
+        <button type="button" 
+                class="px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px <%= params[:nature] == 'inflow' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground' %>"
+                data-action="click->transaction-form#changeType"
+                data-type="inflow">
+          Income
+        </button>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <%= render Ui::InputComponent.new(
+        type: "text",
+        name: "entry[name]",
+        id: "entry_name",
+        label: "Description",
+        placeholder: "Enter transaction description",
+        value: entry.name,
+        required: true,
+        error: entry.errors[:name].first
+      ) %>
+
+      <% if entry.account_id %>
+        <%= f.hidden_field :account_id %>
+      <% else %>
+        <div class="space-y-2">
+          <label for="entry_account_id" class="text-sm font-medium leading-none">Account</label>
+          <select name="entry[account_id]" id="entry_account_id" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+            <option value="">Select an account</option>
+            <% Current.family.accounts.manual.alphabetically.each do |account| %>
+              <option value="<%= account.id %>" <%= 'selected' if entry.account_id == account.id %>><%= account.name %></option>
+            <% end %>
+          </select>
+        </div>
+      <% end %>
+
+      <div class="space-y-2">
+        <label for="entry_amount" class="text-sm font-medium leading-none">Amount</label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"><%= Current.family.currency_symbol %></span>
+          <input type="number" 
+                 name="entry[amount]" 
+                 id="entry_amount" 
+                 value="<%= entry.amount.to_s %>" 
+                 step="0.01" 
+                 required 
+                 class="flex h-10 w-full rounded-md border border-input bg-background pl-8 pr-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label for="entry_entryable_attributes_category_id" class="text-sm font-medium leading-none">Category</label>
+        <select name="entry[entryable_attributes][category_id]" 
+                id="entry_entryable_attributes_category_id" 
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                data-transaction-form-target="categorySelect">
+          <option value="">Select a category</option>
+          <% categories = params[:nature] == "inflow" ? income_categories : expense_categories %>
+          <% categories.each do |category| %>
+            <option value="<%= category.id %>" <%= 'selected' if entry.entryable.try(:category_id) == category.id %>><%= category.name %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <%= render Ui::InputComponent.new(
+        type: "date",
+        name: "entry[date]",
+        id: "entry_date",
+        label: "Date",
+        value: entry.date || Date.current,
+        required: true,
+        min: Entry.min_supported_date,
+        max: Date.current,
+        error: entry.errors[:date].first
+      ) %>
+    </section>
+
+    <div class="border border-border rounded-lg">
+      <div class="flex items-center justify-between p-4 cursor-pointer" data-action="click->transaction-form#toggleAdvanced">
+        <h3 class="text-sm font-medium">Additional Details</h3>
+        <div class="text-muted-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-down" data-transaction-form-target="chevron">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+      <div class="p-4 border-t border-border hidden" data-transaction-form-target="advancedFields">
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <label for="entry_entryable_attributes_tag_ids" class="text-sm font-medium leading-none">Tags</label>
+            <select name="entry[entryable_attributes][tag_ids][]" 
+                    id="entry_entryable_attributes_tag_ids" 
+                    multiple 
+                    class="flex h-40 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+              <% Current.family.tags.alphabetically.each do |tag| %>
+                <option value="<%= tag.id %>" <%= 'selected' if entry.entryable.try(:tag_ids)&.include?(tag.id) %>><%= tag.name %></option>
+              <% end %>
+            </select>
+          </div>
+          
+          <%= render Ui::InputComponent.new(
+            type: "textarea",
+            name: "entry[notes]",
+            id: "entry_notes",
+            label: "Notes",
+            placeholder: "Add notes about this transaction",
+            value: entry.notes,
+            rows: 5,
+            error: entry.errors[:notes].first
+          ) %>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <button type="submit" class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+        <%= entry.new_record? ? "Create Transaction" : "Update Transaction" %>
+      </button>
+    </div>
+  <% end %>
+</div>

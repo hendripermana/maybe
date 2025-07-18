@@ -1,0 +1,91 @@
+<%= turbo_frame_tag dom_id(entry) do %>
+  <%= turbo_frame_tag dom_id(transaction) do %>
+    <div class="<%= container_classes %>" data-transaction-item-target="container">
+      <div class="pr-4 lg:pr-10 flex items-center gap-3 lg:gap-4 col-span-8 <%= name_column_classes %>">
+        <%= check_box_tag dom_id(entry, "selection"),
+            disabled: transfer?,
+            class: "checkbox checkbox--light focus:ring-2 focus:ring-primary-500",
+            data: {
+              id: entry.id,
+              "bulk-select-target": "row",
+              action: "bulk-select#toggleRowSelection"
+            } %>
+
+        <div class="max-w-full">
+          <div class="flex items-center gap-2">
+            <% if has_merchant_logo? %>
+              <%= image_tag merchant_logo_url,
+                  class: "w-6 h-6 rounded-full object-cover",
+                  loading: "lazy",
+                  alt: "#{transaction.merchant.name} logo" %>
+            <% else %>
+              <%= render FilledIconComponent.new(
+                variant: :text,
+                text: entry.name,
+                size: "sm",
+                rounded: true
+              ) %>
+            <% end %>
+
+            <div class="truncate">
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-1 min-w-0">
+                  <div class="truncate flex-shrink">
+                    <%= link_to(
+                          entry.name,
+                          transaction_path,
+                          data: {
+                            turbo_frame: "drawer",
+                            turbo_prefetch: false
+                          },
+                          class: "hover:underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 rounded-sm"
+                        ) %>
+                  </div>
+
+                  <div class="flex items-center gap-1 flex-shrink-0">
+                    <% if one_time? %>
+                      <span class="text-orange-500" title="One-time <%= entry.amount.negative? ? "income" : "expense" %> (excluded from averages)">
+                        <%= icon "asterisk", size: "sm", color: "current" %>
+                      </span>
+                    <% end %>
+
+                    <% if transaction.transfer.present? %>
+                      <%= render "transactions/transfer_match", transaction: transaction %>
+                    <% end %>
+                  </div>
+                </div>
+
+                <div class="text-secondary text-xs font-normal hidden lg:block">
+                  <% if transfer? %>
+                    <span class="text-secondary">
+                      <%= transaction.loan_payment? ? "Loan Payment" : "Transfer" %> • <%= entry.account.name %>
+                    </span>
+                  <% else %>
+                    <%= link_to entry.account.name,
+                        account_path_with_focus,
+                        data: { turbo_frame: "_top" },
+                        class: "hover:underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 rounded-sm" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden lg:flex items-center gap-1 col-span-2">
+        <%= render "transactions/transaction_category", transaction: transaction %>
+      </div>
+
+      <div class="col-span-4 lg:col-span-2 ml-auto text-right">
+        <%= content_tag :p, formatted_amount, class: amount_classes %>
+      </div>
+
+      <% if view_ctx != "global" %>
+        <div class="col-span-2 justify-self-end hidden lg:block">
+          <%= tag.p balance_amount, class: balance_classes %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

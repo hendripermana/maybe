@@ -1,0 +1,42 @@
+<div class="<%= container_classes %>">
+  <!-- Checkbox and Transaction Name/Details - Responsive Column -->
+  <div class="<%= name_column_classes %> flex items-center gap-3">
+    <!-- Checkbox placeholder -->
+    <div class="w-5 h-5 rounded-sm bg-gray-200 [data-theme=dark]:bg-gray-700 animate-pulse"></div>
+    
+    <!-- Transaction Info with Responsive Layout -->
+    <div class="flex items-center gap-2 w-full">
+      <!-- Icon placeholder -->
+      <%= render SkeletonComponent.new(variant: :circle, width: "32px", height: "32px") %>
+      
+      <!-- Transaction Details with Responsive Layout -->
+      <div class="space-y-2 w-full max-w-xs">
+        <!-- Transaction Name placeholder -->
+        <%= render SkeletonComponent.new(variant: :text, width: "80%") %>
+        
+        <!-- Account Name placeholder - Hidden on Small Mobile -->
+        <%= render SkeletonComponent.new(variant: :text, width: "60%", classes: "hidden sm:block") %>
+        
+        <!-- Category Badge placeholder - Visible on Mobile Only -->
+        <%= render SkeletonComponent.new(variant: :rectangle, width: "80px", height: "24px", classes: "block md:hidden mt-1") %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Column - Hidden on Mobile -->
+  <div class="hidden md:flex items-center gap-1 col-span-2">
+    <%= render SkeletonComponent.new(variant: :rectangle, width: "80%", height: "24px") %>
+  </div>
+
+  <!-- Amount Column - Responsive -->
+  <div class="col-span-4 md:col-span-4 lg:col-span-2 ml-auto text-right">
+    <%= render SkeletonComponent.new(variant: :text, width: "60px", classes: "ml-auto") %>
+  </div>
+
+  <!-- Balance Column - Hidden on Mobile and Medium -->
+  <% if view_ctx != "global" %>
+    <div class="col-span-2 justify-self-end hidden lg:block">
+      <%= render SkeletonComponent.new(variant: :text, width: "60px", classes: "ml-auto") %>
+    </div>
+  <% end %>
+</div>

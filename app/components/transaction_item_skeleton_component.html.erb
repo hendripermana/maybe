@@ -1,0 +1,28 @@
+<div class="<%= container_classes %>">
+  <div class="pr-4 lg:pr-10 flex items-center gap-3 lg:gap-4 col-span-8 <%= name_column_classes %>">
+    <div class="w-4 h-4 rounded-sm bg-gray-200 [data-theme=dark]:bg-gray-700 animate-pulse"></div>
+    
+    <div class="flex items-center gap-2 w-full">
+      <%= render SkeletonComponent.new(variant: :circle, width: "24px", height: "24px") %>
+      
+      <div class="space-y-2 w-full max-w-xs">
+        <%= render SkeletonComponent.new(variant: :text, width: "80%") %>
+        <%= render SkeletonComponent.new(variant: :text, width: "60%", classes: "hidden lg:block") %>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden lg:flex items-center gap-1 col-span-2">
+    <%= render SkeletonComponent.new(variant: :rectangle, width: "80%", height: "24px") %>
+  </div>
+
+  <div class="col-span-4 lg:col-span-2 ml-auto text-right">
+    <%= render SkeletonComponent.new(variant: :text, width: "60px", classes: "ml-auto") %>
+  </div>
+
+  <% if view_ctx != "global" %>
+    <div class="col-span-2 justify-self-end hidden lg:block">
+      <%= render SkeletonComponent.new(variant: :text, width: "60px", classes: "ml-auto") %>
+    </div>
+  <% end %>
+</div>

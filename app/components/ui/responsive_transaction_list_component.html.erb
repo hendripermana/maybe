@@ -1,0 +1,43 @@
+<div class="responsive-transaction-list">
+  <% if entries.any? %>
+    <div class="space-y-2">
+      <!-- Header row - only visible on tablet and larger screens -->
+      <div class="hidden md:grid md:grid-cols-12 text-xs font-medium text-muted-foreground px-4 py-2">
+        <!-- Transaction column header -->
+        <div class="col-span-6">Transaction</div>
+        
+        <!-- Category column header - only visible on large screens -->
+        <div class="hidden lg:block col-span-2">Category</div>
+        
+        <!-- Amount column header -->
+        <div class="col-span-2 md:col-span-4 lg:col-span-2 text-right">Amount</div>
+        
+        <!-- Balance column header - only visible on large screens and when not in global view -->
+        <% if view_ctx != "global" %>
+          <div class="hidden lg:block col-span-2 text-right">Balance</div>
+        <% end %>
+      </div>
+      
+      <!-- Transaction items -->
+      <% entries.each do |entry| %>
+        <% balance_trend = balance_trends&.dig(entry.id) %>
+        <%= render(TransactionItemComponent.new(
+          entry: entry,
+          view_ctx: view_ctx,
+          balance_trend: balance_trend
+        )) %>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Empty state -->
+    <div class="flex flex-col items-center justify-center p-8 text-center border border-dashed border-border rounded-lg bg-muted/50">
+      <div class="mb-4 rounded-full bg-primary/10 p-3">
+        <svg class="h-6 w-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium">No transactions found</h3>
+      <p class="text-sm text-muted-foreground mt-2">Try adjusting your filters or create a new transaction.</p>
+    </div>
+  <% end %>
+</div>

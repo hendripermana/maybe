@@ -1,0 +1,56 @@
+<div class="responsive-transaction-container">
+  <!-- Header Section -->
+  <% if header %>
+    <div class="mb-4 sm:mb-6">
+      <%= header %>
+    </div>
+  <% end %>
+
+  <!-- Filters Section - Responsive Layout -->
+  <% if filters %>
+    <div class="mb-4">
+      <%= filters %>
+    </div>
+  <% end %>
+
+  <!-- Main Content Section -->
+  <div class="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+    <% if loading? %>
+      <!-- Loading State -->
+      <% if loading_state %>
+        <%= loading_state %>
+      <% else %>
+        <div class="p-4 space-y-4">
+          <% 5.times do %>
+            <%= render Ui::ResponsiveTransactionItemSkeletonComponent.new %>
+          <% end %>
+        </div>
+      <% end %>
+    <% elsif content %>
+      <!-- Content State -->
+      <%= content %>
+    <% else %>
+      <!-- Empty State -->
+      <% if empty_state %>
+        <%= empty_state %>
+      <% else %>
+        <div class="flex flex-col items-center justify-center p-8 text-center">
+          <div class="mb-4 rounded-full bg-primary/10 p-3">
+            <svg class="h-6 w-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium">No transactions found</h3>
+          <p class="text-sm text-muted-foreground mt-2">Try adjusting your filters or create a new transaction.</p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Pagination Section -->
+  <% if pagination %>
+    <div class="mt-4 sm:mt-6">
+      <%= pagination %>
+    </div>
+  <% end %>
+</div>

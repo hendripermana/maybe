@@ -1,0 +1,128 @@
+/* Responsive Transaction Components Styles */
+
+/* Touch-friendly styles */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Responsive transaction list */
+.responsive-transaction-list {
+  width: 100%;
+}
+
+/* Responsive transaction item */
+.responsive-transaction-item {
+  transition: background-color 0.2s ease;
+}
+
+/* Improved touch targets */
+.responsive-transaction-item button,
+.responsive-transaction-item a,
+.responsive-transaction-item input[type="checkbox"] {
+  min-height: 44px; /* Minimum touch target size */
+}
+
+/* Scrollable filters on mobile */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+}
+
+/* Responsive media queries */
+@media (max-width: 640px) {
+  /* Mobile-specific styles */
+  .responsive-transaction-container {
+    margin: 0 -1rem; /* Negative margin to expand container on small screens */
+    width: calc(100% + 2rem);
+  }
+  
+  /* Larger touch targets on mobile */
+  .responsive-transaction-item .checkbox {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Improved spacing for touch on mobile */
+  .responsive-transaction-item {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Tablet-specific styles */
+  .responsive-transaction-item {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Desktop-specific styles */
+  .responsive-transaction-item {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Orientation-specific styles */
+@media (max-width: 640px) and (orientation: landscape) {
+  /* Mobile landscape mode */
+  .responsive-transaction-container {
+    margin: 0;
+    width: 100%;
+  }
+  
+  /* Adjust layout for landscape orientation */
+  .responsive-transaction-item {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .responsive-transaction-container {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  .responsive-transaction-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  /* Hide interactive elements when printing */
+  .responsive-transaction-filters,
+  .responsive-pagination-component,
+  .responsive-transaction-item input[type="checkbox"] {
+    display: none !important;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .responsive-transaction-item {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .responsive-transaction-item {
+    border: 1px solid CanvasText;
+  }
+  
+  .responsive-transaction-item:focus-within {
+    outline: 2px solid Highlight;
+  }
+}

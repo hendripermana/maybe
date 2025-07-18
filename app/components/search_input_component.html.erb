@@ -1,0 +1,8 @@
+<div class="<%= container_classes %>">
+  <%= icon("search", size: "sm", color: "gray") %>
+  <%= form.text_field name,
+                      placeholder: placeholder,
+                      value: value,
+                      class: input_classes,
+                      data: auto_submit ? { "auto-submit-form-target": "auto" } : {} %>
+</div>

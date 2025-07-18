@@ -1,0 +1,8 @@
+<div class="<%= badge_classes %>">
+  <span><%= label %></span>
+  <%= link_to clear_url, 
+              class: button_classes,
+              aria: { label: "Remove #{label} filter" } do %>
+    <%= icon("x", size: "xs", color: "gray") %>
+  <% end %>
+</div>
