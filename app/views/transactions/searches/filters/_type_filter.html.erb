@@ -1,37 +1,39 @@
 <%# locals: (form:) %>
 
-<div class="p-2 space-y-3">
-  <div class="flex items-center gap-3" data-filter-name="income">
-    <%= form.check_box :types,
-                           {
-                             multiple: true,
-                             checked: @q[:types]&.include?("income"),
-                             class: "checkbox checkbox--light"
-                           },
-                           "income",
-                           nil %>
-    <%= form.label :types, t(".income"), value: "income", class: "text-sm text-primary" %>
+<div class="p-3 space-y-3">
+  <div class="flex items-center space-x-2 rounded-md p-2 hover:bg-accent" data-filter-name="income">
+    <input type="checkbox" 
+           id="type_income" 
+           name="q[types][]" 
+           value="income" 
+           <%= 'checked' if @q[:types]&.include?("income") %>
+           class="h-4 w-4 rounded border-input bg-background text-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+    <label for="type_income" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+      <%= t(".income") %>
+    </label>
   </div>
-  <div class="flex items-center gap-3" data-filter-name="expense">
-    <%= form.check_box :types,
-                           {
-                             multiple: true,
-                             checked: @q[:types]&.include?("expense"),
-                             class: "checkbox checkbox--light"
-                           },
-                           "expense",
-                           nil %>
-    <%= form.label :types, t(".expense"), value: "expense", class: "text-sm text-primary" %>
+  
+  <div class="flex items-center space-x-2 rounded-md p-2 hover:bg-accent" data-filter-name="expense">
+    <input type="checkbox" 
+           id="type_expense" 
+           name="q[types][]" 
+           value="expense" 
+           <%= 'checked' if @q[:types]&.include?("expense") %>
+           class="h-4 w-4 rounded border-input bg-background text-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+    <label for="type_expense" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+      <%= t(".expense") %>
+    </label>
   </div>
-  <div class="flex items-center gap-3" data-filter-name="transfer">
-    <%= form.check_box :types,
-                           {
-                             multiple: true,
-                             checked: @q[:types]&.include?("transfer"),
-                             class: "checkbox checkbox--light"
-                           },
-                           "transfer",
-                           nil %>
-    <%= form.label :types, t(".transfer"), value: "transfer", class: "text-sm text-primary" %>
+  
+  <div class="flex items-center space-x-2 rounded-md p-2 hover:bg-accent" data-filter-name="transfer">
+    <input type="checkbox" 
+           id="type_transfer" 
+           name="q[types][]" 
+           value="transfer" 
+           <%= 'checked' if @q[:types]&.include?("transfer") %>
+           class="h-4 w-4 rounded border-input bg-background text-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+    <label for="type_transfer" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+      <%= t(".transfer") %>
+    </label>
   </div>
 </div>

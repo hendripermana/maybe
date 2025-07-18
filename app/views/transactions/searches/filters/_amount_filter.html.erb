@@ -1,15 +1,22 @@
 <%# locals: (form:) %>
 
-<div class="space-y-2">
-  <div class="form-field">
-    <%= form.select :amount_operator, options_for_select([
-      [t(".equal_to"), "equal"],
-      [t(".greater_than"), "greater"],
-      [t(".less_than"), "less"]
-    ], @q[:amount_operator] || "equal"), {}, class: "form-field__input" %>
+<div class="p-3 space-y-4">
+  <div class="space-y-2">
+    <label for="q_amount_operator" class="text-sm font-medium leading-none">Operator</label>
+    <select name="q[amount_operator]" id="q_amount_operator" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <option value="equal" <%= 'selected' if @q[:amount_operator] == 'equal' || @q[:amount_operator].nil? %>><%= t(".equal_to") %></option>
+      <option value="greater" <%= 'selected' if @q[:amount_operator] == 'greater' %>><%= t(".greater_than") %></option>
+      <option value="less" <%= 'selected' if @q[:amount_operator] == 'less' %>><%= t(".less_than") %></option>
+    </select>
   </div>
 
-  <div class="form-field">
-    <%= form.number_field :amount, step: 0.01, class: "form-field__input", placeholder: t(".placeholder"), value: @q[:amount] %>
-  </div>
+  <%= render Ui::InputComponent.new(
+    type: "number",
+    name: "q[amount]",
+    id: "q_amount",
+    label: "Amount",
+    value: @q[:amount],
+    placeholder: t(".placeholder"),
+    step: "0.01"
+  ) %>
 </div>

@@ -99,11 +99,12 @@ class DialogComponent < ViewComponent::Base
     merged_opts = opts.dup
     data = merged_opts.delete(:data) || {}
 
-    data[:controller] = [ "dialog", "hotkey", data[:controller] ].compact.join(" ")
+    data[:controller] = [ "dialog", "hotkey", "focus-trap", data[:controller] ].compact.join(" ")
     data[:dialog_auto_open_value] = auto_open
     data[:dialog_reload_on_close_value] = reload_on_close
-    data[:action] = [ "mousedown->dialog#clickOutside", data[:action] ].compact.join(" ")
+    data[:action] = [ "mousedown->dialog#clickOutside", "keydown.escape->dialog#close", data[:action] ].compact.join(" ")
     data[:hotkey] = "esc:dialog#close"
+    data[:focus_trap_auto_focus_value] = true
     merged_opts[:data] = data
 
     merged_opts
