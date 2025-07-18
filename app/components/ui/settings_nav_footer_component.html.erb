@@ -1,0 +1,74 @@
+<%# Modern settings navigation footer component %>
+<div class="settings-nav-footer">
+  <%# Desktop navigation footer %>
+  <div class="hidden md:flex flex-row justify-between gap-4">
+    <% if previous_setting %>
+      <%= render Ui::CardComponent.new(
+        variant: :interactive,
+        size: :sm,
+        href: helpers.send(previous_setting[:path]),
+        class: "flex-1"
+      ) do %>
+        <div class="flex items-center gap-3">
+          <%= helpers.icon("arrow-left") %>
+          <div>
+            <span class="block text-sm text-secondary"><%= I18n.t("settings._settings_nav_link_large.previous") %></span>
+            <span class="block text-sm font-medium text-primary"><%= previous_setting[:name] %></span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    
+    <% if next_setting %>
+      <%= render Ui::CardComponent.new(
+        variant: :interactive,
+        size: :sm,
+        href: helpers.send(next_setting[:path]),
+        class: "flex-1"
+      ) do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="block text-sm text-secondary"><%= I18n.t("settings._settings_nav_link_large.next") %></span>
+            <span class="block text-sm font-medium text-primary"><%= next_setting[:name] %></span>
+          </div>
+          <%= helpers.icon("arrow-right") %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Mobile navigation footer %>
+  <div class="md:hidden flex flex-col gap-4">
+    <% if previous_setting %>
+      <%= render Ui::CardComponent.new(
+        variant: :interactive,
+        size: :sm,
+        href: helpers.send(previous_setting[:path])
+      ) do %>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <%= helpers.icon("arrow-left") %>
+            <span class="text-sm text-secondary">Back</span>
+          </div>
+          <span class="text-sm font-medium text-primary"><%= previous_setting[:name] %></span>
+        </div>
+      <% end %>
+    <% end %>
+    
+    <% if next_setting %>
+      <%= render Ui::CardComponent.new(
+        variant: :interactive,
+        size: :sm,
+        href: helpers.send(next_setting[:path])
+      ) do %>
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-secondary">Next</span>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-primary"><%= next_setting[:name] %></span>
+            <%= helpers.icon("arrow-right") %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

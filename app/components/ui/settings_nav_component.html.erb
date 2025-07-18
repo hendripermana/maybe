@@ -1,0 +1,114 @@
+<%# Modern settings navigation component with responsive design %>
+<div class="settings-nav space-y-6">
+  <%# Desktop back button %>
+  <div class="hidden lg:block">
+    <%= render Ui::ButtonComponent.new(
+      variant: :ghost,
+      icon: "chevron-left",
+      icon_position: :left,
+      href: previous_path,
+      text: "Back"
+    ) %>
+    <span class="hidden md:inline-block uppercase bg-surface-inset-hover rounded-sm px-1 py-0.5 text-xs text-secondary shadow-sm ml-2 pointer-events-none" data-controller="hotkey" data-hotkey="Escape">
+      <kbd>esc</kbd>
+    </span>
+  </div>
+
+  <%# Desktop navigation %>
+  <nav class="space-y-6 hidden md:block">
+    <% sections.each do |section| %>
+      <section class="space-y-2">
+        <div class="flex items-center gap-2 px-3">
+          <h3 class="uppercase text-secondary font-medium text-xs"><%= section[:header] %></h3>
+          <div class="h-px bg-border flex-grow"></div>
+        </div>
+        <ul class="space-y-1">
+          <% section[:items].each do |item| %>
+            <% next if item[:if] == false %>
+            <li>
+              <%= link_to item[:path], class: class_names(
+                "flex items-center gap-2 whitespace-nowrap px-3 py-2 rounded-lg text-sm transition-colors",
+                active?(item[:path]) ? "text-primary bg-card shadow-border-xs" : "text-secondary hover:bg-surface-hover"
+              ), aria: { current: ("page" if active?(item[:path])) } do %>
+                <%= helpers.icon(item[:icon]) if item[:icon] %>
+                <span><%= item[:label] %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+    <section>
+      <%= button_to helpers.session_path(helpers.Current.session), method: :delete, class: "flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-surface-hover w-full transition-colors" do %>
+        <%= helpers.icon("log-out", color: "current") %>
+        <span><%= I18n.t("settings._settings_nav.logout") %></span>
+      <% end %>
+    </section>
+  </nav>
+
+  <%# Mobile navigation %>
+  <nav class="md:hidden space-y-4" id="mobile-settings-nav" data-controller="preserve-scroll scroll-on-connect settings-nav">
+    <%# Mobile back button %>
+    <div class="flex items-center mb-4">
+      <%= render Ui::ButtonComponent.new(
+        variant: :ghost,
+        icon: "chevron-left",
+        icon_position: :left,
+        href: previous_path,
+        text: "Back"
+      ) %>
+    </div>
+
+    <%# Mobile section tabs %>
+    <div class="flex overflow-x-auto pb-2 gap-2 settings-nav-tabs">
+      <% sections.each_with_index do |section, index| %>
+        <button 
+          class="px-3 py-1.5 text-sm whitespace-nowrap rounded-md border border-transparent transition-colors"
+          data-settings-nav-target="tab"
+          data-action="settings-nav#select"
+          data-index="<%= index %>"
+          data-selected-class="bg-card text-primary border-border shadow-sm"
+          data-unselected-class="text-secondary hover:bg-surface-hover"
+          role="tab"
+          aria-selected="<%= index == 0 %>"
+        >
+          <%= section[:header] %>
+        </button>
+      <% end %>
+    </div>
+
+    <%# Mobile section content %>
+    <div class="space-y-1">
+      <% sections.each_with_index do |section, index| %>
+        <div 
+          class="space-y-1" 
+          data-settings-nav-target="panel"
+          data-index="<%= index %>"
+          data-selected-class="block"
+          data-unselected-class="hidden"
+          role="tabpanel"
+          aria-hidden="<%= index != 0 %>"
+        >
+          <% section[:items].each do |item| %>
+            <% next if item[:if] == false %>
+            <%= link_to item[:path], class: class_names(
+              "flex items-center gap-2 whitespace-nowrap px-3 py-2 rounded-lg text-sm transition-colors",
+              active?(item[:path]) ? "text-primary bg-card shadow-border-xs" : "text-secondary hover:bg-surface-hover"
+            ), aria: { current: ("page" if active?(item[:path])) } do %>
+              <%= helpers.icon(item[:icon]) if item[:icon] %>
+              <span><%= item[:label] %></span>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+      
+      <%# Mobile logout button %>
+      <div class="pt-4">
+        <%= button_to helpers.session_path(helpers.Current.session), method: :delete, class: "flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-surface-hover w-full transition-colors" do %>
+          <%= helpers.icon("log-out", color: "current") %>
+          <span><%= I18n.t("settings._settings_nav.logout") %></span>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+</div>

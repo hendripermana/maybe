@@ -35,28 +35,11 @@ module SettingsHelper
 
   def settings_section(title:, subtitle: nil, &block)
     content = capture(&block)
-    render partial: "settings/section", locals: { title: title, subtitle: subtitle, content: content }
+    render Ui::SettingsSectionComponent.new(title: title, subtitle: subtitle) { content }
   end
 
-  def settings_nav_footer
-    previous_setting = adjacent_setting(request.path, -1)
-    next_setting = adjacent_setting(request.path, 1)
-
-    content_tag :div, class: "hidden md:flex flex-row justify-between gap-4" do
-      concat(previous_setting)
-      concat(next_setting)
-    end
-  end
-
-  def settings_nav_footer_mobile
-    previous_setting = adjacent_setting(request.path, -1)
-    next_setting = adjacent_setting(request.path, 1)
-
-    content_tag :div, class: "md:hidden flex flex-col gap-4" do
-      concat(previous_setting)
-      concat(next_setting)
-    end
-  end
+  # These methods are no longer needed as we're using SettingsNavFooterComponent directly
+  # Keeping the adjacent_setting method for backward compatibility
 
   private
     def not_self_hosted?

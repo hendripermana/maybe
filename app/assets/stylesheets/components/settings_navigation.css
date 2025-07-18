@@ -1,0 +1,67 @@
+/* Modern settings navigation styles */
+
+/* Settings navigation container */
+.settings-nav {
+  --settings-nav-item-radius: 0.5rem;
+  --settings-nav-item-padding: 0.5rem 0.75rem;
+}
+
+/* Settings navigation section headers */
+.settings-nav h3 {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Settings navigation items */
+.settings-nav a {
+  border-radius: var(--settings-nav-item-radius);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--settings-nav-item-padding);
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+/* Active state for navigation items */
+.settings-nav a[aria-current="page"] {
+  background-color: var(--color-card);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-border-xs);
+}
+
+/* Hover state for navigation items */
+.settings-nav a:not([aria-current="page"]):hover {
+  background-color: var(--color-surface-hover);
+}
+
+/* Mobile navigation tabs */
+.settings-nav-tabs {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.settings-nav-tabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Settings navigation footer */
+.settings-nav-footer {
+  margin-top: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .settings-nav-footer {
+    margin-top: 1rem;
+  }
+}
+
+/* Accessibility focus styles */
+.settings-nav a:focus-visible,
+.settings-nav button:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
