@@ -1,0 +1,75 @@
+/* Touch Interaction Styles */
+
+/* Touch active state for inputs */
+.touch-device .form-field__input.touch-active {
+  background-color: var(--color-accent-100);
+  border-color: var(--color-accent-500);
+}
+
+/* Increase touch target size on touch devices */
+.touch-device .form-field__input {
+  min-height: 2.75rem;
+  font-size: 1.05rem;
+}
+
+/* Prevent text selection during touch interactions */
+.touch-device .form-field__input {
+  user-select: none;
+}
+
+/* Add subtle transition for touch feedback */
+.form-field__input {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Ensure proper spacing for touch targets */
+.touch-device .subcategory-item {
+  padding: 0.5rem 0;
+}
+
+/* Enhance touch feedback for the confirm button */
+.touch-device .confirm-button-container button {
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+
+.touch-device .confirm-button-container button:active {
+  transform: scale(0.98);
+}
+
+/* Optimize number inputs for touch */
+.touch-device input[type="number"] {
+  font-size: 1.05rem;
+}
+
+/* Ensure proper tap targets for all interactive elements */
+@media (max-width: 639px) {
+  .touch-device button,
+  .touch-device input,
+  .touch-device label {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Add more space between items for easier touch */
+  .touch-device .category-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Enhance visual separation between items */
+  .touch-device .category-group:not(:last-child) {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* Optimize for different orientations */
+@media (orientation: landscape) {
+  .touch-device .responsive-budget-grid {
+    padding-bottom: 5rem; /* Extra space for the sticky confirm button */
+  }
+}
+
+/* Ensure proper scrolling behavior on iOS */
+.touch-device .responsive-budget-grid {
+  -webkit-overflow-scrolling: touch;
+}

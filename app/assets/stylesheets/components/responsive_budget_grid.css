@@ -1,0 +1,115 @@
+/* Responsive Budget Grid Component Styles */
+
+.responsive-budget-grid {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Container sizes for different screen sizes */
+@media (min-width: 640px) {
+  .responsive-budget-grid {
+    max-width: 36rem; /* ~576px */
+    padding: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-budget-grid {
+    max-width: 42rem; /* ~672px */
+  }
+}
+
+/* Allocation progress container */
+.allocation-progress-container {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-background);
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.5rem;
+}
+
+/* Category group styling */
+.category-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* Subcategories container */
+.subcategories-container {
+  position: relative;
+}
+
+/* Add vertical line for subcategories on larger screens */
+@media (min-width: 640px) {
+  .subcategories-container::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--color-border);
+  }
+}
+
+/* Subcategory item */
+.subcategory-item {
+  position: relative;
+  width: 100%;
+}
+
+/* Touch-friendly adjustments for mobile */
+@media (max-width: 639px) {
+  .subcategory-item {
+    padding: 0.5rem 0;
+  }
+  
+  /* Increase touch target size */
+  .form-field__input {
+    min-height: 2.5rem;
+  }
+  
+  /* Add more space between items */
+  .budget-categories-container > * + * {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (max-width: 767px) and (orientation: landscape) {
+  .responsive-budget-grid {
+    max-width: 100%;
+    padding: 0 2rem;
+  }
+  
+  .budget-categories-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .category-group {
+    margin-bottom: 0;
+  }
+}
+
+/* Confirm button container */
+.confirm-button-container {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 10;
+  padding-top: 1rem;
+  background-color: var(--color-background);
+}
+
+/* Ensure the button is large enough for touch on mobile */
+@media (max-width: 639px) {
+  .confirm-button-container button {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}

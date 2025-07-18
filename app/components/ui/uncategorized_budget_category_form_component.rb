@@ -17,7 +17,7 @@ module Ui
     def call
       budget_category = budget.uncategorized_budget_category
 
-      content_tag(:div, id: dom_id(budget, :uncategorized_budget_category_form), class: "flex gap-3 items-center") do
+      content_tag(:div, id: dom_id(budget, :uncategorized_budget_category_form), class: "flex flex-wrap sm:flex-nowrap gap-3 items-center") do
         # Category color indicator
         concat(
           content_tag(:div, "", 
@@ -28,7 +28,7 @@ module Ui
 
         # Category name and average info
         concat(
-          content_tag(:div, class: "text-sm mr-3") do
+          content_tag(:div, class: "text-sm mr-3 flex-grow min-w-[150px]") do
             concat(content_tag(:p, budget_category.category.name, class: "text-primary font-medium mb-0.5"))
             concat(content_tag(:p, "#{budget_category.avg_monthly_expense_money.format(precision: 0)}/m avg", class: "text-secondary"))
           end
@@ -42,12 +42,12 @@ module Ui
                 # Currency symbol
                 concat(content_tag(:span, budget_category.budgeted_spending_money.currency.symbol, class: "text-subdued text-sm mr-2"))
                 
-                # Input field (disabled)
+                # Input field (disabled) - enhanced for touch
                 concat(
                   text_field_tag(:uncategorized, 
                     budget_category.budgeted_spending_money.amount, 
                     autocomplete: "off", 
-                    class: "form-field__input text-right bg-muted [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none", 
+                    class: "form-field__input text-right bg-muted [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none py-2 px-3 sm:py-1.5 sm:px-2", 
                     disabled: true
                   )
                 )
