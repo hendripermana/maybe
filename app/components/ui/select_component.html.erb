@@ -1,0 +1,12 @@
+<%# Modern select component template %>
+<div class="relative">
+  <% if collection_select? %>
+    <%= form.collection_select field, collection, value_method, text_method, select_options, select_html_options %>
+  <% else %>
+    <%= form.select field, options, select_options, select_html_options %>
+  <% end %>
+  
+  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+    <%= helpers.icon("chevron-down", size: "sm", color: "default") %>
+  </div>
+</div>

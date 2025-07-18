@@ -1,0 +1,66 @@
+<%= content_for :page_title, "Create New API Key" %>
+
+<%= settings_section title: "Create New API Key", subtitle: "Generate a new API key to access your Maybe data programmatically." do %>
+  <%= render Ui::FormComponent.new(model: @api_key, url: settings_api_key_path) do |form| %>
+    <%= render Ui::FormFieldComponent.new(form: form, field: :name, label: "API Key Name", required: true) do %>
+      <%= render Ui::InputComponent.new(
+        form: form,
+        field: :name,
+        placeholder: "e.g., My Budget App, Portfolio Tracker",
+        required: true
+      ) %>
+      
+      <div slot="hint">
+        Choose a descriptive name to help you identify this key later.
+      </div>
+    <% end %>
+
+    <fieldset class="space-y-3">
+      <legend class="text-sm font-medium text-primary mb-2">Permissions</legend>
+      <p class="text-sm text-secondary mb-3">Select the permissions this API key should have:</p>
+
+      <div class="space-y-3">
+        <% [
+          ["read", "Read Only", "View your accounts, transactions, and balances"],
+          ["read_write", "Read/Write", "View your data and create new transactions"]
+        ].each do |value, label, description| %>
+          <div class="bg-surface-inset rounded-lg p-4 border border-border">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <%= render Ui::RadioButtonComponent.new(
+                form: form,
+                field: :scopes,
+                value: value,
+                label_text: "",
+                checked: (@api_key&.scopes || []).include?(value)
+              ) %>
+              <div class="flex-1">
+                <div class="font-medium text-primary"><%= label %></div>
+                <div class="text-sm text-secondary mt-1"><%= description %></div>
+              </div>
+            </label>
+          </div>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <%= render Ui::FormFeedbackComponent.new(
+      message: "Your API key will be displayed only once after creation. Make sure to copy and store it securely. Anyone with access to this key can access your data according to the permissions you select.",
+      variant: :warning,
+      icon: "alert-triangle"
+    ) %>
+
+    <div slot="actions" class="flex items-center justify-end gap-3">
+      <%= render Ui::ButtonComponent.new(
+        text: "Cancel",
+        variant: :ghost,
+        href: settings_api_key_path
+      ) %>
+
+      <%= render Ui::ButtonComponent.new(
+        text: "Create API Key",
+        variant: :primary,
+        type: "submit"
+      ) %>
+    </div>
+  <% end %>
+<% end %>

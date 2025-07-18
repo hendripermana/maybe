@@ -1,64 +1,49 @@
 # frozen_string_literal: true
 
 module Ui
-  # Modern input component for text fields, email inputs, etc.
-  # Provides consistent styling and accessibility for input fields
-  class InputComponent < BaseComponent
-    TYPES = %i[text email password number tel url search date time datetime-local month week].freeze
-    
-    attr_reader :form, :field, :type, :placeholder, :value, :disabled, :readonly, :required, :autocomplete, :min, :max, :step
+  # Modern textarea component for multiline text input
+  # Provides consistent styling and accessibility for textarea fields
+  class TextareaComponent < BaseComponent
+    attr_reader :form, :field, :placeholder, :rows, :disabled, :readonly, :required, :autocomplete
 
     def initialize(
       form:, 
       field:, 
-      type: :text, 
       placeholder: nil, 
-      value: nil, 
+      rows: 3,
       disabled: false, 
       readonly: false, 
       required: false,
       autocomplete: nil,
-      min: nil,
-      max: nil,
-      step: nil,
       **options
     )
       super(**options)
       @form = form
       @field = field
-      @type = type.to_sym
       @placeholder = placeholder
-      @value = value
+      @rows = rows
       @disabled = disabled
       @readonly = readonly
       @required = required
       @autocomplete = autocomplete
-      @min = min
-      @max = max
-      @step = step
-      
-      raise ArgumentError, "Invalid input type: #{type}" unless TYPES.include?(@type)
     end
 
-    def input_options
+    def textarea_options
       {
-        class: input_classes,
+        class: textarea_classes,
         placeholder: @placeholder,
+        rows: @rows,
         disabled: @disabled,
         readonly: @readonly,
         required: @required,
         autocomplete: @autocomplete,
-        min: @min,
-        max: @max,
-        step: @step,
-        value: @value,
         **@options.except(:class)
       }.compact
     end
 
-    def input_classes
+    def textarea_classes
       build_classes(
-        "form-input w-full rounded-md border border-input bg-background px-3 py-2",
+        "form-textarea w-full rounded-md border border-input bg-background px-3 py-2",
         "text-sm text-primary placeholder:text-muted",
         "focus:outline-none focus:ring-2 focus:ring-ring focus:border-input",
         "disabled:cursor-not-allowed disabled:opacity-50",

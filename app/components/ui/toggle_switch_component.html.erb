@@ -1,0 +1,21 @@
+<%# Modern toggle switch component template %>
+<div class="toggle-switch">
+  <%= form.hidden_field field, value: unchecked_value %>
+  
+  <button 
+    type="button"
+    id="<%= field_id %>"
+    role="switch"
+    aria-checked="<%= checked? %>"
+    class="<%= toggle_classes %>"
+    <%= "disabled" if disabled %>
+    data-controller="toggle-switch"
+    data-action="toggle-switch#toggle"
+    data-toggle-switch-field-value="<%= form.object_name %>[<%= field %>]"
+    data-toggle-switch-checked-value="<%= checked_value %>"
+    data-toggle-switch-unchecked-value="<%= unchecked_value %>"
+  >
+    <span class="sr-only"><%= field.to_s.humanize %></span>
+    <span class="<%= toggle_switch_classes %>"></span>
+  </button>
+</div>

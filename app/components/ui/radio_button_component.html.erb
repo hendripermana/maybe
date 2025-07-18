@@ -1,0 +1,5 @@
+<%# Modern radio button component template %>
+<div class="flex items-center">
+  <%= form.radio_button field, value, radio_options.merge(id: field_id) %>
+  <%= form.label field, label_text, class: label_classes, for: field_id %>
+</div>

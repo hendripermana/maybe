@@ -1,0 +1,21 @@
+<%# Modern form component template %>
+<%= form_with(**form_options) do |form| %>
+  <div class="form-fields space-y-4">
+    <%= content_for(form) %>
+  </div>
+
+  <% if actions? %>
+    <div class="form-actions flex items-center justify-end gap-3 mt-6">
+      <%= actions %>
+    </div>
+  <% elsif !auto_submit? %>
+    <div class="form-actions flex items-center justify-end gap-3 mt-6">
+      <%= render Ui::ButtonComponent.new(
+        variant: :primary,
+        text: "Save changes",
+        type: "submit",
+        data: { turbo_submits_with: "Saving..." }
+      ) %>
+    </div>
+  <% end %>
+<% end %>

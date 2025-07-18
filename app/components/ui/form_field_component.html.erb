@@ -1,0 +1,37 @@
+<%# Modern form field component template %>
+<div class="form-field space-y-2">
+  <div class="form-field-header flex items-center justify-between">
+    <%= form.label field, label_text, class: "form-field-label text-sm font-medium text-primary" %>
+    
+    <% if actions? || tooltip %>
+      <div class="form-field-actions flex items-center gap-2">
+        <% if tooltip %>
+          <div class="tooltip-container" data-controller="tooltip">
+            <%= helpers.icon("help-circle", size: "sm", color: "default", class: "cursor-help") %>
+            <div role="tooltip" data-tooltip-target="tooltip" class="tooltip bg-gray-700 text-sm p-2 rounded w-64 text-white">
+              <%= tooltip %>
+            </div>
+          </div>
+        <% end %>
+        
+        <%= actions if actions? %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="form-field-body">
+    <%= content %>
+  </div>
+  
+  <% if hint? %>
+    <div class="form-field-hint text-sm text-secondary">
+      <%= hint %>
+    </div>
+  <% end %>
+  
+  <% if has_error? %>
+    <div class="form-field-error text-sm text-destructive">
+      <%= error || error_message %>
+    </div>
+  <% end %>
+</div>
