@@ -1,0 +1,33 @@
+<div id="<%= dom_id(budget_category, :form) %>" class="w-full flex gap-3 items-center">
+  <!-- Category color indicator -->
+  <div class="w-1 h-3 rounded-xl mt-1" style="background-color: <%= budget_category.category.color %>"></div>
+
+  <!-- Category name and average info -->
+  <div class="text-sm mr-3">
+    <p class="text-primary font-medium mb-0.5"><%= budget_category.category.name %></p>
+    <p class="text-secondary"><%= budget_category.median_monthly_expense_money.format(precision: 0) %>/m avg</p>
+  </div>
+
+  <!-- Form input -->
+  <div class="ml-auto">
+    <%= form_with(
+      model: [budget_category.budget, budget_category],
+      data: { controller: "auto-submit-form preserve-focus" }
+    ) do |f| %>
+      <div class="form-field w-[120px]">
+        <div class="flex items-center">
+          <span class="text-secondary text-sm mr-2"><%= budget_category.budget.currency_symbol %></span>
+          <%= f.number_field :budgeted_spending,
+            class: "form-field__input text-right bg-background [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            placeholder: "0",
+            step: budget_category.budget.currency_symbol == "¥" ? "1" : "0.01",
+            id: dom_id(budget_category, :budgeted_spending),
+            min: 0,
+            max: budget_category.max_allocation,
+            data: { auto_submit_form_target: "auto" }
+          %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

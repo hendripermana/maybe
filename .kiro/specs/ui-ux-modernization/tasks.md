@@ -118,7 +118,7 @@
   - Ensure consistent theme support across all budget components
   - _Requirements: 3.1, 3.5, 8.2_
 
-- [ ] 18. Modernize budget creation and editing forms
+- [x] 18. Modernize budget creation and editing forms
   - Replace legacy form components with modern alternatives
   - Implement proper validation and error handling
   - Ensure forms are accessible and theme-aware
