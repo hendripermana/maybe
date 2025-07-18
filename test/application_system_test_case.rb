@@ -5,6 +5,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include ThemeTestHelper
   include AccessibilityTestHelper
   include ResponsiveTransactionsTestHelper
+  include BudgetTestHelper
   
   setup do
     Capybara.default_max_wait_time = 5

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Ui::BudgetFormComponentTest < ViewComponent::TestCase
   test "renders budget form with proper theme-aware styling" do
-    budget = budgets(:january)
+    budget = budgets(:one)
     
     render_inline(Ui::BudgetFormComponent.new(budget: budget))
     
@@ -22,7 +22,7 @@ class Ui::BudgetFormComponentTest < ViewComponent::TestCase
   end
   
   test "renders auto-suggest toggle when estimates are available" do
-    budget = budgets(:january)
+    budget = budgets(:one)
     budget.stubs(:estimated_income).returns(5000)
     budget.stubs(:estimated_spending).returns(4000)
     
@@ -33,7 +33,7 @@ class Ui::BudgetFormComponentTest < ViewComponent::TestCase
   end
   
   test "renders error messages when budget has errors" do
-    budget = budgets(:january)
+    budget = budgets(:one)
     budget.errors.add(:budgeted_spending, "can't be blank")
     
     render_inline(Ui::BudgetFormComponent.new(budget: budget))

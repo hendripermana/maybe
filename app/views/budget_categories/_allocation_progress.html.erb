@@ -1,0 +1,28 @@
+<div class="allocation-progress">
+  <div class="flex justify-between mb-2">
+    <div>
+      <span class="text-sm text-muted-foreground">Allocated:</span>
+      <span class="text-sm font-medium text-foreground total-budgeted"><%= budget.allocated_spending %></span>
+    </div>
+    <div>
+      <span class="text-sm text-muted-foreground">Remaining:</span>
+      <span class="text-sm font-medium text-foreground remaining-amount"><%= budget.available_to_allocate %></span>
+    </div>
+  </div>
+  
+  <div class="relative w-full h-2 bg-muted rounded-full overflow-hidden">
+    <% allocation_percentage = budget.allocated_percent %>
+    <% allocation_percentage = [allocation_percentage, 100].min %>
+    
+    <progress 
+      id="allocation-progress-bar"
+      class="absolute top-0 left-0 h-full bg-primary rounded-full"
+      value="<%= allocation_percentage %>"
+      max="100"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="<%= allocation_percentage %>"
+      style="width: <%= allocation_percentage %>%"
+    ></progress>
+  </div>
+</div>

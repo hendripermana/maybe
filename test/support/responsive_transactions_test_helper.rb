@@ -1,13 +1,13 @@
 module ResponsiveTransactionsTestHelper
   # Helper method to test in both themes
-  def test_both_themes
+  def test_both_themes(&block)
     # Test in light theme
     ensure_theme("light")
-    yield
+    block.call if block
     
     # Test in dark theme
     ensure_theme("dark")
-    yield
+    block.call if block
   end
   
   # Helper method to ensure a specific theme is active
