@@ -1,0 +1,8 @@
+<span class="<%= container_classes %>">
+  <% if show_indicator %>
+    <span class="inline-flex items-center mr-1">
+      <%= helpers.icon indicator_icon, size: "xs", color: indicator_color %>
+    </span>
+  <% end %>
+  <%= formatted_amount %>
+</span>

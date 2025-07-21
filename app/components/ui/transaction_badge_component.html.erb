@@ -1,0 +1,8 @@
+<%= render Ui::BadgeComponent.new(variant: variant, size: size, **options) do %>
+  <% if show_icon %>
+    <span class="mr-1 -ml-0.5">
+      <%= helpers.icon icon, size: "xs" %>
+    </span>
+  <% end %>
+  <%= label %>
+<% end %>

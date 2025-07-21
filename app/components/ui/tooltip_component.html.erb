@@ -1,0 +1,8 @@
+<div class="<%= container_classes %>" <%= build_data_attributes.merge(data_attributes).to_json.html_safe %>>
+  <div class="<%= tooltip_classes %>" data-ui--tooltip-target="tooltip">
+    <%= text %>
+  </div>
+  <div data-ui--tooltip-target="content">
+    <%= content %>
+  </div>
+</div>

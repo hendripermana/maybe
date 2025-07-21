@@ -16,6 +16,183 @@ This component library provides a set of reusable UI components that follow mode
 
 ## Available Components
 
+### AlertComponent
+
+Alert component for displaying messages with different variants:
+
+**Variants:**
+- `default` - Standard gray alert
+- `info` - Blue informational alert
+- `success` - Green success alert
+- `warning` - Yellow warning alert
+- `destructive` - Red error alert
+
+**Sizes:**
+- `sm` - Small alert (p-3)
+- `md` - Medium alert (p-4) - default
+- `lg` - Large alert (p-5)
+
+**Features:**
+- Optional title
+- Dismissible alerts
+- Icon indicators
+- Theme-aware styling
+
+**Usage:**
+```ruby
+# Basic alert
+render Ui::AlertComponent.new(variant: :info) { "This is an informational message" }
+
+# Alert with title
+render Ui::AlertComponent.new(
+  title: "Success!",
+  variant: :success
+) { "Your changes have been saved." }
+
+# Dismissible alert
+render Ui::AlertComponent.new(
+  variant: :warning,
+  dismissible: true
+) { "Please review your information before continuing." }
+```
+
+### AccountCardComponent
+
+Component for displaying account information:
+
+**Variants:**
+- `default` - Standard card styling
+- `primary` - Primary color styling
+- `success` - Success color styling
+- `warning` - Warning color styling
+- `destructive` - Destructive color styling
+
+**Sizes:**
+- `sm` - Small card (p-3)
+- `md` - Medium card (p-4) - default
+- `lg` - Large card (p-5)
+
+**Features:**
+- Account type icon
+- Institution name
+- Balance display
+- Available balance (when applicable)
+- Action menu
+- Theme-aware styling
+
+**Usage:**
+```ruby
+# Basic account card
+render Ui::AccountCardComponent.new(account: @checking_account)
+
+# Account card without balance
+render Ui::AccountCardComponent.new(
+  account: @investment_account,
+  show_balance: false
+)
+
+# Account card with custom variant
+render Ui::AccountCardComponent.new(
+  account: @savings_account,
+  variant: :primary
+)
+```
+
+### AvatarComponent
+
+Component for displaying user or entity images:
+
+**Variants:**
+- `default` - Standard avatar styling
+- `primary` - Primary color styling
+- `success` - Success color styling
+- `warning` - Warning color styling
+- `destructive` - Destructive color styling
+
+**Sizes:**
+- `xs` - Extra small avatar (w-6 h-6)
+- `sm` - Small avatar (w-8 h-8)
+- `md` - Medium avatar (w-10 h-10) - default
+- `lg` - Large avatar (w-12 h-12)
+- `xl` - Extra large avatar (w-16 h-16)
+
+**Features:**
+- Image display
+- Fallback initials
+- Theme-aware styling
+
+**Usage:**
+```ruby
+# Avatar with image
+render Ui::AvatarComponent.new(
+  src: user.avatar_url,
+  alt: user.name
+)
+
+# Avatar with initials fallback
+render Ui::AvatarComponent.new(
+  alt: "John Doe",
+  size: :lg
+)
+
+# Avatar with custom variant
+render Ui::AvatarComponent.new(
+  alt: "John Doe",
+  variant: :primary
+)
+```
+
+### BalanceDisplayComponent
+
+Component for displaying financial balances:
+
+**Variants:**
+- `default` - Automatic color based on amount (green for positive, red for negative)
+- `primary` - Primary color styling
+- `success` - Success color styling
+- `warning` - Warning color styling
+- `destructive` - Destructive color styling
+
+**Sizes:**
+- `xs` - Extra small text
+- `sm` - Small text
+- `md` - Medium text (default)
+- `lg` - Large text
+- `xl` - Extra large text
+- `2xl` - 2XL text
+- `3xl` - 3XL text
+
+**Features:**
+- Formatted currency display
+- Optional sign display
+- Optional indicator icon
+- Theme-aware styling
+
+**Usage:**
+```ruby
+# Basic balance display
+render Ui::BalanceDisplayComponent.new(amount: 1250.75)
+
+# Negative balance
+render Ui::BalanceDisplayComponent.new(amount: -450.25)
+
+# With currency and sign
+render Ui::BalanceDisplayComponent.new(
+  amount: 1250.75,
+  currency: "EUR",
+  show_sign: true
+)
+
+# With indicator and custom size
+render Ui::BalanceDisplayComponent.new(
+  amount: 1250.75,
+  show_indicator: true,
+  size: :xl
+)
+```
+
+### BadgeComponent
+
 ### BaseComponent
 
 The foundation class for all UI components, providing:
@@ -212,6 +389,162 @@ render Ui::ModalComponent.new(
   end
   "This action cannot be undone."
 end
+```
+
+### SeparatorComponent
+
+Component for visually dividing content:
+
+**Orientations:**
+- `horizontal` - Horizontal divider (default)
+- `vertical` - Vertical divider
+
+**Variants:**
+- `default` - Standard gray separator
+- `primary` - Primary color separator
+- `success` - Success color separator
+- `warning` - Warning color separator
+- `destructive` - Destructive color separator
+
+**Features:**
+- Decorative or semantic divider
+- Theme-aware styling
+
+**Usage:**
+```ruby
+# Basic horizontal separator
+render Ui::SeparatorComponent.new
+
+# Vertical separator
+render Ui::SeparatorComponent.new(orientation: :vertical)
+
+# Semantic separator (not decorative)
+render Ui::SeparatorComponent.new(decorative: false)
+
+# Custom variant
+render Ui::SeparatorComponent.new(variant: :primary)
+```
+
+### SkeletonComponent
+
+Component for loading states:
+
+**Variants:**
+- `default` - Standard gray skeleton
+- `primary` - Primary color skeleton
+- `success` - Success color skeleton
+- `warning` - Warning color skeleton
+- `destructive` - Destructive color skeleton
+
+**Features:**
+- Custom width and height
+- Rounded corners (optional)
+- Animation (optional)
+- Theme-aware styling
+
+**Usage:**
+```ruby
+# Basic skeleton
+render Ui::SkeletonComponent.new(width: "100%", height: "20px")
+
+# Multiple skeletons for loading state
+content_tag(:div, class: "space-y-2") do
+  concat render(Ui::SkeletonComponent.new(width: "70%", height: "24px"))
+  concat render(Ui::SkeletonComponent.new(width: "100%", height: "16px"))
+  concat render(Ui::SkeletonComponent.new(width: "90%", height: "16px"))
+end
+
+# Custom variant without animation
+render Ui::SkeletonComponent.new(
+  width: "120px",
+  height: "32px",
+  variant: :primary,
+  animate: false
+)
+```
+
+### TooltipComponent
+
+Component for displaying additional information on hover:
+
+**Positions:**
+- `top` - Above the element (default)
+- `bottom` - Below the element
+- `left` - To the left of the element
+- `right` - To the right of the element
+
+**Variants:**
+- `default` - Standard dark tooltip
+- `primary` - Primary color tooltip
+- `success` - Success color tooltip
+- `warning` - Warning color tooltip
+- `destructive` - Destructive color tooltip
+
+**Features:**
+- Customizable delay for show/hide
+- Theme-aware styling
+- Stimulus controller integration
+
+**Usage:**
+```ruby
+# Basic tooltip
+render Ui::TooltipComponent.new(text: "Additional information") do
+  content_tag(:button, "Hover me")
+end
+
+# Tooltip with custom position and delay
+render Ui::TooltipComponent.new(
+  text: "Click to delete",
+  position: :right,
+  variant: :destructive,
+  delay_show: 500
+) do
+  render Ui::ButtonComponent.new(variant: :ghost, icon: "trash") { "Delete" }
+end
+```
+
+### TransactionBadgeComponent
+
+Component for displaying transaction types and statuses:
+
+**Transaction Types:**
+- `income` - Income transaction
+- `expense` - Expense transaction
+- `transfer` - Transfer transaction
+- `investment` - Investment transaction
+- `refund` - Refund transaction
+- `adjustment` - Adjustment transaction
+
+**Transaction Statuses:**
+- `pending` - Pending transaction
+- `cleared` - Cleared transaction
+- `reconciled` - Reconciled transaction
+- `void` - Void transaction
+
+**Sizes:**
+- `sm` - Small badge (default)
+- `md` - Medium badge
+- `lg` - Large badge
+
+**Features:**
+- Icon indicators (optional)
+- Custom labels
+- Theme-aware styling
+
+**Usage:**
+```ruby
+# Transaction type badge
+render Ui::TransactionBadgeComponent.new(transaction_type: :income)
+
+# Transaction status badge
+render Ui::TransactionBadgeComponent.new(transaction_status: :pending)
+
+# Custom badge
+render Ui::TransactionBadgeComponent.new(
+  custom_label: "Recurring",
+  show_icon: false,
+  size: :md
+)
 ```
 
 ## CSS Variables Integration

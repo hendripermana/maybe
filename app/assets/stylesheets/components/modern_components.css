@@ -1,0 +1,68 @@
+/* Modern Components CSS */
+
+/* Tooltip animations */
+[data-controller="ui--tooltip"] [data-ui--tooltip-target="tooltip"] {
+  transition: opacity 0.2s ease-in-out;
+}
+
+[data-controller="ui--tooltip"] [data-ui--tooltip-target="tooltip"].opacity-100 {
+  opacity: 1;
+}
+
+/* Alert animations */
+[data-controller="ui--alert"] {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Account Card hover effects */
+.ui-account-card-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ui-account-card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Balance Display animations */
+.ui-balance-display-animate .ui-balance-indicator {
+  transition: transform 0.2s ease;
+}
+
+.ui-balance-display-animate:hover .ui-balance-indicator {
+  transform: translateY(-2px);
+}
+
+/* Transaction Badge hover effects */
+.ui-transaction-badge {
+  transition: background-color 0.2s ease;
+}
+
+/* Skeleton loading animation override */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Avatar fallback text centering */
+.ui-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Separator responsive behavior */
+@media (max-width: 640px) {
+  .ui-separator-responsive {
+    width: 100% !important;
+    height: 1px !important;
+  }
+}

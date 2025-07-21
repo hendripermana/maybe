@@ -16,6 +16,9 @@ Rails.application.routes.draw do
 
   mount Lookbook::Engine, at: "/design-system"
 
+  # Component showcase
+  get "ui/component-showcase", to: "ui#component_showcase"
+
   # Uses basic auth - see config/initializers/sidekiq.rb
   mount Sidekiq::Web => "/sidekiq"
 

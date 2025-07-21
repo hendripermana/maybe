@@ -1,0 +1,56 @@
+<div class="<%= container_classes %>">
+  <div class="flex items-start justify-between">
+    <div class="flex items-center gap-3">
+      <div class="flex-shrink-0 p-2 rounded-full bg-gray-100 [data-theme=dark]:bg-gray-700">
+        <%= helpers.icon account_type_icon, size: "md", color: account_type_color %>
+      </div>
+      
+      <div>
+        <h3 class="font-medium text-gray-900 [data-theme=dark]:text-gray-100"><%= account.name %></h3>
+        <p class="text-sm text-gray-500 [data-theme=dark]:text-gray-400">
+          <%= account.accountable_type.underscore.humanize %>
+          <% if account.institution_name.present? %>
+            • <%= account.institution_name %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+
+    <% if show_actions %>
+      <div class="flex-shrink-0">
+        <div class="dropdown">
+          <button class="p-1 rounded-md hover:bg-gray-100 [data-theme=dark]:hover:bg-gray-700 transition-colors" aria-label="Account options">
+            <%= helpers.icon "more-horizontal", size: "sm", color: "gray-600" %>
+          </button>
+          <div class="dropdown-menu">
+            <%= link_to "View details", polymorphic_path(account), class: "dropdown-item" %>
+            <%= link_to "Edit account", edit_polymorphic_path(account), class: "dropdown-item" %>
+            <% if account.respond_to?(:sync) && account.can_sync? %>
+              <%= button_to "Sync account", sync_polymorphic_path(account), method: :post, class: "dropdown-item" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if show_balance %>
+    <div class="mt-4 pt-4 border-t border-gray-200 [data-theme=dark]:border-gray-700">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-medium text-gray-500 [data-theme=dark]:text-gray-400">Current balance</span>
+        <span class="text-lg font-semibold <%= account_balance_class %>">
+          <%= helpers.format_currency(account.balance, account.currency) %>
+        </span>
+      </div>
+      
+      <% if account.respond_to?(:available_balance) && account.available_balance != account.balance %>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-sm text-gray-500 [data-theme=dark]:text-gray-400">Available</span>
+          <span class="text-sm font-medium">
+            <%= helpers.format_currency(account.available_balance, account.currency) %>
+          </span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

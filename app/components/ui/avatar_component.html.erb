@@ -1,0 +1,7 @@
+<div class="<%= container_classes %>" role="img" aria-label="<%= alt %>">
+  <% if src.present? %>
+    <img src="<%= src %>" alt="<%= alt %>" class="w-full h-full object-cover" />
+  <% else %>
+    <span class="font-medium"><%= initials %></span>
+  <% end %>
+</div>

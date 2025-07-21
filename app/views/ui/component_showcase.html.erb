@@ -1,0 +1,290 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">Modern UI Component Library</h1>
+    <p class="text-gray-600 [data-theme=dark]:text-gray-400">
+      A showcase of Shadcn-inspired components with theme support
+    </p>
+    <div class="mt-4">
+      <%= render Ui::ThemeSwitcherComponent.new %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Alert Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Alert Components</h2>
+      
+      <div class="space-y-4">
+        <%= render Ui::AlertComponent.new(variant: :default) do %>
+          This is a default alert
+        <% end %>
+        
+        <%= render Ui::AlertComponent.new(variant: :info) do %>
+          This is an info alert
+        <% end %>
+        
+        <%= render Ui::AlertComponent.new(variant: :success, title: "Success") do %>
+          This is a success alert with a title
+        <% end %>
+        
+        <%= render Ui::AlertComponent.new(variant: :warning) do %>
+          This is a warning alert
+        <% end %>
+        
+        <%= render Ui::AlertComponent.new(variant: :destructive, dismissible: true) do %>
+          This is a dismissible destructive alert
+        <% end %>
+      </div>
+    </section>
+
+    <!-- Badge Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Badge Components</h2>
+      
+      <div class="flex flex-wrap gap-2">
+        <%= render Ui::BadgeComponent.new(variant: :default) do %>Default<% end %>
+        <%= render Ui::BadgeComponent.new(variant: :primary) do %>Primary<% end %>
+        <%= render Ui::BadgeComponent.new(variant: :success) do %>Success<% end %>
+        <%= render Ui::BadgeComponent.new(variant: :warning) do %>Warning<% end %>
+        <%= render Ui::BadgeComponent.new(variant: :destructive) do %>Destructive<% end %>
+        <%= render Ui::BadgeComponent.new(variant: :outline) do %>Outline<% end %>
+      </div>
+      
+      <div class="mt-4">
+        <h3 class="text-lg font-medium mb-2">Transaction Badges</h3>
+        <div class="flex flex-wrap gap-2">
+          <%= render Ui::TransactionBadgeComponent.new(transaction_type: :income) %>
+          <%= render Ui::TransactionBadgeComponent.new(transaction_type: :expense) %>
+          <%= render Ui::TransactionBadgeComponent.new(transaction_type: :transfer) %>
+          <%= render Ui::TransactionBadgeComponent.new(transaction_status: :pending) %>
+          <%= render Ui::TransactionBadgeComponent.new(transaction_status: :cleared) %>
+        </div>
+      </div>
+    </section>
+
+    <!-- Account Card Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Account Card Components</h2>
+      
+      <div class="space-y-4">
+        <%= render Ui::AccountCardComponent.new(
+          account: OpenStruct.new(
+            name: "Checking Account",
+            accountable_type: "Depository",
+            institution_name: "Example Bank",
+            balance: 1250.75,
+            currency: "USD",
+            available_balance: 1350.75,
+            can_sync?: true
+          )
+        ) %>
+        
+        <%= render Ui::AccountCardComponent.new(
+          account: OpenStruct.new(
+            name: "Credit Card",
+            accountable_type: "CreditCard",
+            institution_name: "Example Bank",
+            balance: -450.25,
+            currency: "USD",
+            available_balance: 5000.00,
+            can_sync?: true
+          ),
+          variant: :primary
+        ) %>
+      </div>
+    </section>
+
+    <!-- Balance Display Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Balance Display Components</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-lg font-medium mb-2">Positive Balance</h3>
+          <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75) %>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Negative Balance</h3>
+          <%= render Ui::BalanceDisplayComponent.new(amount: -450.25) %>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">With Indicator</h3>
+          <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, show_indicator: true) %>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Sizes</h3>
+          <div class="flex flex-col gap-2">
+            <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, size: :xs) %>
+            <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, size: :sm) %>
+            <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, size: :md) %>
+            <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, size: :lg) %>
+            <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, size: :xl) %>
+            <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, size: :"2xl") %>
+            <%= render Ui::BalanceDisplayComponent.new(amount: 1250.75, size: :"3xl") %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Avatar Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Avatar Components</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-lg font-medium mb-2">With Image</h3>
+          <div class="flex gap-2">
+            <%= render Ui::AvatarComponent.new(
+              src: "https://i.pravatar.cc/300",
+              alt: "User Avatar",
+              size: :md
+            ) %>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">With Initials</h3>
+          <div class="flex gap-2">
+            <%= render Ui::AvatarComponent.new(alt: "John Doe", size: :md) %>
+            <%= render Ui::AvatarComponent.new(alt: "Jane Smith", size: :md) %>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Sizes</h3>
+          <div class="flex items-end gap-2">
+            <%= render Ui::AvatarComponent.new(alt: "XS", size: :xs) %>
+            <%= render Ui::AvatarComponent.new(alt: "SM", size: :sm) %>
+            <%= render Ui::AvatarComponent.new(alt: "MD", size: :md) %>
+            <%= render Ui::AvatarComponent.new(alt: "LG", size: :lg) %>
+            <%= render Ui::AvatarComponent.new(alt: "XL", size: :xl) %>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Variants</h3>
+          <div class="flex gap-2">
+            <%= render Ui::AvatarComponent.new(alt: "John Doe", variant: :default) %>
+            <%= render Ui::AvatarComponent.new(alt: "John Doe", variant: :primary) %>
+            <%= render Ui::AvatarComponent.new(alt: "John Doe", variant: :success) %>
+            <%= render Ui::AvatarComponent.new(alt: "John Doe", variant: :warning) %>
+            <%= render Ui::AvatarComponent.new(alt: "John Doe", variant: :destructive) %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tooltip Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Tooltip Components</h2>
+      
+      <div class="space-y-8 py-8">
+        <div class="flex justify-center">
+          <%= render Ui::TooltipComponent.new(text: "Tooltip on top", position: :top) do %>
+            <button class="px-4 py-2 bg-gray-200 rounded [data-theme=dark]:bg-gray-700">Hover me (top)</button>
+          <% end %>
+        </div>
+        
+        <div class="flex justify-around">
+          <%= render Ui::TooltipComponent.new(text: "Tooltip on left", position: :left) do %>
+            <button class="px-4 py-2 bg-gray-200 rounded [data-theme=dark]:bg-gray-700">Hover me (left)</button>
+          <% end %>
+          
+          <%= render Ui::TooltipComponent.new(text: "Tooltip on right", position: :right) do %>
+            <button class="px-4 py-2 bg-gray-200 rounded [data-theme=dark]:bg-gray-700">Hover me (right)</button>
+          <% end %>
+        </div>
+        
+        <div class="flex justify-center">
+          <%= render Ui::TooltipComponent.new(text: "Tooltip on bottom", position: :bottom) do %>
+            <button class="px-4 py-2 bg-gray-200 rounded [data-theme=dark]:bg-gray-700">Hover me (bottom)</button>
+          <% end %>
+        </div>
+        
+        <div class="flex justify-center">
+          <%= render Ui::TooltipComponent.new(text: "Destructive action!", position: :top, variant: :destructive) do %>
+            <button class="px-4 py-2 bg-red-100 text-red-700 rounded [data-theme=dark]:bg-red-900/20 [data-theme=dark]:text-red-400">Delete item</button>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+    <!-- Separator Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Separator Components</h2>
+      
+      <div class="space-y-8">
+        <div>
+          <h3 class="text-lg font-medium mb-2">Horizontal Separator</h3>
+          <div class="py-2">Content above</div>
+          <%= render Ui::SeparatorComponent.new %>
+          <div class="py-2">Content below</div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Vertical Separator</h3>
+          <div class="flex h-16 items-center">
+            <div class="px-4">Left content</div>
+            <%= render Ui::SeparatorComponent.new(orientation: :vertical) %>
+            <div class="px-4">Right content</div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Variants</h3>
+          <div class="space-y-4">
+            <%= render Ui::SeparatorComponent.new(variant: :default) %>
+            <%= render Ui::SeparatorComponent.new(variant: :primary) %>
+            <%= render Ui::SeparatorComponent.new(variant: :success) %>
+            <%= render Ui::SeparatorComponent.new(variant: :warning) %>
+            <%= render Ui::SeparatorComponent.new(variant: :destructive) %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skeleton Components -->
+    <section class="border rounded-lg p-6 [data-theme=dark]:border-gray-700">
+      <h2 class="text-xl font-semibold mb-4">Skeleton Components</h2>
+      
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-lg font-medium mb-2">Basic Skeletons</h3>
+          <div class="space-y-2">
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px") %>
+            <%= render Ui::SkeletonComponent.new(width: "80%", height: "24px") %>
+            <%= render Ui::SkeletonComponent.new(width: "60%", height: "24px") %>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Card Skeleton</h3>
+          <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+            <div class="flex items-center gap-4 mb-4">
+              <%= render Ui::SkeletonComponent.new(width: "48px", height: "48px", rounded: true) %>
+              <div class="space-y-2">
+                <%= render Ui::SkeletonComponent.new(width: "150px", height: "20px") %>
+                <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+              </div>
+            </div>
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "150px") %>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-2">Variants</h3>
+          <div class="space-y-2">
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :default) %>
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :primary) %>
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :success) %>
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :warning) %>
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :destructive) %>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
