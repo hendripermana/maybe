@@ -1,0 +1,105 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Keyboard Navigation for Form Fields</h3>
+    <p class="mb-4">This example demonstrates proper keyboard navigation for form fields:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li>Tab key navigates between form fields in a logical order</li>
+      <li>Focus is visibly indicated with a ring outline</li>
+      <li>Error states are properly communicated</li>
+      <li>Required fields are clearly marked</li>
+    </ul>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <%= render Ui::InputComponent.new(
+          label: "First Name",
+          placeholder: "Enter your first name",
+          required: true
+        ) %>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Last Name",
+          placeholder: "Enter your last name",
+          required: true
+        ) %>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Email",
+          type: "email",
+          placeholder: "user@example.com",
+          required: true
+        ) %>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Phone Number",
+          type: "tel",
+          placeholder: "(123) 456-7890"
+        ) %>
+        
+        <div class="flex justify-end">
+          <%= render Ui::ButtonComponent.new(variant: :primary) do %>
+            Submit
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Keyboard Shortcuts for Input Fields</h3>
+    <p class="mb-4">Input fields support these keyboard interactions:</p>
+    <ul class="list-disc pl-5">
+      <li><kbd>Tab</kbd>: Move to next form field</li>
+      <li><kbd>Shift</kbd> + <kbd>Tab</kbd>: Move to previous form field</li>
+      <li><kbd>Enter</kbd>: Submit form (when focus is on an input)</li>
+      <li><kbd>Space</kbd>: Toggle checkboxes and radio buttons</li>
+      <li><kbd>Arrow keys</kbd>: Navigate select dropdown options</li>
+      <li><kbd>Escape</kbd>: Close dropdowns and reset focus</li>
+    </ul>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Focus Management for Complex Inputs</h3>
+    <p class="mb-4">This example demonstrates focus management for inputs with additional elements:</p>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <%= render Ui::InputComponent.new(
+          label: "Search",
+          placeholder: "Search...",
+          leading_icon: "search"
+        ) %>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Amount",
+          type: "number",
+          placeholder: "0.00"
+        ) do |input| %>
+          <% input.with_leading_content do %>
+            <span class="text-muted-foreground">$</span>
+          <% end %>
+          
+          <% input.with_trailing_content do %>
+            <select class="h-full border-0 bg-transparent text-muted-foreground focus:ring-0">
+              <option>USD</option>
+              <option>EUR</option>
+            </select>
+          <% end %>
+        <% end %>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Password",
+          type: "password",
+          placeholder: "Enter your password"
+        ) do |input| %>
+          <% input.with_trailing_content do %>
+            <button type="button" class="focus:outline-none focus:ring-2 focus:ring-ring rounded-sm p-1">
+              <%= render Ui::IconComponent.new(name: "eye", class: "w-4 h-4") %>
+              <span class="sr-only">Show password</span>
+            </button>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

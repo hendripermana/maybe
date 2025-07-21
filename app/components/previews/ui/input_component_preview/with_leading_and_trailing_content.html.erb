@@ -1,0 +1,20 @@
+<%= render Ui::InputComponent.new(
+  label: "Amount",
+  type: "number",
+  placeholder: "0.00",
+  min: 0,
+  step: 0.01
+) do |input| %>
+  <% input.with_leading_content do %>
+    <span class="text-muted-foreground">$</span>
+  <% end %>
+  
+  <% input.with_trailing_content do %>
+    <select class="h-full border-0 bg-transparent text-muted-foreground focus:ring-0">
+      <option>USD</option>
+      <option>EUR</option>
+      <option>GBP</option>
+      <option>CAD</option>
+    </select>
+  <% end %>
+<% end %>

@@ -1,0 +1,177 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6">Accessibility Guidelines</h1>
+  
+  <p class="mb-6">
+    The Maybe UI component library is designed with accessibility in mind, following WCAG 2.1 AA standards to ensure all users can effectively use the application regardless of abilities.
+  </p>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Core Principles</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Perceivable</h3>
+        <ul class="list-disc pl-5">
+          <li>Sufficient color contrast (4.5:1 minimum)</li>
+          <li>Text alternatives for non-text content</li>
+          <li>Content adaptable and distinguishable</li>
+          <li>Multiple ways to access content</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Operable</h3>
+        <ul class="list-disc pl-5">
+          <li>Keyboard accessible functionality</li>
+          <li>Sufficient time to read and use content</li>
+          <li>No content that causes seizures</li>
+          <li>Navigable content structure</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Understandable</h3>
+        <ul class="list-disc pl-5">
+          <li>Readable and predictable content</li>
+          <li>Consistent navigation and identification</li>
+          <li>Input assistance and error prevention</li>
+          <li>Clear instructions and feedback</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Robust</h3>
+        <ul class="list-disc pl-5">
+          <li>Compatible with current and future tools</li>
+          <li>Valid HTML and ARIA usage</li>
+          <li>Semantic markup structure</li>
+          <li>Assistive technology support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Component-Specific Guidelines</h2>
+    
+    <div class="space-y-6">
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Interactive Elements</h3>
+        <ul class="list-disc pl-5">
+          <li><strong>Focus indicators:</strong> Visible focus states for all interactive elements</li>
+          <li><strong>Touch targets:</strong> Minimum size of 44x44px for touch interactions</li>
+          <li><strong>Keyboard operation:</strong> All functionality available via keyboard</li>
+          <li><strong>ARIA roles:</strong> Proper roles for custom interactive elements</li>
+          <li><strong>State management:</strong> ARIA states for current status (expanded, selected, etc.)</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Form Components</h3>
+        <ul class="list-disc pl-5">
+          <li><strong>Labels:</strong> All form controls have associated labels</li>
+          <li><strong>Error states:</strong> Clear error messages with instructions</li>
+          <li><strong>Required fields:</strong> Clearly indicated with both visual and programmatic markers</li>
+          <li><strong>Input assistance:</strong> Help text and validation feedback</li>
+          <li><strong>Grouping:</strong> Related controls are properly grouped</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Modal Dialogs</h3>
+        <ul class="list-disc pl-5">
+          <li><strong>Focus management:</strong> Focus trapped within modal when open</li>
+          <li><strong>Keyboard dismissal:</strong> ESC key closes the modal</li>
+          <li><strong>ARIA attributes:</strong> role="dialog" and aria-modal="true"</li>
+          <li><strong>Return focus:</strong> Focus returns to triggering element when closed</li>
+          <li><strong>Screen reader announcements:</strong> Modal opening is announced</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Content and Typography</h3>
+        <ul class="list-disc pl-5">
+          <li><strong>Heading hierarchy:</strong> Proper heading levels (h1-h6)</li>
+          <li><strong>Text contrast:</strong> Minimum 4.5:1 ratio for normal text, 3:1 for large text</li>
+          <li><strong>Text resizing:</strong> Content readable when zoomed to 200%</li>
+          <li><strong>Line spacing:</strong> Adequate spacing for readability</li>
+          <li><strong>Font size:</strong> Minimum 16px for body text</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Testing Accessibility</h2>
+    <p class="mb-4">All components should be tested for accessibility using:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Keyboard navigation:</strong> Test tab order, focus states, and keyboard operation</li>
+      <li><strong>Screen readers:</strong> Test with VoiceOver (macOS) and NVDA (Windows)</li>
+      <li><strong>Color contrast:</strong> Verify using contrast checkers in both themes</li>
+      <li><strong>Zoom:</strong> Test at 200% zoom level</li>
+      <li><strong>Reduced motion:</strong> Test with prefers-reduced-motion media query</li>
+      <li><strong>Automated tools:</strong> Use axe or similar tools for basic compliance checks</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Common ARIA Patterns</h2>
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><!-- Button -->
+<button aria-label="Close dialog" aria-pressed="false">
+  <span aria-hidden="true">×</span>
+</button>
+
+<!-- Form field with error -->
+<div>
+  <label for="email">Email</label>
+  <input 
+    id="email" 
+    type="email" 
+    aria-invalid="true" 
+    aria-describedby="email-error"
+  />
+  <div id="email-error" role="alert">
+    Please enter a valid email address
+  </div>
+</div>
+
+<!-- Modal dialog -->
+<div 
+  role="dialog" 
+  aria-modal="true" 
+  aria-labelledby="dialog-title"
+  aria-describedby="dialog-desc"
+>
+  <h2 id="dialog-title">Confirmation</h2>
+  <p id="dialog-desc">Are you sure you want to continue?</p>
+</div>
+
+<!-- Tab interface -->
+<div role="tablist">
+  <button 
+    role="tab" 
+    aria-selected="true" 
+    aria-controls="panel-1"
+    id="tab-1"
+  >
+    Tab 1
+  </button>
+  <div 
+    role="tabpanel" 
+    id="panel-1" 
+    aria-labelledby="tab-1"
+  >
+    Panel content
+  </div>
+</div></code></pre>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Resources</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><a href="https://www.w3.org/WAI/WCAG21/quickref/" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">WCAG 2.1 Quick Reference</a></li>
+      <li><a href="https://www.w3.org/WAI/ARIA/apg/" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">ARIA Authoring Practices Guide</a></li>
+      <li><a href="https://inclusive-components.design/" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">Inclusive Components</a></li>
+      <li><a href="https://www.a11yproject.com/" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">The A11Y Project</a></li>
+    </ul>
+  </div>
+</div>

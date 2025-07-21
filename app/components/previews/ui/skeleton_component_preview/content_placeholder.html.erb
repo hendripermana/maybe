@@ -1,0 +1,99 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Text Content Placeholder</h3>
+    <div class="space-y-2">
+      <!-- Heading placeholder -->
+      <%= render Ui::SkeletonComponent.new(width: "50%", height: "32px", class: "mb-4") %>
+      
+      <!-- Paragraph placeholders -->
+      <%= render Ui::SkeletonComponent.new(width: "100%", height: "16px") %>
+      <%= render Ui::SkeletonComponent.new(width: "100%", height: "16px") %>
+      <%= render Ui::SkeletonComponent.new(width: "75%", height: "16px") %>
+      
+      <!-- Spacing -->
+      <div class="h-4"></div>
+      
+      <!-- Second paragraph placeholders -->
+      <%= render Ui::SkeletonComponent.new(width: "100%", height: "16px") %>
+      <%= render Ui::SkeletonComponent.new(width: "100%", height: "16px") %>
+      <%= render Ui::SkeletonComponent.new(width: "40%", height: "16px") %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Profile Information Placeholder</h3>
+    <div class="flex items-center gap-4">
+      <!-- Avatar placeholder -->
+      <%= render Ui::SkeletonComponent.new(width: "64px", height: "64px", rounded: true) %>
+      
+      <div class="space-y-2">
+        <!-- Name placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "150px", height: "24px") %>
+        
+        <!-- Email placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "200px", height: "16px") %>
+        
+        <!-- Role placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">List Item Placeholders</h3>
+    <div class="space-y-4">
+      <% 3.times do %>
+        <div class="flex items-center gap-3">
+          <!-- Icon placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "24px", height: "24px", rounded: true) %>
+          
+          <div class="space-y-2 flex-1">
+            <!-- Title placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "60%", height: "20px") %>
+            
+            <!-- Description placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "80%", height: "16px") %>
+          </div>
+          
+          <!-- Action placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "24px", height: "24px") %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Form Placeholder</h3>
+    <div class="space-y-4">
+      <!-- Form field placeholders -->
+      <div class="space-y-1">
+        <!-- Label placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "80px", height: "16px") %>
+        
+        <!-- Input placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "100%", height: "40px", class: "rounded-md") %>
+      </div>
+      
+      <div class="space-y-1">
+        <!-- Label placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "120px", height: "16px") %>
+        
+        <!-- Input placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "100%", height: "40px", class: "rounded-md") %>
+      </div>
+      
+      <div class="space-y-1">
+        <!-- Label placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+        
+        <!-- Textarea placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "100%", height: "100px", class: "rounded-md") %>
+      </div>
+      
+      <!-- Button placeholder -->
+      <div class="flex justify-end">
+        <%= render Ui::SkeletonComponent.new(width: "120px", height: "40px", class: "rounded-md") %>
+      </div>
+    </div>
+  </div>
+</div>

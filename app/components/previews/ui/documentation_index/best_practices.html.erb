@@ -1,0 +1,299 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6">Component Best Practices</h1>
+  
+  <p class="mb-6">
+    Follow these best practices when using the Maybe UI component library to ensure consistency, accessibility, and maintainability.
+  </p>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">General Guidelines</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li>Use the most specific component for your needs rather than building from scratch</li>
+      <li>Maintain consistent spacing and sizing across related components</li>
+      <li>Follow the established design patterns for each component type</li>
+      <li>Use CSS variables for all color values to ensure theme compatibility</li>
+      <li>Test components in both light and dark themes</li>
+      <li>Ensure all components meet accessibility standards</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Component Selection</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <th class="py-2 px-4 text-left">When you need to...</th>
+            <th class="py-2 px-4 text-left">Use this component</th>
+            <th class="py-2 px-4 text-left">Instead of</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4">Display an actionable button</td>
+            <td class="py-2 px-4"><code>Ui::ButtonComponent</code></td>
+            <td class="py-2 px-4">Styled links or divs with click handlers</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4">Show important messages</td>
+            <td class="py-2 px-4"><code>Ui::AlertComponent</code></td>
+            <td class="py-2 px-4">Custom styled divs</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4">Group related content</td>
+            <td class="py-2 px-4"><code>Ui::CardComponent</code></td>
+            <td class="py-2 px-4">Divs with custom borders and shadows</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4">Collect user input</td>
+            <td class="py-2 px-4"><code>Ui::InputComponent</code></td>
+            <td class="py-2 px-4">Raw HTML form elements</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4">Display loading states</td>
+            <td class="py-2 px-4"><code>Ui::SkeletonComponent</code></td>
+            <td class="py-2 px-4">Custom loading animations</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4">Show additional information on hover</td>
+            <td class="py-2 px-4"><code>Ui::TooltipComponent</code></td>
+            <td class="py-2 px-4">Custom tooltip implementations</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4">Display account information</td>
+            <td class="py-2 px-4"><code>Ui::AccountCardComponent</code></td>
+            <td class="py-2 px-4">Generic cards with custom styling</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Component-Specific Best Practices</h2>
+    
+    <div class="space-y-6">
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Button Component</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="font-medium mb-2">✅ Do This</h4>
+            <ul class="list-disc pl-5">
+              <li>Use <code>primary</code> variant for main actions</li>
+              <li>Use <code>secondary</code> variant for secondary actions</li>
+              <li>Use <code>destructive</code> variant for dangerous actions</li>
+              <li>Include descriptive text for screen readers</li>
+              <li>Group related buttons with consistent sizing</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-medium mb-2">❌ Avoid This</h4>
+            <ul class="list-disc pl-5">
+              <li>Using multiple primary buttons in one section</li>
+              <li>Using buttons for navigation (use links instead)</li>
+              <li>Creating buttons with only icons and no labels</li>
+              <li>Inconsistent button sizing within a group</li>
+              <li>Overriding button styles with custom CSS</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Form Components</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="font-medium mb-2">✅ Do This</h4>
+            <ul class="list-disc pl-5">
+              <li>Always include labels for form fields</li>
+              <li>Provide clear error messages</li>
+              <li>Group related fields with fieldsets</li>
+              <li>Use appropriate input types (email, number, etc.)</li>
+              <li>Include help text for complex inputs</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-medium mb-2">❌ Avoid This</h4>
+            <ul class="list-disc pl-5">
+              <li>Placeholder text as the only label</li>
+              <li>Generic error messages</li>
+              <li>Inconsistent validation behavior</li>
+              <li>Disabling form fields without explanation</li>
+              <li>Using non-standard input patterns</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Card Components</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="font-medium mb-2">✅ Do This</h4>
+            <ul class="list-disc pl-5">
+              <li>Use consistent card sizing in grids</li>
+              <li>Include clear headings for card content</li>
+              <li>Use the header and footer slots for actions</li>
+              <li>Maintain consistent padding within cards</li>
+              <li>Use interactive variant for clickable cards</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-medium mb-2">❌ Avoid This</h4>
+            <ul class="list-disc pl-5">
+              <li>Nesting cards within cards</li>
+              <li>Inconsistent card heights in a row</li>
+              <li>Overloading cards with too much content</li>
+              <li>Using cards for simple content containers</li>
+              <li>Mixing card variants in a single section</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Alert Components</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="font-medium mb-2">✅ Do This</h4>
+            <ul class="list-disc pl-5">
+              <li>Use appropriate variants for message type</li>
+              <li>Include clear, concise messages</li>
+              <li>Add titles for complex alerts</li>
+              <li>Make alerts dismissible when appropriate</li>
+              <li>Use ARIA live regions for dynamic alerts</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-medium mb-2">❌ Avoid This</h4>
+            <ul class="list-disc pl-5">
+              <li>Using alerts for non-important information</li>
+              <li>Including too many alerts on one page</li>
+              <li>Using destructive variant for non-errors</li>
+              <li>Creating alerts with vague messages</li>
+              <li>Auto-dismissing important alerts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Layout Best Practices</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li>Maintain consistent spacing between components (use Tailwind spacing utilities)</li>
+      <li>Use responsive grid layouts for component arrangements</li>
+      <li>Ensure proper stacking order on mobile devices</li>
+      <li>Use appropriate container widths for different content types</li>
+      <li>Maintain consistent section padding throughout the application</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Performance Considerations</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li>Use skeleton components for loading states</li>
+      <li>Avoid unnecessary component nesting</li>
+      <li>Lazy load components that are not immediately visible</li>
+      <li>Use appropriate image sizes and formats</li>
+      <li>Minimize JavaScript interactions where possible</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Example Component Combinations</h2>
+    
+    <div class="space-y-6">
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Form with Validation</h3>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><%= render Ui::FormComponent.new(url: "/example") do |form| %>
+  <%= form.with_field do %>
+    <%= render Ui::InputComponent.new(
+      label: "Email",
+      type: "email",
+      required: true,
+      error: @errors[:email]
+    ) %>
+  <% end %>
+  
+  <%= form.with_field do %>
+    <%= render Ui::InputComponent.new(
+      label: "Password",
+      type: "password",
+      required: true,
+      error: @errors[:password]
+    ) %>
+  <% end %>
+  
+  <%= form.with_actions do %>
+    <%= render Ui::ButtonComponent.new(
+      variant: :secondary,
+      type: "button"
+    ) { "Cancel" } %>
+    
+    <%= render Ui::ButtonComponent.new(
+      variant: :primary,
+      type: "submit"
+    ) { "Submit" } %>
+  <% end %>
+<% end %></code></pre>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Card with Actions</h3>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><%= render Ui::CardComponent.new(title: "Account Summary") do |card| %>
+  <div class="space-y-4">
+    <%= render Ui::BalanceDisplayComponent.new(
+      amount: 1250.75,
+      size: :xl,
+      show_indicator: true
+    ) %>
+    
+    <div class="text-sm text-muted-foreground">
+      Last updated: <%= Time.now.strftime("%B %d, %Y") %>
+    </div>
+  </div>
+  
+  <% card.with_footer do %>
+    <div class="flex justify-end space-x-2">
+      <%= render Ui::ButtonComponent.new(
+        variant: :outline,
+        size: :sm
+      ) { "View Details" } %>
+      
+      <%= render Ui::ButtonComponent.new(
+        variant: :primary,
+        size: :sm
+      ) { "Add Transaction" } %>
+    </div>
+  <% end %>
+<% end %></code></pre>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Alert with Actions</h3>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><%= render Ui::AlertComponent.new(
+  variant: :warning,
+  title: "Account Verification Required",
+  dismissible: true
+) do %>
+  <div class="space-y-4">
+    <p>Please verify your account to continue using all features.</p>
+    
+    <div>
+      <%= render Ui::ButtonComponent.new(
+        variant: :primary,
+        size: :sm
+      ) { "Verify Now" } %>
+    </div>
+  </div>
+<% end %></code></pre>
+      </div>
+    </div>
+  </div>
+</div>

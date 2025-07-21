@@ -1,0 +1,23 @@
+<%= render Ui::CardComponent.new do |card| %>
+  <% card.with_header do %>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <%= render Ui::AvatarComponent.new(alt: "John Doe", size: :sm) %>
+        <div>
+          <h3 class="text-lg font-medium">John Doe</h3>
+          <p class="text-sm text-muted-foreground">Posted 2 hours ago</p>
+        </div>
+      </div>
+      <div>
+        <%= render Ui::ButtonComponent.new(variant: :ghost, size: :sm, icon: "more-horizontal") do %>
+          <span class="sr-only">Options</span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  
+  <div class="py-4">
+    <p class="mb-4">This example shows a card with a completely custom header that includes an avatar, user information, and an actions button.</p>
+    <p>Custom headers are useful for social media posts, comments, or any content with author information.</p>
+  </div>
+<% end %>

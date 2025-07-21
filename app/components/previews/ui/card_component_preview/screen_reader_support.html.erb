@@ -1,0 +1,104 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Screen Reader Attributes</h3>
+    <p class="mb-4">This example demonstrates proper ARIA attributes for screen reader accessibility:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li><code>aria-labelledby</code>: Links the card to its title for screen readers</li>
+      <li><code>aria-describedby</code>: Links the card to its description for screen readers</li>
+      <li>Semantic HTML structure with proper heading hierarchy</li>
+      <li>Descriptive text for all interactive elements</li>
+    </ul>
+    
+    <%= render Ui::CardComponent.new do |card| %>
+      <div id="card-title" class="text-lg font-medium mb-2">Accessible Card Title</div>
+      <div id="card-desc" class="mb-4">
+        <p>This card uses proper ARIA attributes to ensure screen reader accessibility.</p>
+        <p>The card is linked to its title and description using aria-labelledby and aria-describedby.</p>
+      </div>
+      
+      <div class="border-t border-border pt-4 mt-4">
+        <h4 class="text-md font-medium mb-2">ARIA Attributes Used:</h4>
+        <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>&lt;div
+  role="region"
+  aria-labelledby="card-title"
+  aria-describedby="card-desc"
+&gt;</code></pre>
+      </div>
+    <% end %>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Interactive Card with Screen Reader Support</h3>
+    <p class="mb-4">This example demonstrates an interactive card with proper screen reader support:</p>
+    
+    <%= render Ui::CardComponent.new(
+      variant: :interactive,
+      href: "#",
+      aria: { 
+        label: "Interactive card example",
+        haspopup: "dialog"
+      }
+    ) do %>
+      <div class="space-y-2">
+        <h3 class="text-lg font-medium">Interactive Card</h3>
+        <p>This card has proper ARIA attributes for screen readers:</p>
+        <ul class="list-disc pl-5">
+          <li><code>aria-label</code>: Provides a descriptive label</li>
+          <li><code>aria-haspopup</code>: Indicates it triggers a dialog</li>
+          <li>Role is automatically set to "button" for interactive cards</li>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Form Card with Screen Reader Support</h3>
+    <p class="mb-4">This example demonstrates a card containing a form with proper screen reader support:</p>
+    
+    <%= render Ui::CardComponent.new(title: "Contact Form") do %>
+      <div class="space-y-4">
+        <p>This form has proper labels and ARIA attributes for screen readers:</p>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Name",
+          type: "text",
+          id: "name",
+          required: true,
+          aria: { required: "true", describedby: "name-desc" }
+        ) %>
+        <div id="name-desc" class="text-sm text-muted-foreground">Enter your full name</div>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Email",
+          type: "email",
+          id: "email",
+          required: true,
+          aria: { required: "true", describedby: "email-desc" }
+        ) %>
+        <div id="email-desc" class="text-sm text-muted-foreground">We'll never share your email</div>
+        
+        <div class="flex justify-end">
+          <%= render Ui::ButtonComponent.new(
+            variant: :primary,
+            type: "submit",
+            aria: { label: "Submit contact form" }
+          ) do %>
+            Submit
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Screen Reader Testing</h3>
+    <p>To test screen reader support:</p>
+    <ol class="list-decimal pl-5">
+      <li>Enable a screen reader (VoiceOver on macOS, NVDA on Windows)</li>
+      <li>Navigate through the page using screen reader commands</li>
+      <li>Verify that all content is properly announced</li>
+      <li>Check that interactive elements are properly identified</li>
+      <li>Ensure form fields have proper labels and descriptions</li>
+    </ol>
+  </div>
+</div>

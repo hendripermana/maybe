@@ -1,0 +1,91 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Status Indicators</h3>
+    <div class="flex flex-wrap gap-2">
+      <%= render Ui::BadgeComponent.new(variant: :success) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Online
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :warning) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Away
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :destructive) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Offline
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :secondary) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Busy
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Animated Status Indicators</h3>
+    <div class="flex flex-wrap gap-2">
+      <%= render Ui::BadgeComponent.new(variant: :success) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block animate-pulse"></span>
+        Live
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :warning) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block animate-pulse"></span>
+        Processing
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :destructive) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block animate-pulse"></span>
+        Error
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Transaction Status</h3>
+    <div class="flex flex-wrap gap-2">
+      <%= render Ui::BadgeComponent.new(variant: :success) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Completed
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :warning) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block animate-pulse"></span>
+        Pending
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :destructive) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Failed
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :secondary) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Canceled
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Priority Levels</h3>
+    <div class="flex flex-wrap gap-2">
+      <%= render Ui::BadgeComponent.new(variant: :destructive) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        High
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :warning) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Medium
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :secondary) do %>
+        <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block"></span>
+        Low
+      <% end %>
+    </div>
+  </div>
+</div>

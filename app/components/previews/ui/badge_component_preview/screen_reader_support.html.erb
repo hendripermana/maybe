@@ -1,0 +1,135 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Screen Reader Attributes</h3>
+    <p class="mb-4">This example demonstrates proper ARIA attributes for screen reader accessibility:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li><code>aria-label</code>: Provides additional context when needed</li>
+      <li><code>aria-hidden</code>: Hides decorative elements from screen readers</li>
+      <li><code>sr-only</code>: Provides text for screen readers that is visually hidden</li>
+    </ul>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <div>
+          <h4 class="text-sm font-medium mb-2">Badge with Additional Context</h4>
+          <%= render Ui::BadgeComponent.new(variant: :success, aria: { label: "Status: Online" }) do %>
+            <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block" aria-hidden="true"></span>
+            Online
+          <% end %>
+          
+          <div class="mt-2">
+            <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>&lt;span aria-label="Status: Online"&gt;
+  &lt;span aria-hidden="true"&gt;●&lt;/span&gt;
+  Online
+&lt;/span&gt;</code></pre>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-sm font-medium mb-2">Badge with Count</h4>
+          <%= render Ui::BadgeComponent.new(variant: :primary) do %>
+            Notifications 
+            <span class="ml-1 bg-white text-primary rounded-full px-1.5 py-0.5 text-xs" aria-label="5 unread notifications">5</span>
+          <% end %>
+          
+          <div class="mt-2">
+            <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>&lt;span&gt;
+  Notifications
+  &lt;span aria-label="5 unread notifications"&gt;5&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-sm font-medium mb-2">Badge with Hidden Visual Element</h4>
+          <%= render Ui::BadgeComponent.new(variant: :warning) do %>
+            <span class="sr-only">Status:</span>
+            <span class="mr-1 w-2 h-2 rounded-full bg-current inline-block" aria-hidden="true"></span>
+            Pending
+          <% end %>
+          
+          <div class="mt-2">
+            <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>&lt;span&gt;
+  &lt;span class="sr-only"&gt;Status:&lt;/span&gt;
+  &lt;span aria-hidden="true"&gt;●&lt;/span&gt;
+  Pending
+&lt;/span&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Removable Badge with Accessibility</h3>
+    <p class="mb-4">This example demonstrates accessible removable badges:</p>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="flex flex-wrap gap-2">
+        <%= render Ui::BadgeComponent.new(variant: :default) do %>
+          JavaScript
+          <button 
+            type="button" 
+            class="ml-1 rounded-full hover:bg-background/80" 
+            aria-label="Remove JavaScript tag"
+          >
+            <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+            <span class="sr-only">Remove</span>
+          </button>
+        <% end %>
+        
+        <%= render Ui::BadgeComponent.new(variant: :default) do %>
+          Ruby
+          <button 
+            type="button" 
+            class="ml-1 rounded-full hover:bg-background/80" 
+            aria-label="Remove Ruby tag"
+          >
+            <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+            <span class="sr-only">Remove</span>
+          </button>
+        <% end %>
+      </div>
+      
+      <div class="mt-4">
+        <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>&lt;button 
+  type="button"
+  aria-label="Remove JavaScript tag"
+&gt;
+  &lt;svg&gt;...&lt;/svg&gt;
+  &lt;span class="sr-only"&gt;Remove&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Color Not Used Alone</h3>
+    <p class="mb-4">This example demonstrates using both color and text to convey information:</p>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <div class="flex flex-wrap gap-2">
+          <%= render Ui::BadgeComponent.new(variant: :success) do %>
+            <span class="sr-only">Status:</span>
+            Active
+          <% end %>
+          
+          <%= render Ui::BadgeComponent.new(variant: :warning) do %>
+            <span class="sr-only">Status:</span>
+            Pending
+          <% end %>
+          
+          <%= render Ui::BadgeComponent.new(variant: :destructive) do %>
+            <span class="sr-only">Status:</span>
+            Inactive
+          <% end %>
+        </div>
+        
+        <p class="text-sm text-muted-foreground">
+          These badges use both color and text to indicate status, ensuring users who cannot perceive color differences can still understand the information.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

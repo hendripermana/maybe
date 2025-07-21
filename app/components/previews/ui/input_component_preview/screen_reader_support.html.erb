@@ -1,0 +1,141 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Screen Reader Attributes</h3>
+    <p class="mb-4">This example demonstrates proper ARIA attributes for screen reader accessibility:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li><code>aria-required</code>: Indicates required fields to screen readers</li>
+      <li><code>aria-invalid</code>: Communicates validation errors</li>
+      <li><code>aria-describedby</code>: Links inputs to their help text or error messages</li>
+      <li><code>aria-label</code>: Provides additional context when needed</li>
+    </ul>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <%= render Ui::InputComponent.new(
+          label: "Email",
+          type: "email",
+          placeholder: "user@example.com",
+          required: true,
+          aria: { describedby: "email-help" }
+        ) %>
+        <div id="email-help" class="text-sm text-muted-foreground">We'll never share your email with anyone else.</div>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Password",
+          type: "password",
+          placeholder: "Enter your password",
+          value: "pass",
+          error: "Password must be at least 8 characters",
+          aria: { describedby: "password-error" }
+        ) %>
+        <div id="password-error" class="text-sm text-destructive">Password must be at least 8 characters.</div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Hidden Labels with ARIA</h3>
+    <p class="mb-4">This example demonstrates how to provide screen reader labels when visual labels are hidden:</p>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <div class="relative">
+          <%= render Ui::InputComponent.new(
+            label: "Search",
+            hide_label: true,
+            placeholder: "Search...",
+            leading_icon: "search",
+            aria: { label: "Search the website" }
+          ) %>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <div class="text-sm text-muted-foreground">Code:</div>
+          <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>&lt;input
+  type="text"
+  placeholder="Search..."
+  aria-label="Search the website"
+&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Form Field Groups</h3>
+    <p class="mb-4">This example demonstrates how to group related form fields for screen readers:</p>
+    
+    <div class="p-4 border rounded-lg">
+      <fieldset aria-describedby="address-desc">
+        <legend class="text-lg font-medium mb-2">Shipping Address</legend>
+        <div id="address-desc" class="text-sm text-muted-foreground mb-4">Enter your shipping address details below.</div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <%= render Ui::InputComponent.new(
+            label: "Street Address",
+            placeholder: "123 Main St",
+            required: true
+          ) %>
+          
+          <%= render Ui::InputComponent.new(
+            label: "Apartment/Suite",
+            placeholder: "Apt 4B"
+          ) %>
+          
+          <%= render Ui::InputComponent.new(
+            label: "City",
+            placeholder: "New York",
+            required: true
+          ) %>
+          
+          <%= render Ui::InputComponent.new(
+            label: "State/Province",
+            placeholder: "NY",
+            required: true
+          ) %>
+          
+          <%= render Ui::InputComponent.new(
+            label: "Postal Code",
+            placeholder: "10001",
+            required: true
+          ) %>
+          
+          <%= render Ui::InputComponent.new(
+            label: "Country",
+            placeholder: "United States",
+            required: true
+          ) %>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Live Regions for Dynamic Updates</h3>
+    <p class="mb-4">This example demonstrates using ARIA live regions for dynamic validation feedback:</p>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <%= render Ui::InputComponent.new(
+          label: "Username",
+          placeholder: "Choose a username",
+          help_text: "Username must be 3-20 characters"
+        ) %>
+        
+        <div aria-live="polite" role="status" class="text-sm text-success">
+          <div class="flex items-center gap-1">
+            <%= render Ui::IconComponent.new(name: "check", class: "w-4 h-4") %>
+            <span>Username is available!</span>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-2 mt-4">
+          <div class="text-sm text-muted-foreground">Code:</div>
+          <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>&lt;div aria-live="polite" role="status"&gt;
+  Username is available!
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

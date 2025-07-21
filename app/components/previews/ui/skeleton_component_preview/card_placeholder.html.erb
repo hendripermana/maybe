@@ -1,0 +1,124 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Account Card Placeholder</h3>
+    <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <!-- Icon placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "40px", height: "40px", rounded: true) %>
+          
+          <div class="space-y-2">
+            <!-- Account name placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "150px", height: "20px") %>
+            
+            <!-- Institution name placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "120px", height: "16px") %>
+          </div>
+        </div>
+        
+        <!-- Menu button placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "24px", height: "24px") %>
+      </div>
+      
+      <div class="space-y-1">
+        <!-- Balance label placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "80px", height: "14px") %>
+        
+        <!-- Balance amount placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "120px", height: "28px") %>
+      </div>
+      
+      <div class="mt-4 pt-4 border-t [data-theme=dark]:border-gray-700">
+        <!-- Available balance placeholder -->
+        <div class="flex items-center justify-between">
+          <%= render Ui::SkeletonComponent.new(width: "140px", height: "16px") %>
+          <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Transaction Card Placeholder</h3>
+    <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <!-- Category icon placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "40px", height: "40px", rounded: true) %>
+          
+          <div class="space-y-2">
+            <!-- Merchant name placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "180px", height: "20px") %>
+            
+            <!-- Date placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+          </div>
+        </div>
+        
+        <!-- Amount placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "80px", height: "24px") %>
+      </div>
+      
+      <!-- Category and account placeholders -->
+      <div class="flex items-center gap-2">
+        <%= render Ui::SkeletonComponent.new(width: "80px", height: "24px", class: "rounded-full") %>
+        <%= render Ui::SkeletonComponent.new(width: "100px", height: "24px", class: "rounded-full") %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Multiple Card Placeholders</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <% 2.times do %>
+        <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+          <!-- Card header placeholder -->
+          <div class="flex items-center justify-between mb-4">
+            <%= render Ui::SkeletonComponent.new(width: "150px", height: "24px") %>
+            <%= render Ui::SkeletonComponent.new(width: "24px", height: "24px") %>
+          </div>
+          
+          <!-- Card content placeholder -->
+          <div class="space-y-2">
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "16px") %>
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "16px") %>
+            <%= render Ui::SkeletonComponent.new(width: "60%", height: "16px") %>
+          </div>
+          
+          <!-- Card footer placeholder -->
+          <div class="mt-4 pt-4 border-t [data-theme=dark]:border-gray-700 flex justify-end">
+            <%= render Ui::SkeletonComponent.new(width: "100px", height: "36px", class: "rounded-md") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Budget Card Placeholder</h3>
+    <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+      <!-- Budget header placeholder -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="space-y-2">
+          <!-- Budget name placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "120px", height: "20px") %>
+          
+          <!-- Budget period placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "80px", height: "16px") %>
+        </div>
+        
+        <!-- Budget amount placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "100px", height: "24px") %>
+      </div>
+      
+      <!-- Progress bar placeholder -->
+      <%= render Ui::SkeletonComponent.new(width: "100%", height: "8px", class: "rounded-full") %>
+      
+      <!-- Budget details placeholder -->
+      <div class="mt-4 flex items-center justify-between">
+        <%= render Ui::SkeletonComponent.new(width: "80px", height: "16px") %>
+        <%= render Ui::SkeletonComponent.new(width: "60px", height: "16px") %>
+      </div>
+    </div>
+  </div>
+</div>

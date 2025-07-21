@@ -1,0 +1,28 @@
+<div class="space-y-8">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Screen Reader Support</h3>
+    <p class="mb-4">This component includes proper ARIA attributes for screen reader accessibility:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li>Uses semantic HTML elements</li>
+      <li>Includes appropriate ARIA roles</li>
+      <li>Provides descriptive labels</li>
+      <li>Announces state changes</li>
+    </ul>
+    
+    <div class="p-4 border rounded-lg">
+      <p class="mb-2">Screen reader attributes:</p>
+      <pre class="bg-gray-100 p-2 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>&lt;div
+  role="..."
+  aria-label="..."
+  aria-live="..."
+  aria-expanded="..."
+&gt;</code></pre>
+      
+      <div class="mt-4">
+        <%= render component do %>
+          Screen reader accessible content
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

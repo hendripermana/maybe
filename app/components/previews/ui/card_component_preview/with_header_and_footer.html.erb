@@ -1,0 +1,32 @@
+<%= render Ui::CardComponent.new(title: "Card with Header and Footer") do |card| %>
+  <% card.with_header do %>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <%= render Ui::IconComponent.new(name: "credit-card", class: "w-5 h-5 text-primary") %>
+        <h3 class="text-lg font-medium">Custom Header</h3>
+      </div>
+      <div>
+        <%= render Ui::BadgeComponent.new(variant: :outline) do %>
+          Featured
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  
+  <div class="py-4">
+    <p class="mb-4">This card demonstrates the use of custom header and footer slots.</p>
+    <p>The header includes an icon and badge, while the footer contains action buttons.</p>
+  </div>
+  
+  <% card.with_footer do %>
+    <div class="flex justify-end space-x-2">
+      <%= render Ui::ButtonComponent.new(variant: :ghost, size: :sm) do %>
+        Cancel
+      <% end %>
+      
+      <%= render Ui::ButtonComponent.new(variant: :primary, size: :sm) do %>
+        Save Changes
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

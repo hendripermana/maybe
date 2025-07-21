@@ -1,0 +1,44 @@
+<div class="space-y-4">
+  <div class="flex flex-wrap gap-2">
+    <%= render Ui::BadgeComponent.new(variant: :default) do %>
+      Notifications <span class="ml-1 bg-primary text-primary-foreground rounded-full px-1.5 py-0.5 text-xs">5</span>
+    <% end %>
+    
+    <%= render Ui::BadgeComponent.new(variant: :primary) do %>
+      Messages <span class="ml-1 bg-white text-primary rounded-full px-1.5 py-0.5 text-xs">12</span>
+    <% end %>
+    
+    <%= render Ui::BadgeComponent.new(variant: :secondary) do %>
+      Updates <span class="ml-1 bg-secondary-foreground text-secondary rounded-full px-1.5 py-0.5 text-xs">3</span>
+    <% end %>
+    
+    <%= render Ui::BadgeComponent.new(variant: :outline) do %>
+      Cart <span class="ml-1 bg-primary text-primary-foreground rounded-full px-1.5 py-0.5 text-xs">2</span>
+    <% end %>
+  </div>
+  
+  <div class="mt-6">
+    <h3 class="text-lg font-medium mb-2">Standalone Count Badges</h3>
+    <div class="flex flex-wrap gap-2">
+      <%= render Ui::BadgeComponent.new(variant: :primary, class: "rounded-full px-1.5 min-w-[20px] text-center") do %>
+        1
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :primary, class: "rounded-full px-1.5 min-w-[20px] text-center") do %>
+        25
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :primary, class: "rounded-full px-1.5 min-w-[20px] text-center") do %>
+        99+
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :destructive, class: "rounded-full px-1.5 min-w-[20px] text-center") do %>
+        5
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :success, class: "rounded-full px-1.5 min-w-[20px] text-center") do %>
+        3
+      <% end %>
+    </div>
+  </div>
+</div>

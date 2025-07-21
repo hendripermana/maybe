@@ -1,0 +1,89 @@
+<div class="space-y-4">
+  <div class="flex flex-wrap gap-2">
+    <%= render Ui::BadgeComponent.new(variant: :default) do %>
+      Default
+      <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove">
+        <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+      </button>
+    <% end %>
+    
+    <%= render Ui::BadgeComponent.new(variant: :primary) do %>
+      Primary
+      <button type="button" class="ml-1 rounded-full hover:bg-primary-foreground/20" aria-label="Remove">
+        <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+      </button>
+    <% end %>
+    
+    <%= render Ui::BadgeComponent.new(variant: :secondary) do %>
+      Secondary
+      <button type="button" class="ml-1 rounded-full hover:bg-secondary-foreground/20" aria-label="Remove">
+        <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+      </button>
+    <% end %>
+    
+    <%= render Ui::BadgeComponent.new(variant: :outline) do %>
+      Outline
+      <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove">
+        <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+      </button>
+    <% end %>
+  </div>
+  
+  <div class="mt-6">
+    <h3 class="text-lg font-medium mb-2">Tag-Style Badges</h3>
+    <div class="flex flex-wrap gap-2">
+      <div class="inline-flex items-center">
+        <%= render Ui::BadgeComponent.new(variant: :default) do %>
+          JavaScript
+          <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove JavaScript tag">
+            <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+          </button>
+        <% end %>
+      </div>
+      
+      <div class="inline-flex items-center">
+        <%= render Ui::BadgeComponent.new(variant: :default) do %>
+          Ruby
+          <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove Ruby tag">
+            <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+          </button>
+        <% end %>
+      </div>
+      
+      <div class="inline-flex items-center">
+        <%= render Ui::BadgeComponent.new(variant: :default) do %>
+          Rails
+          <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove Rails tag">
+            <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-6">
+    <h3 class="text-lg font-medium mb-2">Filter Badges</h3>
+    <div class="flex flex-wrap gap-2">
+      <%= render Ui::BadgeComponent.new(variant: :outline) do %>
+        Status: Active
+        <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove status filter">
+          <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+        </button>
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :outline) do %>
+        Category: Finance
+        <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove category filter">
+          <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+        </button>
+      <% end %>
+      
+      <%= render Ui::BadgeComponent.new(variant: :outline) do %>
+        Date: Last 30 days
+        <button type="button" class="ml-1 rounded-full hover:bg-background/80" aria-label="Remove date filter">
+          <%= render Ui::IconComponent.new(name: "x", class: "w-3 h-3") %>
+        </button>
+      <% end %>
+    </div>
+  </div>
+</div>

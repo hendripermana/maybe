@@ -1,0 +1,356 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6">CSS Variables Reference</h1>
+  
+  <p class="mb-6">
+    The Maybe UI component library uses a comprehensive set of CSS variables to ensure consistent theming across light and dark modes. This reference documents all available variables and their usage.
+  </p>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Core Color Variables</h2>
+    <p class="mb-4">These are the foundational color variables used throughout the component library:</p>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <th class="py-2 px-4 text-left">Variable</th>
+            <th class="py-2 px-4 text-left">Description</th>
+            <th class="py-2 px-4 text-left">Light Theme</th>
+            <th class="py-2 px-4 text-left">Dark Theme</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--background</code></td>
+            <td class="py-2 px-4">Page background</td>
+            <td class="py-2 px-4">hsl(0 0% 100%)</td>
+            <td class="py-2 px-4">hsl(224 71% 4%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--foreground</code></td>
+            <td class="py-2 px-4">Text color</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+            <td class="py-2 px-4">hsl(213 31% 91%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--primary</code></td>
+            <td class="py-2 px-4">Primary accent color</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+            <td class="py-2 px-4">hsl(210 40% 98%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--primary-foreground</code></td>
+            <td class="py-2 px-4">Text on primary color</td>
+            <td class="py-2 px-4">hsl(210 40% 98%)</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--secondary</code></td>
+            <td class="py-2 px-4">Secondary accent color</td>
+            <td class="py-2 px-4">hsl(210 40% 96.1%)</td>
+            <td class="py-2 px-4">hsl(217.2 32.6% 17.5%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--secondary-foreground</code></td>
+            <td class="py-2 px-4">Text on secondary color</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+            <td class="py-2 px-4">hsl(210 40% 98%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--muted</code></td>
+            <td class="py-2 px-4">Muted background</td>
+            <td class="py-2 px-4">hsl(210 40% 96.1%)</td>
+            <td class="py-2 px-4">hsl(217.2 32.6% 17.5%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--muted-foreground</code></td>
+            <td class="py-2 px-4">Muted text color</td>
+            <td class="py-2 px-4">hsl(215.4 16.3% 46.9%)</td>
+            <td class="py-2 px-4">hsl(215 20.2% 65.1%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--accent</code></td>
+            <td class="py-2 px-4">Accent background</td>
+            <td class="py-2 px-4">hsl(210 40% 96.1%)</td>
+            <td class="py-2 px-4">hsl(217.2 32.6% 17.5%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--accent-foreground</code></td>
+            <td class="py-2 px-4">Text on accent</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+            <td class="py-2 px-4">hsl(210 40% 98%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--destructive</code></td>
+            <td class="py-2 px-4">Destructive/error color</td>
+            <td class="py-2 px-4">hsl(0 84.2% 60.2%)</td>
+            <td class="py-2 px-4">hsl(0 62.8% 30.6%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--destructive-foreground</code></td>
+            <td class="py-2 px-4">Text on destructive</td>
+            <td class="py-2 px-4">hsl(210 40% 98%)</td>
+            <td class="py-2 px-4">hsl(0 85.7% 97.3%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--success</code></td>
+            <td class="py-2 px-4">Success color</td>
+            <td class="py-2 px-4">hsl(142.1 76.2% 36.3%)</td>
+            <td class="py-2 px-4">hsl(142.1 70.6% 45.3%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--success-foreground</code></td>
+            <td class="py-2 px-4">Text on success</td>
+            <td class="py-2 px-4">hsl(210 40% 98%)</td>
+            <td class="py-2 px-4">hsl(210 40% 98%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--warning</code></td>
+            <td class="py-2 px-4">Warning color</td>
+            <td class="py-2 px-4">hsl(47.9 95.8% 53.1%)</td>
+            <td class="py-2 px-4">hsl(47.9 95.8% 53.1%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--warning-foreground</code></td>
+            <td class="py-2 px-4">Text on warning</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Component-Specific Variables</h2>
+    <p class="mb-4">These variables are used for specific component styling:</p>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <th class="py-2 px-4 text-left">Variable</th>
+            <th class="py-2 px-4 text-left">Description</th>
+            <th class="py-2 px-4 text-left">Light Theme</th>
+            <th class="py-2 px-4 text-left">Dark Theme</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--card</code></td>
+            <td class="py-2 px-4">Card background</td>
+            <td class="py-2 px-4">hsl(0 0% 100%)</td>
+            <td class="py-2 px-4">hsl(224 71% 4%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--card-foreground</code></td>
+            <td class="py-2 px-4">Card text color</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+            <td class="py-2 px-4">hsl(213 31% 91%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--popover</code></td>
+            <td class="py-2 px-4">Popover background</td>
+            <td class="py-2 px-4">hsl(0 0% 100%)</td>
+            <td class="py-2 px-4">hsl(224 71% 4%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--popover-foreground</code></td>
+            <td class="py-2 px-4">Popover text color</td>
+            <td class="py-2 px-4">hsl(222.2 47.4% 11.2%)</td>
+            <td class="py-2 px-4">hsl(213 31% 91%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--border</code></td>
+            <td class="py-2 px-4">Border color</td>
+            <td class="py-2 px-4">hsl(214.3 31.8% 91.4%)</td>
+            <td class="py-2 px-4">hsl(217.2 32.6% 17.5%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--input</code></td>
+            <td class="py-2 px-4">Input border color</td>
+            <td class="py-2 px-4">hsl(214.3 31.8% 91.4%)</td>
+            <td class="py-2 px-4">hsl(217.2 32.6% 17.5%)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--ring</code></td>
+            <td class="py-2 px-4">Focus ring color</td>
+            <td class="py-2 px-4">hsl(215 20.2% 65.1%)</td>
+            <td class="py-2 px-4">hsl(215 20.2% 65.1%)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Shadow Variables</h2>
+    <p class="mb-4">Shadow variables for consistent elevation:</p>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <th class="py-2 px-4 text-left">Variable</th>
+            <th class="py-2 px-4 text-left">Description</th>
+            <th class="py-2 px-4 text-left">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--shadow-sm</code></td>
+            <td class="py-2 px-4">Small shadow</td>
+            <td class="py-2 px-4">0 1px 2px 0 rgb(0 0 0 / 0.05)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--shadow</code></td>
+            <td class="py-2 px-4">Default shadow</td>
+            <td class="py-2 px-4">0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--shadow-md</code></td>
+            <td class="py-2 px-4">Medium shadow</td>
+            <td class="py-2 px-4">0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--shadow-lg</code></td>
+            <td class="py-2 px-4">Large shadow</td>
+            <td class="py-2 px-4">0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--shadow-xl</code></td>
+            <td class="py-2 px-4">Extra large shadow</td>
+            <td class="py-2 px-4">0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Border Radius Variables</h2>
+    <p class="mb-4">Border radius variables for consistent rounding:</p>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <th class="py-2 px-4 text-left">Variable</th>
+            <th class="py-2 px-4 text-left">Description</th>
+            <th class="py-2 px-4 text-left">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--radius-sm</code></td>
+            <td class="py-2 px-4">Small radius</td>
+            <td class="py-2 px-4">0.125rem (2px)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--radius</code></td>
+            <td class="py-2 px-4">Default radius</td>
+            <td class="py-2 px-4">0.25rem (4px)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--radius-md</code></td>
+            <td class="py-2 px-4">Medium radius</td>
+            <td class="py-2 px-4">0.375rem (6px)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--radius-lg</code></td>
+            <td class="py-2 px-4">Large radius</td>
+            <td class="py-2 px-4">0.5rem (8px)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--radius-xl</code></td>
+            <td class="py-2 px-4">Extra large radius</td>
+            <td class="py-2 px-4">0.75rem (12px)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--radius-2xl</code></td>
+            <td class="py-2 px-4">2XL radius</td>
+            <td class="py-2 px-4">1rem (16px)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>--radius-full</code></td>
+            <td class="py-2 px-4">Full/circle radius</td>
+            <td class="py-2 px-4">9999px</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Using CSS Variables</h2>
+    <p class="mb-4">Here are examples of how to use these CSS variables in your styles:</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-lg font-medium mb-2">CSS Example</h3>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>.custom-card {
+  background-color: var(--color-card);
+  color: var(--color-card-foreground);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.custom-button {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-radius: var(--radius);
+}
+
+.custom-button:hover {
+  background-color: var(--color-primary-hover);
+}</code></pre>
+      </div>
+      
+      <div>
+        <h3 class="text-lg font-medium mb-2">Tailwind Example</h3>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><div class="bg-card text-card-foreground border border-border rounded-lg shadow-md">
+  <div class="p-4">
+    <h3 class="text-lg font-medium">Card Title</h3>
+    <p class="text-muted-foreground">Card content</p>
+  </div>
+  <div class="p-4 border-t border-border">
+    <button class="bg-primary text-primary-foreground px-4 py-2 rounded">
+      Button
+    </button>
+  </div>
+</div></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Theme Switching</h2>
+    <p class="mb-4">CSS variables automatically update when the theme changes via the <code>data-theme</code> attribute:</p>
+    
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>// JavaScript for theme switching
+document.documentElement.setAttribute('data-theme', 'dark');
+// or
+document.documentElement.setAttribute('data-theme', 'light');</code></pre>
+    
+    <div class="mt-6 border rounded-lg p-6 [data-theme=dark]:border-gray-700" data-controller="theme-preview">
+      <div class="mb-4">
+        <%= render Ui::ThemeToggleComponent.new %>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 bg-card text-card-foreground border border-border rounded-lg shadow">
+          <h3 class="text-lg font-medium mb-2">Card using variables</h3>
+          <p class="text-muted-foreground mb-4">This card uses CSS variables for all styling.</p>
+          <button class="bg-primary text-primary-foreground px-4 py-2 rounded">Primary Button</button>
+        </div>
+        
+        <div class="p-4 bg-accent text-accent-foreground border border-border rounded-lg shadow">
+          <h3 class="text-lg font-medium mb-2">Accent Card</h3>
+          <p class="text-muted-foreground mb-4">This card uses accent variables.</p>
+          <button class="bg-secondary text-secondary-foreground px-4 py-2 rounded">Secondary Button</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

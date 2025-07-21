@@ -1,0 +1,158 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Data Table Placeholder</h3>
+    <div class="border rounded-lg [data-theme=dark]:border-gray-700 overflow-hidden">
+      <!-- Table header placeholder -->
+      <div class="bg-muted p-4 border-b [data-theme=dark]:border-gray-700 flex items-center gap-4">
+        <% 4.times do |i| %>
+          <%= render Ui::SkeletonComponent.new(
+            width: i == 0 ? "40px" : (i == 3 ? "80px" : "120px"), 
+            height: "20px"
+          ) %>
+        <% end %>
+      </div>
+      
+      <!-- Table rows placeholder -->
+      <div>
+        <% 5.times do %>
+          <div class="p-4 border-b [data-theme=dark]:border-gray-700 flex items-center gap-4">
+            <!-- Checkbox placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "20px", height: "20px", rounded: true) %>
+            
+            <!-- Name placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "120px", height: "20px") %>
+            
+            <!-- Email placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "180px", height: "20px") %>
+            
+            <!-- Actions placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "60px", height: "20px") %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Table footer placeholder -->
+      <div class="p-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <!-- Items per page placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "120px", height: "32px", class: "rounded-md") %>
+          
+          <!-- Showing text placeholder -->
+          <%= render Ui::SkeletonComponent.new(width: "150px", height: "16px") %>
+        </div>
+        
+        <!-- Pagination placeholder -->
+        <div class="flex items-center gap-1">
+          <% 4.times do %>
+            <%= render Ui::SkeletonComponent.new(width: "32px", height: "32px", class: "rounded-md") %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Transaction Table Placeholder</h3>
+    <div class="border rounded-lg [data-theme=dark]:border-gray-700 overflow-hidden">
+      <!-- Table header placeholder -->
+      <div class="bg-muted p-4 border-b [data-theme=dark]:border-gray-700 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <% 3.times do %>
+            <%= render Ui::SkeletonComponent.new(width: "100px", height: "20px") %>
+          <% end %>
+        </div>
+        
+        <!-- Search placeholder -->
+        <%= render Ui::SkeletonComponent.new(width: "200px", height: "36px", class: "rounded-md") %>
+      </div>
+      
+      <!-- Table rows placeholder -->
+      <div>
+        <% 5.times do %>
+          <div class="p-4 border-b [data-theme=dark]:border-gray-700 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <!-- Icon placeholder -->
+              <%= render Ui::SkeletonComponent.new(width: "40px", height: "40px", rounded: true) %>
+              
+              <div class="space-y-2">
+                <!-- Transaction name placeholder -->
+                <%= render Ui::SkeletonComponent.new(width: "180px", height: "20px") %>
+                
+                <!-- Transaction date placeholder -->
+                <%= render Ui::SkeletonComponent.new(width: "120px", height: "16px") %>
+              </div>
+            </div>
+            
+            <!-- Transaction amount placeholder -->
+            <%= render Ui::SkeletonComponent.new(width: "100px", height: "24px") %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Load more placeholder -->
+      <div class="p-4 flex justify-center">
+        <%= render Ui::SkeletonComponent.new(width: "120px", height: "36px", class: "rounded-md") %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Responsive Table Placeholder</h3>
+    <div class="space-y-4">
+      <!-- Mobile view (card-style) -->
+      <div class="md:hidden">
+        <% 3.times do %>
+          <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700 mb-4">
+            <div class="flex items-center justify-between mb-3">
+              <!-- Title placeholder -->
+              <%= render Ui::SkeletonComponent.new(width: "150px", height: "20px") %>
+              
+              <!-- Badge placeholder -->
+              <%= render Ui::SkeletonComponent.new(width: "60px", height: "24px", class: "rounded-full") %>
+            </div>
+            
+            <!-- Details placeholders -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <%= render Ui::SkeletonComponent.new(width: "80px", height: "16px") %>
+                <%= render Ui::SkeletonComponent.new(width: "120px", height: "16px") %>
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <%= render Ui::SkeletonComponent.new(width: "60px", height: "16px") %>
+                <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <%= render Ui::SkeletonComponent.new(width: "70px", height: "16px") %>
+                <%= render Ui::SkeletonComponent.new(width: "80px", height: "16px") %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Desktop view (table) -->
+      <div class="hidden md:block border rounded-lg [data-theme=dark]:border-gray-700 overflow-hidden">
+        <!-- Table header placeholder -->
+        <div class="bg-muted p-4 border-b [data-theme=dark]:border-gray-700 grid grid-cols-4 gap-4">
+          <% 4.times do %>
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "20px") %>
+          <% end %>
+        </div>
+        
+        <!-- Table rows placeholder -->
+        <% 5.times do %>
+          <div class="p-4 border-b [data-theme=dark]:border-gray-700 grid grid-cols-4 gap-4">
+            <% 4.times do |i| %>
+              <%= render Ui::SkeletonComponent.new(
+                width: "100%", 
+                height: i == 0 ? "20px" : "16px"
+              ) %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

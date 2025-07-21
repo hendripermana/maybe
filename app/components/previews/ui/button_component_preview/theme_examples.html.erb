@@ -1,0 +1,42 @@
+<div class="space-y-8">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Light Theme (Default)</h3>
+    <div class="p-4 border rounded-lg bg-white">
+      <div class="flex flex-wrap gap-2">
+        <%= render Ui::ButtonComponent.new(variant: :primary) { "Primary" } %>
+        <%= render Ui::ButtonComponent.new(variant: :secondary) { "Secondary" } %>
+        <%= render Ui::ButtonComponent.new(variant: :destructive) { "Destructive" } %>
+        <%= render Ui::ButtonComponent.new(variant: :outline) { "Outline" } %>
+        <%= render Ui::ButtonComponent.new(variant: :ghost) { "Ghost" } %>
+        <%= render Ui::ButtonComponent.new(variant: :link) { "Link" } %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Dark Theme</h3>
+    <div class="p-4 border rounded-lg bg-gray-900" data-theme="dark">
+      <div class="flex flex-wrap gap-2">
+        <%= render Ui::ButtonComponent.new(variant: :primary) { "Primary" } %>
+        <%= render Ui::ButtonComponent.new(variant: :secondary) { "Secondary" } %>
+        <%= render Ui::ButtonComponent.new(variant: :destructive) { "Destructive" } %>
+        <%= render Ui::ButtonComponent.new(variant: :outline) { "Outline" } %>
+        <%= render Ui::ButtonComponent.new(variant: :ghost) { "Ghost" } %>
+        <%= render Ui::ButtonComponent.new(variant: :link) { "Link" } %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Theme Switching</h3>
+    <p class="mb-2">This component uses CSS variables for theming and automatically adapts to the current theme.</p>
+    <div class="p-4 border rounded-lg" data-controller="theme-preview">
+      <%= render Ui::ThemeToggleComponent.new %>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <%= render Ui::ButtonComponent.new(variant: :primary) { "Primary" } %>
+        <%= render Ui::ButtonComponent.new(variant: :secondary) { "Secondary" } %>
+        <%= render Ui::ButtonComponent.new(variant: :destructive) { "Destructive" } %>
+      </div>
+    </div>
+  </div>
+</div>

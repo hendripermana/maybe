@@ -1,0 +1,23 @@
+<div class="space-y-8">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Keyboard Navigation</h3>
+    <p class="mb-4">This component supports keyboard navigation:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li>Use <kbd>Tab</kbd> to focus on the component</li>
+      <li>Use <kbd>Enter</kbd> or <kbd>Space</kbd> to activate</li>
+      <li>Use <kbd>Escape</kbd> to dismiss (if applicable)</li>
+      <li>Use arrow keys for navigation (if applicable)</li>
+    </ul>
+    
+    <div class="p-4 border rounded-lg">
+      <p class="mb-2">Try tabbing through these components:</p>
+      <div class="flex gap-2">
+        <button class="px-4 py-2 bg-gray-200 rounded">Before</button>
+        <%= render component do %>
+          Focusable component
+        <% end %>
+        <button class="px-4 py-2 bg-gray-200 rounded">After</button>
+      </div>
+    </div>
+  </div>
+</div>

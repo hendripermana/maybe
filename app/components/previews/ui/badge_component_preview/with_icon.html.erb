@@ -1,0 +1,31 @@
+<div class="flex flex-wrap gap-2">
+  <%= render Ui::BadgeComponent.new(variant: :default) do %>
+    <%= render Ui::IconComponent.new(name: "check", class: "w-3 h-3 mr-1") %>
+    Completed
+  <% end %>
+  
+  <%= render Ui::BadgeComponent.new(variant: :primary) do %>
+    <%= render Ui::IconComponent.new(name: "star", class: "w-3 h-3 mr-1") %>
+    Featured
+  <% end %>
+  
+  <%= render Ui::BadgeComponent.new(variant: :success) do %>
+    <%= render Ui::IconComponent.new(name: "check-circle", class: "w-3 h-3 mr-1") %>
+    Verified
+  <% end %>
+  
+  <%= render Ui::BadgeComponent.new(variant: :warning) do %>
+    <%= render Ui::IconComponent.new(name: "alert-triangle", class: "w-3 h-3 mr-1") %>
+    Warning
+  <% end %>
+  
+  <%= render Ui::BadgeComponent.new(variant: :destructive) do %>
+    <%= render Ui::IconComponent.new(name: "x-circle", class: "w-3 h-3 mr-1") %>
+    Rejected
+  <% end %>
+  
+  <%= render Ui::BadgeComponent.new(variant: :outline) do %>
+    <%= render Ui::IconComponent.new(name: "clock", class: "w-3 h-3 mr-1") %>
+    Pending
+  <% end %>
+</div>

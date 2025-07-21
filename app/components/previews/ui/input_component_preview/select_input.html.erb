@@ -1,0 +1,17 @@
+<%= render Ui::InputComponent.new(
+  label: "Category",
+  type: "select",
+  required: true
+) do %>
+  <option value="">Select a category...</option>
+  <option value="food">Food & Dining</option>
+  <option value="transport">Transportation</option>
+  <option value="housing">Housing</option>
+  <option value="utilities">Utilities</option>
+  <option value="entertainment">Entertainment</option>
+  <option value="shopping">Shopping</option>
+  <option value="health">Health & Medical</option>
+  <option value="education">Education</option>
+  <option value="travel">Travel</option>
+  <option value="other">Other</option>
+<% end %>

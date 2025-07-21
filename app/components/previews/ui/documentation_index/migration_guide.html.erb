@@ -1,0 +1,222 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6">Component Migration Guide</h1>
+  
+  <p class="mb-6">
+    This guide provides instructions for migrating from legacy components to the new Shadcn-inspired UI component library.
+  </p>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Migration Strategy</h2>
+    <p class="mb-4">Follow these steps when migrating components:</p>
+    <ol class="list-decimal pl-5 space-y-2">
+      <li>Identify the legacy component and its equivalent in the new UI library</li>
+      <li>Replace the component with its modern equivalent</li>
+      <li>Update any custom styling to use CSS variables</li>
+      <li>Test the component in both light and dark themes</li>
+      <li>Verify accessibility compliance</li>
+    </ol>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Common Component Mappings</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <th class="py-2 px-4 text-left">Legacy Component</th>
+            <th class="py-2 px-4 text-left">Modern Component</th>
+            <th class="py-2 px-4 text-left">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>ButtonComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::ButtonComponent</code></td>
+            <td class="py-2 px-4">Update variant names (primary, secondary, etc.)</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>AlertComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::AlertComponent</code></td>
+            <td class="py-2 px-4">New component supports dismissible alerts</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>CardComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::CardComponent</code></td>
+            <td class="py-2 px-4">New component has header/footer slots</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>InputComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::InputComponent</code></td>
+            <td class="py-2 px-4">New component has improved error handling</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>ModalComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::ModalComponent</code></td>
+            <td class="py-2 px-4">New component has improved focus management</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>TabsComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::TabsComponent</code></td>
+            <td class="py-2 px-4">New component has improved accessibility</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>BadgeComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::BadgeComponent</code></td>
+            <td class="py-2 px-4">New component has more variants</td>
+          </tr>
+          <tr class="border-b [data-theme=dark]:border-gray-700">
+            <td class="py-2 px-4"><code>ToggleComponent</code></td>
+            <td class="py-2 px-4"><code>Ui::ToggleSwitchComponent</code></td>
+            <td class="py-2 px-4">Renamed for clarity</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Example Migrations</h2>
+    
+    <div class="mb-6">
+      <h3 class="text-xl font-medium mb-2">Button Component</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h4 class="font-medium mb-2">Legacy Code</h4>
+          <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><%= render ButtonComponent.new(
+  type: "primary",
+  class: "btn-lg",
+  data: { action: "click->form#submit" }
+) do %>
+  Save Changes
+<% end %></code></pre>
+        </div>
+        
+        <div>
+          <h4 class="font-medium mb-2">Modern Code</h4>
+          <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><%= render Ui::ButtonComponent.new(
+  variant: :primary,
+  size: :lg,
+  data: { action: "click->form#submit" }
+) do %>
+  Save Changes
+<% end %></code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-6">
+      <h3 class="text-xl font-medium mb-2">Alert Component</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h4 class="font-medium mb-2">Legacy Code</h4>
+          <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><div class="alert alert-info">
+  <h4 class="alert-heading">Information</h4>
+  <p>This is an informational message.</p>
+</div></code></pre>
+        </div>
+        
+        <div>
+          <h4 class="font-medium mb-2">Modern Code</h4>
+          <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><%= render Ui::AlertComponent.new(
+  variant: :info,
+  title: "Information"
+) do %>
+  This is an informational message.
+<% end %></code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-6">
+      <h3 class="text-xl font-medium mb-2">Form Input Component</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h4 class="font-medium mb-2">Legacy Code</h4>
+          <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><div class="form-group">
+  <label for="email">Email Address</label>
+  <input 
+    type="email" 
+    id="email" 
+    class="form-control <%= 'is-invalid' if has_error %>"
+    placeholder="user@example.com"
+    required
+  >
+  <% if has_error %>
+    <div class="invalid-feedback">
+      Please enter a valid email address
+    </div>
+  <% end %>
+</div></code></pre>
+        </div>
+        
+        <div>
+          <h4 class="font-medium mb-2">Modern Code</h4>
+          <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code><%= render Ui::InputComponent.new(
+  type: "email",
+  label: "Email Address",
+  placeholder: "user@example.com",
+  required: true,
+  error: has_error ? "Please enter a valid email address" : nil
+) %></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">CSS Migration</h2>
+    <p class="mb-4">When migrating CSS styles:</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <h4 class="font-medium mb-2">Legacy CSS</h4>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>.custom-card {
+  background-color: white;
+  color: #333333;
+  border: 1px solid #dddddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .custom-card {
+  background-color: #222222;
+  color: #eeeeee;
+  border-color: #444444;
+}</code></pre>
+      </div>
+      
+      <div>
+        <h4 class="font-medium mb-2">Modern CSS</h4>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>.custom-card {
+  background-color: var(--color-card);
+  color: var(--color-card-foreground);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* No dark mode override needed - CSS variables handle it */</code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Testing Your Migration</h2>
+    <p class="mb-4">After migrating components, verify:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Functionality:</strong> All features work as expected</li>
+      <li><strong>Theme support:</strong> Component works in both light and dark themes</li>
+      <li><strong>Accessibility:</strong> Component meets accessibility standards</li>
+      <li><strong>Responsive behavior:</strong> Component works on all screen sizes</li>
+      <li><strong>Performance:</strong> Component renders efficiently</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Migration Tools</h2>
+    <p class="mb-4">Use these tools to assist with migration:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Component Showcase:</strong> Reference implementation of all components</li>
+      <li><strong>Theme Preview:</strong> Test components in different themes</li>
+      <li><strong>CSS Variable Reference:</strong> Complete list of available CSS variables</li>
+      <li><strong>Accessibility Checker:</strong> Verify component accessibility</li>
+    </ul>
+  </div>
+</div>

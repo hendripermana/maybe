@@ -1,0 +1,261 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6">Component Testing Guide</h1>
+  
+  <p class="mb-6">
+    This guide provides comprehensive instructions for testing UI components, ensuring they work correctly across themes, are accessible, and maintain consistent behavior.
+  </p>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Testing Approach</h2>
+    <p class="mb-4">The Maybe UI component library uses a multi-layered testing approach:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Unit Tests:</strong> Testing component logic and rendering</li>
+      <li><strong>Visual Regression Tests:</strong> Ensuring consistent appearance across themes</li>
+      <li><strong>Accessibility Tests:</strong> Verifying WCAG compliance</li>
+      <li><strong>Integration Tests:</strong> Testing component interactions</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Unit Testing Components</h2>
+    <p class="mb-4">Unit tests verify that components render correctly and their logic works as expected:</p>
+    
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>require "test_helper"
+
+class Ui::ButtonComponentTest < ViewComponent::TestCase
+  test "renders with correct variant classes" do
+    render_inline(Ui::ButtonComponent.new(variant: :primary)) { "Click me" }
+    
+    assert_selector "button.btn-modern-primary"
+    assert_text "Click me"
+  end
+  
+  test "renders as link when href is provided" do
+    render_inline(Ui::ButtonComponent.new(
+      variant: :primary,
+      href: "/example"
+    )) { "Link Button" }
+    
+    assert_selector "a[href='/example']"
+    assert_text "Link Button"
+  end
+  
+  test "applies disabled state correctly" do
+    render_inline(Ui::ButtonComponent.new(
+      variant: :primary,
+      disabled: true
+    )) { "Disabled Button" }
+    
+    assert_selector "button[disabled]"
+  end
+  
+  test "renders with icon" do
+    render_inline(Ui::ButtonComponent.new(
+      variant: :primary,
+      icon: "plus"
+    )) { "Button with Icon" }
+    
+    assert_selector "button svg"
+    assert_text "Button with Icon"
+  end
+  
+  test "renders with loading state" do
+    render_inline(Ui::ButtonComponent.new(
+      variant: :primary,
+      loading: true
+    )) { "Loading Button" }
+    
+    assert_selector "button .spinner"
+  end
+end</code></pre>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Theme Testing</h2>
+    <p class="mb-4">Test components in both light and dark themes to ensure proper styling:</p>
+    
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>require "test_helper"
+
+class Ui::CardComponentTest < ViewComponent::TestCase
+  test "renders with theme-aware styling" do
+    # Test light theme (default)
+    render_inline(Ui::CardComponent.new(title: "Card Title")) { "Card content" }
+    
+    assert_selector ".bg-card.text-card-foreground"
+    
+    # Test dark theme
+    with_theme(:dark) do
+      render_inline(Ui::CardComponent.new(title: "Card Title")) { "Card content" }
+      
+      assert_selector "[data-theme='dark'] .bg-card.text-card-foreground"
+    end
+  end
+  
+  # Helper method for theme testing
+  def with_theme(theme)
+    previous_theme = controller.request.params[:theme]
+    controller.request.params[:theme] = theme
+    yield
+    controller.request.params[:theme] = previous_theme
+  end
+end</code></pre>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Accessibility Testing</h2>
+    <p class="mb-4">Test components for accessibility compliance:</p>
+    
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>require "test_helper"
+require "axe-core-capybara"
+
+class Ui::AccessibilityTest < ApplicationSystemTestCase
+  test "button component meets accessibility standards" do
+    visit "/component_preview/ui/button_component/primary"
+    
+    assert_axe_component_accessible
+  end
+  
+  test "modal component traps focus correctly" do
+    visit "/component_preview/ui/modal_component/default"
+    
+    click_button "Open Modal"
+    
+    # Test focus is trapped inside modal
+    assert_focus_trapped_in_modal
+    
+    # Test ESC key closes modal
+    find("body").send_keys :escape
+    assert_no_selector "[role='dialog']", visible: true
+  end
+  
+  private
+  
+  def assert_axe_component_accessible
+    assert_axe_accessible
+  end
+  
+  def assert_focus_trapped_in_modal
+    # Send tab key multiple times and ensure focus stays within modal
+    modal = find("[role='dialog']")
+    
+    # Get all focusable elements in modal
+    focusable_elements = modal.all("button, a, input, select, textarea, [tabindex]:not([tabindex='-1'])")
+    
+    # Tab through all elements and ensure focus stays in modal
+    (focusable_elements.length + 2).times do
+      find("body").send_keys :tab
+      assert modal.has_focused_element?
+    end
+  end
+end</code></pre>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Visual Regression Testing</h2>
+    <p class="mb-4">Use visual regression testing to catch unexpected visual changes:</p>
+    
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>require "test_helper"
+
+class Ui::VisualRegressionTest < ApplicationSystemTestCase
+  test "button component visual appearance" do
+    visit "/component_preview/ui/button_component/primary"
+    
+    # Take screenshot in light theme
+    take_screenshot("button_primary_light")
+    
+    # Switch to dark theme
+    execute_script("document.documentElement.setAttribute('data-theme', 'dark')")
+    
+    # Take screenshot in dark theme
+    take_screenshot("button_primary_dark")
+    
+    # Compare screenshots with baseline (implementation depends on your visual testing tool)
+    assert_screenshots_match("button_primary_light")
+    assert_screenshots_match("button_primary_dark")
+  end
+end</code></pre>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Integration Testing</h2>
+    <p class="mb-4">Test how components work together in real-world scenarios:</p>
+    
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>require "test_helper"
+
+class Ui::FormIntegrationTest < ApplicationSystemTestCase
+  test "form submission with validation" do
+    visit "/component_preview/ui/form_component/with_validation"
+    
+    # Test form validation
+    click_button "Submit"
+    
+    # Check error messages appear
+    assert_text "Email is required"
+    
+    # Fill in form
+    fill_in "Email", with: "test@example.com"
+    fill_in "Password", with: "password123"
+    
+    # Submit form
+    click_button "Submit"
+    
+    # Check success message
+    assert_text "Form submitted successfully"
+  end
+end</code></pre>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Test Coverage</h2>
+    <p class="mb-4">Aim for comprehensive test coverage of components:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Props and Options:</strong> Test all component props and options</li>
+      <li><strong>Variants:</strong> Test all component variants</li>
+      <li><strong>States:</strong> Test all component states (hover, focus, disabled, etc.)</li>
+      <li><strong>Events:</strong> Test all component events and interactions</li>
+      <li><strong>Themes:</strong> Test in both light and dark themes</li>
+      <li><strong>Accessibility:</strong> Test keyboard navigation and screen reader support</li>
+      <li><strong>Edge Cases:</strong> Test with empty content, long content, etc.</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Testing Tools</h2>
+    <p class="mb-4">The Maybe UI component library uses these testing tools:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Minitest:</strong> Ruby testing framework</li>
+      <li><strong>ViewComponent::TestCase:</strong> Testing ViewComponents</li>
+      <li><strong>Capybara:</strong> Integration testing</li>
+      <li><strong>Selenium:</strong> Browser automation</li>
+      <li><strong>Percy:</strong> Visual regression testing</li>
+      <li><strong>Axe:</strong> Accessibility testing</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Example Test Files</h2>
+    <p class="mb-4">Here are examples of test files for common components:</p>
+    
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-lg font-medium mb-2">Button Component Test</h3>
+        <a href="/lookbook/inspect/file/test/components/ui/button_component_test.rb" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">View Button Component Test</a>
+      </div>
+      
+      <div>
+        <h3 class="text-lg font-medium mb-2">Alert Component Test</h3>
+        <a href="/lookbook/inspect/file/test/components/ui/alert_component_test.rb" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">View Alert Component Test</a>
+      </div>
+      
+      <div>
+        <h3 class="text-lg font-medium mb-2">Card Component Test</h3>
+        <a href="/lookbook/inspect/file/test/components/ui/card_component_test.rb" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">View Card Component Test</a>
+      </div>
+      
+      <div>
+        <h3 class="text-lg font-medium mb-2">Form Component Test</h3>
+        <a href="/lookbook/inspect/file/test/components/ui/form_component_test.rb" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">View Form Component Test</a>
+      </div>
+    </div>
+  </div>
+</div>

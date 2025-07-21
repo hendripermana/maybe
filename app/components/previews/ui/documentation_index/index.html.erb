@@ -1,0 +1,93 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6">Maybe UI Component Library</h1>
+  
+  <p class="mb-6 text-lg">
+    A modern, Shadcn-inspired component library built with ViewComponent and CSS variables for consistent theming across light and dark modes.
+  </p>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Key Features</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Theme Consistency:</strong> All components use CSS variables for seamless light/dark mode switching</li>
+      <li><strong>Accessibility:</strong> Built with WCAG 2.1 AA compliance in mind</li>
+      <li><strong>Modern Design:</strong> Shadcn-inspired styling with clean, professional aesthetics</li>
+      <li><strong>ViewComponent Architecture:</strong> Leverages Rails ViewComponent for maintainable, testable components</li>
+      <li><strong>Comprehensive Documentation:</strong> Full Lookbook integration with interactive examples</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Component Categories</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Layout Components</h3>
+        <ul class="list-disc pl-5">
+          <li>Card</li>
+          <li>Separator</li>
+          <li>Data Table</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Form Components</h3>
+        <ul class="list-disc pl-5">
+          <li>Button</li>
+          <li>Input</li>
+          <li>Checkbox</li>
+          <li>Radio Button</li>
+          <li>Select</li>
+          <li>Textarea</li>
+          <li>Toggle Switch</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Feedback Components</h3>
+        <ul class="list-disc pl-5">
+          <li>Alert</li>
+          <li>Badge</li>
+          <li>Progress Bar</li>
+          <li>Skeleton</li>
+          <li>Tooltip</li>
+        </ul>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h3 class="text-xl font-medium mb-2">Financial Components</h3>
+        <ul class="list-disc pl-5">
+          <li>Account Card</li>
+          <li>Balance Display</li>
+          <li>Budget Card</li>
+          <li>Transaction Badge</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Documentation Sections</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><a href="#" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">Theme System</a> - How the theme system works and how to use it</li>
+      <li><a href="#" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">Accessibility Guidelines</a> - Ensuring components are accessible</li>
+      <li><a href="#" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">Component Migration Guide</a> - How to migrate from legacy components</li>
+      <li><a href="#" class="text-blue-600 [data-theme=dark]:text-blue-400 hover:underline">Best Practices</a> - Guidelines for using components effectively</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Getting Started</h2>
+    <p class="mb-4">To use components in your views:</p>
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code># Basic component usage
+render Ui::ButtonComponent.new(variant: :primary) { "Click me" }
+
+# Component with options
+render Ui::AlertComponent.new(
+  variant: :info,
+  title: "Information",
+  dismissible: true
+) do
+  "This is an informational message."
+end</code></pre>
+  </div>
+</div>

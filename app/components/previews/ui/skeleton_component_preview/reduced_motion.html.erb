@@ -1,0 +1,107 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Respecting Reduced Motion Preferences</h3>
+    <p class="mb-4">This example demonstrates how skeleton animations respect the user's reduced motion preferences:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li>Standard animation for users without motion preferences</li>
+      <li>Reduced or no animation for users who prefer reduced motion</li>
+      <li>CSS implementation using <code>prefers-reduced-motion</code> media query</li>
+    </ul>
+    
+    <div class="p-4 border rounded-lg">
+      <div class="space-y-4">
+        <div>
+          <h4 class="text-md font-medium mb-2">Standard Animation</h4>
+          <div class="space-y-2">
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "20px") %>
+            <%= render Ui::SkeletonComponent.new(width: "80%", height: "20px") %>
+            <%= render Ui::SkeletonComponent.new(width: "60%", height: "20px") %>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-md font-medium mb-2">Reduced Motion (Simulated)</h4>
+          <div class="space-y-2">
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "20px", animate: false) %>
+            <%= render Ui::SkeletonComponent.new(width: "80%", height: "20px", animate: false) %>
+            <%= render Ui::SkeletonComponent.new(width: "60%", height: "20px", animate: false) %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-6">
+        <h4 class="text-md font-medium mb-2">CSS Implementation</h4>
+        <pre class="bg-muted p-2 rounded text-sm overflow-x-auto"><code>@keyframes skeleton-pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.5; }
+}
+
+.skeleton {
+  animation: skeleton-pulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Alternative Loading Indicators</h3>
+    <p class="mb-4">For users with reduced motion preferences, consider these alternatives:</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h4 class="text-md font-medium mb-2">Static Indicators</h4>
+        <div class="space-y-4">
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 rounded-full bg-primary"></div>
+            <span>Loading content...</span>
+          </div>
+          
+          <div class="space-y-2">
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "20px", animate: false) %>
+            <%= render Ui::SkeletonComponent.new(width: "80%", height: "20px", animate: false) %>
+            <%= render Ui::SkeletonComponent.new(width: "60%", height: "20px", animate: false) %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border rounded-lg p-4 [data-theme=dark]:border-gray-700">
+        <h4 class="text-md font-medium mb-2">Text-Based Progress</h4>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span>Loading content...</span>
+            <span>60%</span>
+          </div>
+          
+          <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
+            <div class="h-full bg-primary rounded-full" style="width: 60%"></div>
+          </div>
+          
+          <div class="space-y-2">
+            <%= render Ui::SkeletonComponent.new(width: "100%", height: "20px", animate: false) %>
+            <%= render Ui::SkeletonComponent.new(width: "80%", height: "20px", animate: false) %>
+            <%= render Ui::SkeletonComponent.new(width: "60%", height: "20px", animate: false) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Testing Reduced Motion</h3>
+    <p class="mb-4">To test how components behave with reduced motion preferences:</p>
+    <ol class="list-decimal pl-5">
+      <li>In Chrome DevTools, open the Rendering tab (Esc > ... > Rendering)</li>
+      <li>Enable "Emulate CSS media feature prefers-reduced-motion: reduce"</li>
+      <li>Verify that animations are disabled or reduced</li>
+      <li>Check that loading states are still clearly indicated</li>
+      <li>Ensure all functionality remains accessible</li>
+    </ol>
+  </div>
+</div>

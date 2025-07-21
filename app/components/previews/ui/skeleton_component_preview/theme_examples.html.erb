@@ -1,0 +1,96 @@
+<div class="space-y-8">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Light Theme (Default)</h3>
+    <div class="p-4 border rounded-lg bg-white">
+      <div class="space-y-2">
+        <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px") %>
+        <%= render Ui::SkeletonComponent.new(width: "80%", height: "24px") %>
+        <%= render Ui::SkeletonComponent.new(width: "60%", height: "24px") %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Dark Theme</h3>
+    <div class="p-4 border rounded-lg bg-gray-900" data-theme="dark">
+      <div class="space-y-2">
+        <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px") %>
+        <%= render Ui::SkeletonComponent.new(width: "80%", height: "24px") %>
+        <%= render Ui::SkeletonComponent.new(width: "60%", height: "24px") %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Theme Switching</h3>
+    <p class="mb-2">This component uses CSS variables for theming and automatically adapts to the current theme.</p>
+    <div class="p-4 border rounded-lg" data-controller="theme-preview">
+      <%= render Ui::ThemeToggleComponent.new %>
+      <div class="mt-4 space-y-2">
+        <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px") %>
+        <%= render Ui::SkeletonComponent.new(width: "80%", height: "24px") %>
+        <%= render Ui::SkeletonComponent.new(width: "60%", height: "24px") %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">All Variants in Both Themes</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="p-4 border rounded-lg bg-white">
+        <h4 class="font-medium mb-2">Light Theme</h4>
+        <div class="space-y-4">
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :default) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :primary) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :success) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :warning) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :destructive) %>
+        </div>
+      </div>
+      
+      <div class="p-4 border rounded-lg bg-gray-900" data-theme="dark">
+        <h4 class="font-medium mb-2 text-white">Dark Theme</h4>
+        <div class="space-y-4">
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :default) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :primary) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :success) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :warning) %>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "24px", variant: :destructive) %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Card Skeleton in Both Themes</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="p-4 border rounded-lg bg-white">
+        <h4 class="font-medium mb-2">Light Theme</h4>
+        <div class="border rounded-lg p-4">
+          <div class="flex items-center gap-4 mb-4">
+            <%= render Ui::SkeletonComponent.new(width: "48px", height: "48px", rounded: true) %>
+            <div class="space-y-2">
+              <%= render Ui::SkeletonComponent.new(width: "150px", height: "20px") %>
+              <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+            </div>
+          </div>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "150px") %>
+        </div>
+      </div>
+      
+      <div class="p-4 border rounded-lg bg-gray-900" data-theme="dark">
+        <h4 class="font-medium mb-2 text-white">Dark Theme</h4>
+        <div class="border rounded-lg p-4 border-gray-700">
+          <div class="flex items-center gap-4 mb-4">
+            <%= render Ui::SkeletonComponent.new(width: "48px", height: "48px", rounded: true) %>
+            <div class="space-y-2">
+              <%= render Ui::SkeletonComponent.new(width: "150px", height: "20px") %>
+              <%= render Ui::SkeletonComponent.new(width: "100px", height: "16px") %>
+            </div>
+          </div>
+          <%= render Ui::SkeletonComponent.new(width: "100%", height: "150px") %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

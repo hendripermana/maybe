@@ -1,0 +1,128 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6">Theme System</h1>
+  
+  <p class="mb-6">
+    The Maybe UI component library uses a comprehensive CSS variable system for theming, allowing seamless switching between light and dark modes while maintaining consistent design language.
+  </p>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">CSS Variables</h2>
+    <p class="mb-4">All components use CSS variables for colors, ensuring theme consistency:</p>
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>:root {
+  /* Semantic color tokens */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-secondary: hsl(var(--secondary));
+  --color-muted: hsl(var(--muted));
+  --color-accent: hsl(var(--accent));
+  --color-destructive: hsl(var(--destructive));
+  
+  /* Component-specific tokens */
+  --color-card: hsl(var(--card));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}</code></pre>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Theme Switching</h2>
+    <p class="mb-4">Themes are controlled via the <code>data-theme</code> attribute:</p>
+    <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>[data-theme="dark"] {
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+  --primary: 210 100% 50%;
+  /* Other dark mode values */
+}</code></pre>
+    
+    <div class="mt-6">
+      <h3 class="text-xl font-medium mb-2">Theme Components</h3>
+      <p class="mb-4">Use these components to implement theme switching:</p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><code>Ui::ThemeToggleComponent</code> - Simple toggle button for switching themes</li>
+        <li><code>Ui::ThemeSwitcherComponent</code> - Dropdown with theme options</li>
+        <li><code>Ui::ThemePreviewComponent</code> - Preview component with theme switching</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Theme-Aware Styling</h2>
+    <p class="mb-4">When writing CSS or using Tailwind classes:</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-lg font-medium mb-2">✅ Do This</h3>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>/* CSS */
+.my-element {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Tailwind */
+<div class="bg-background text-foreground">
+  Content
+</div>
+
+/* Theme-aware Tailwind */
+<div class="bg-white [data-theme=dark]:bg-gray-900">
+  Content
+</div></code></pre>
+      </div>
+      
+      <div>
+        <h3 class="text-lg font-medium mb-2">❌ Avoid This</h3>
+        <pre class="bg-gray-100 p-4 rounded [data-theme=dark]:bg-gray-800 overflow-x-auto"><code>/* CSS */
+.my-element {
+  background-color: white;
+  color: black;
+}
+
+/* Tailwind */
+<div class="bg-white text-black">
+  Content
+</div>
+
+/* Hardcoded colors */
+<div style="background-color: #ffffff; color: #000000">
+  Content
+</div></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Theme Testing</h2>
+    <p class="mb-4">Always test components in both light and dark themes:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li>Check for proper color contrast in both themes</li>
+      <li>Ensure no hardcoded colors are visible</li>
+      <li>Verify that all states (hover, focus, active) work in both themes</li>
+      <li>Test theme switching to ensure smooth transitions</li>
+    </ul>
+  </div>
+  
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Live Theme Preview</h2>
+    <div class="border rounded-lg p-6 [data-theme=dark]:border-gray-700" data-controller="theme-preview">
+      <div class="mb-4">
+        <%= render Ui::ThemeToggleComponent.new %>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= render Ui::CardComponent.new(title: "Card Component") do %>
+            <p>This card adapts to the current theme</p>
+          <% end %>
+        </div>
+        
+        <div>
+          <%= render Ui::AlertComponent.new(variant: :info, title: "Information") do %>
+            This alert adapts to the current theme
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

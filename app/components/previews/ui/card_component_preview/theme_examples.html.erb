@@ -1,0 +1,82 @@
+<div class="space-y-8">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Light Theme (Default)</h3>
+    <div class="p-4 border rounded-lg bg-white">
+      <%= render Ui::CardComponent.new(title: "Light Theme Card") do %>
+        <p class="mb-4">This card is displayed in the light theme.</p>
+        <p>It uses CSS variables for consistent styling.</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Dark Theme</h3>
+    <div class="p-4 border rounded-lg bg-gray-900" data-theme="dark">
+      <%= render Ui::CardComponent.new(title: "Dark Theme Card") do %>
+        <p class="mb-4">This card is displayed in the dark theme.</p>
+        <p>It automatically adapts to the dark theme using CSS variables.</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Theme Switching</h3>
+    <p class="mb-2">This component uses CSS variables for theming and automatically adapts to the current theme.</p>
+    <div class="p-4 border rounded-lg" data-controller="theme-preview">
+      <%= render Ui::ThemeToggleComponent.new %>
+      <div class="mt-4">
+        <%= render Ui::CardComponent.new(title: "Theme-Switching Card") do %>
+          <p class="mb-4">Toggle the theme to see this card adapt.</p>
+          <p>All colors are derived from theme variables.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">All Variants in Both Themes</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="p-4 border rounded-lg bg-white">
+        <h4 class="font-medium mb-2">Light Theme</h4>
+        <div class="space-y-4">
+          <%= render Ui::CardComponent.new(title: "Default", variant: :default) do %>
+            Default card in light theme
+          <% end %>
+          
+          <%= render Ui::CardComponent.new(title: "Elevated", variant: :elevated) do %>
+            Elevated card in light theme
+          <% end %>
+          
+          <%= render Ui::CardComponent.new(title: "Outlined", variant: :outlined) do %>
+            Outlined card in light theme
+          <% end %>
+          
+          <%= render Ui::CardComponent.new(title: "Ghost", variant: :ghost) do %>
+            Ghost card in light theme
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="p-4 border rounded-lg bg-gray-900" data-theme="dark">
+        <h4 class="font-medium mb-2 text-white">Dark Theme</h4>
+        <div class="space-y-4">
+          <%= render Ui::CardComponent.new(title: "Default", variant: :default) do %>
+            Default card in dark theme
+          <% end %>
+          
+          <%= render Ui::CardComponent.new(title: "Elevated", variant: :elevated) do %>
+            Elevated card in dark theme
+          <% end %>
+          
+          <%= render Ui::CardComponent.new(title: "Outlined", variant: :outlined) do %>
+            Outlined card in dark theme
+          <% end %>
+          
+          <%= render Ui::CardComponent.new(title: "Ghost", variant: :ghost) do %>
+            Ghost card in dark theme
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

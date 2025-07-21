@@ -1,0 +1,73 @@
+<div class="space-y-6">
+  <div>
+    <h3 class="text-lg font-medium mb-2">Interactive Card with Keyboard Navigation</h3>
+    <p class="mb-4">This example demonstrates proper keyboard navigation for an interactive card:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li>The entire card is focusable with the Tab key</li>
+      <li>Enter or Space key activates the card's action</li>
+      <li>Focus is visibly indicated with a ring outline</li>
+    </ul>
+    
+    <%= render Ui::CardComponent.new(
+      title: "Interactive Card",
+      variant: :interactive,
+      href: "#",
+      data: { controller: "focus-demo" }
+    ) do %>
+      <p class="mb-4">This entire card is keyboard navigable.</p>
+      <p>Try using Tab to focus on this card, then press Enter to activate it.</p>
+    <% end %>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Card with Interactive Elements</h3>
+    <p class="mb-4">This example demonstrates keyboard navigation within a card containing interactive elements:</p>
+    <ul class="list-disc pl-5 mb-4">
+      <li>Tab key navigates between interactive elements</li>
+      <li>Focus order follows a logical sequence</li>
+      <li>Each interactive element has a visible focus state</li>
+    </ul>
+    
+    <%= render Ui::CardComponent.new(title: "Card with Interactive Elements") do |card| %>
+      <div class="space-y-4">
+        <p>This card contains multiple interactive elements with proper keyboard navigation.</p>
+        
+        <%= render Ui::InputComponent.new(
+          label: "Email",
+          type: "email",
+          placeholder: "user@example.com"
+        ) %>
+        
+        <div class="flex items-center space-x-2">
+          <%= render Ui::CheckboxComponent.new(
+            label: "Subscribe to newsletter",
+            id: "subscribe"
+          ) %>
+        </div>
+      </div>
+      
+      <% card.with_footer do %>
+        <div class="flex justify-end space-x-2">
+          <%= render Ui::ButtonComponent.new(variant: :ghost) do %>
+            Cancel
+          <% end %>
+          
+          <%= render Ui::ButtonComponent.new(variant: :primary) do %>
+            Subscribe
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  
+  <div>
+    <h3 class="text-lg font-medium mb-2">Keyboard Navigation Testing</h3>
+    <p>To test keyboard navigation:</p>
+    <ol class="list-decimal pl-5">
+      <li>Press Tab to move through interactive elements</li>
+      <li>Verify focus indicators are visible</li>
+      <li>Press Enter or Space to activate focused elements</li>
+      <li>Ensure focus order is logical and intuitive</li>
+    </ol>
+  </div>
+</div>
