@@ -4,7 +4,8 @@ module Ui
   # Modern select component for dropdown menus
   # Provides consistent styling and accessibility for select fields
   class SelectComponent < BaseComponent
-    attr_reader :form, :field, :collection, :value_method, :text_method, :options, :include_blank, :prompt, :disabled, :required
+    attr_reader :form, :field, :collection, :value_method, :text_method, :options, 
+                :include_blank, :prompt, :disabled, :required, :description
 
     def initialize(
       form:, 
@@ -17,6 +18,7 @@ module Ui
       prompt: nil,
       disabled: false,
       required: false,
+      description: nil,
       **html_options
     )
       super(**html_options)
@@ -30,6 +32,7 @@ module Ui
       @prompt = prompt
       @disabled = disabled
       @required = required
+      @description = description
     end
 
     def select_options
@@ -44,6 +47,11 @@ module Ui
     def select_html_options
       {
         class: select_classes,
+        id: field_id,
+        aria: { 
+          invalid: has_error? ? "true" : "false",
+          describedby: description ? "#{field_id}_description" : nil
+        },
         **@options.except(:class)
       }.compact
     end
@@ -54,6 +62,7 @@ module Ui
         "text-sm text-primary",
         "focus:outline-none focus:ring-2 focus:ring-ring focus:border-input",
         "disabled:cursor-not-allowed disabled:opacity-50",
+        "transition-colors duration-200",
         has_error? ? "border-destructive focus:ring-destructive" : nil
       )
     end
@@ -64,6 +73,10 @@ module Ui
 
     def collection_select?
       @collection.present?
+    end
+    
+    def field_id
+      "#{form.object_name}_#{field}"
     end
   end
 end

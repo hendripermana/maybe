@@ -6,7 +6,8 @@ module Ui
   class InputComponent < BaseComponent
     TYPES = %i[text email password number tel url search date time datetime-local month week].freeze
     
-    attr_reader :form, :field, :type, :placeholder, :value, :disabled, :readonly, :required, :autocomplete, :min, :max, :step
+    attr_reader :form, :field, :type, :placeholder, :value, :disabled, :readonly, :required, 
+                :autocomplete, :min, :max, :step, :prefix, :suffix, :description
 
     def initialize(
       form:, 
@@ -21,6 +22,9 @@ module Ui
       min: nil,
       max: nil,
       step: nil,
+      prefix: nil,
+      suffix: nil,
+      description: nil,
       **options
     )
       super(**options)
@@ -36,6 +40,9 @@ module Ui
       @min = min
       @max = max
       @step = step
+      @prefix = prefix
+      @suffix = suffix
+      @description = description
       
       raise ArgumentError, "Invalid input type: #{type}" unless TYPES.include?(@type)
     end
@@ -52,6 +59,10 @@ module Ui
         max: @max,
         step: @step,
         value: @value,
+        aria: { 
+          invalid: has_error? ? "true" : "false",
+          describedby: description ? "#{field_id}_description" : nil
+        },
         **@options.except(:class)
       }.compact
     end
@@ -62,12 +73,23 @@ module Ui
         "text-sm text-primary placeholder:text-muted",
         "focus:outline-none focus:ring-2 focus:ring-ring focus:border-input",
         "disabled:cursor-not-allowed disabled:opacity-50",
-        has_error? ? "border-destructive focus:ring-destructive" : nil
+        "transition-colors duration-200",
+        has_error? ? "border-destructive focus:ring-destructive" : nil,
+        prefix ? "rounded-l-none" : nil,
+        suffix ? "rounded-r-none" : nil
       )
     end
 
     def has_error?
       form.object&.errors&.include?(field)
+    end
+    
+    def field_id
+      "#{form.object_name}_#{field}"
+    end
+    
+    def has_addon?
+      prefix.present? || suffix.present?
     end
   end
 end

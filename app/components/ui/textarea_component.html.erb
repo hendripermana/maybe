@@ -1,2 +1,20 @@
 <%# Modern textarea component template %>
-<%= form.text_area field, textarea_options %>
+<div>
+  <%= form.text_area field, textarea_options %>
+  
+  <% if description %>
+    <div id="<%= field_id %>_description" class="text-xs text-secondary mt-1">
+      <%= description %>
+    </div>
+  <% end %>
+  
+  <% if counter %>
+    <div class="flex justify-end mt-1">
+      <span id="<%= field_id %>_counter" class="text-xs text-secondary" data-character-counter-target="counter">
+        <% if max_length %>
+          <span data-character-counter-target="current">0</span>/<%= max_length %>
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+</div>

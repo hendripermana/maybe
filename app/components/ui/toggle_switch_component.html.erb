@@ -1,5 +1,5 @@
 <%# Modern toggle switch component template %>
-<div class="toggle-switch">
+<div class="toggle-switch <%= container_classes %>">
   <%= form.hidden_field field, value: unchecked_value %>
   
   <button 
@@ -7,6 +7,7 @@
     id="<%= field_id %>"
     role="switch"
     aria-checked="<%= checked? %>"
+    aria-labelledby="<%= field_id %>_label"
     class="<%= toggle_classes %>"
     <%= "disabled" if disabled %>
     data-controller="toggle-switch"
@@ -15,7 +16,23 @@
     data-toggle-switch-checked-value="<%= checked_value %>"
     data-toggle-switch-unchecked-value="<%= unchecked_value %>"
   >
-    <span class="sr-only"><%= field.to_s.humanize %></span>
+    <span class="sr-only"><%= label_text %></span>
     <span class="<%= toggle_switch_classes %>"></span>
   </button>
+  
+  <label id="<%= field_id %>_label" for="<%= field_id %>" class="<%= label_classes %>">
+    <%= label_text %>
+  </label>
 </div>
+
+<style>
+  .toggle-animation {
+    animation: toggle-pulse 300ms ease-in-out;
+  }
+  
+  @keyframes toggle-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+</style>

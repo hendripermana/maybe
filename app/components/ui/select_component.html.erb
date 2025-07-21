@@ -10,3 +10,9 @@
     <%= helpers.icon("chevron-down", size: "sm", color: "default") %>
   </div>
 </div>
+
+<% if description %>
+  <div id="<%= field_id %>_description" class="text-xs text-secondary mt-1">
+    <%= description %>
+  </div>
+<% end %>

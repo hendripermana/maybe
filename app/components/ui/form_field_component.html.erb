@@ -1,7 +1,7 @@
 <%# Modern form field component template %>
-<div class="form-field space-y-2">
+<div class="<%= field_classes %>">
   <div class="form-field-header flex items-center justify-between">
-    <%= form.label field, label_text, class: "form-field-label text-sm font-medium text-primary" %>
+    <%= form.label field, label_text, class: label_classes, for: field_id %>
     
     <% if actions? || tooltip %>
       <div class="form-field-actions flex items-center gap-2">
@@ -23,6 +23,12 @@
     <%= content %>
   </div>
   
+  <% if help_text && !has_error? %>
+    <div class="form-field-help text-xs text-secondary mt-1">
+      <%= help_text %>
+    </div>
+  <% end %>
+  
   <% if hint? %>
     <div class="form-field-hint text-sm text-secondary">
       <%= hint %>
@@ -30,8 +36,9 @@
   <% end %>
   
   <% if has_error? %>
-    <div class="form-field-error text-sm text-destructive">
-      <%= error || error_message %>
+    <div class="form-field-error text-sm text-destructive flex items-center gap-1 mt-1">
+      <%= helpers.icon("alert-circle", size: "sm") %>
+      <span><%= error || error_message %></span>
     </div>
   <% end %>
 </div>

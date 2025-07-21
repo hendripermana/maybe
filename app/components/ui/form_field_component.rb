@@ -8,15 +8,16 @@ module Ui
     renders_one :error
     renders_one :actions
 
-    attr_reader :form, :field, :label, :required, :tooltip
+    attr_reader :form, :field, :label, :required, :tooltip, :help_text
 
-    def initialize(form:, field:, label: nil, required: false, tooltip: nil, **options)
+    def initialize(form:, field:, label: nil, required: false, tooltip: nil, help_text: nil, **options)
       super(**options)
       @form = form
       @field = field
       @label = label || field.to_s.humanize
       @required = required
       @tooltip = tooltip
+      @help_text = help_text
     end
 
     def field_id
@@ -40,6 +41,20 @@ module Ui
       else
         label
       end
+    end
+    
+    def field_classes
+      build_classes(
+        "form-field space-y-2",
+        "form-field-error" => has_error?
+      )
+    end
+    
+    def label_classes
+      build_classes(
+        "form-field-label text-sm font-medium text-primary",
+        "text-destructive" => has_error?
+      )
     end
   end
 end

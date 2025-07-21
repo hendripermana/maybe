@@ -1,2 +1,22 @@
 <%# Modern input component template %>
-<%= form.text_field field, input_options.merge(type: type) %>
+<div class="<%= has_addon? ? 'flex' : nil %>">
+  <% if prefix %>
+    <div class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-surface text-secondary text-sm">
+      <%= prefix %>
+    </div>
+  <% end %>
+  
+  <%= form.text_field field, input_options.merge(type: type, id: field_id) %>
+  
+  <% if suffix %>
+    <div class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-input bg-surface text-secondary text-sm">
+      <%= suffix %>
+    </div>
+  <% end %>
+</div>
+
+<% if description %>
+  <div id="<%= field_id %>_description" class="text-xs text-secondary mt-1">
+    <%= description %>
+  </div>
+<% end %>

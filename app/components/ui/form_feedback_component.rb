@@ -5,18 +5,19 @@ module Ui
   # Provides consistent styling for form feedback messages
   class FormFeedbackComponent < BaseComponent
     VARIANTS = {
-      success: "bg-success-light text-success",
-      error: "bg-destructive-light text-destructive",
-      info: "bg-info-light text-info",
-      warning: "bg-warning-light text-warning"
+      success: "bg-success-light text-success border-success",
+      error: "bg-destructive-light text-destructive border-destructive",
+      info: "bg-info-light text-info border-info",
+      warning: "bg-warning-light text-warning border-warning"
     }.freeze
 
-    attr_reader :message, :icon
+    attr_reader :message, :icon, :dismissible
 
-    def initialize(message:, variant: :info, icon: nil, **options)
+    def initialize(message:, variant: :info, icon: nil, dismissible: false, **options)
       super(variant: variant, **options)
       @message = message
       @icon = icon || default_icon
+      @dismissible = dismissible
     end
 
     private
@@ -38,7 +39,8 @@ module Ui
 
     def feedback_classes
       build_classes(
-        "form-feedback flex items-center gap-2 p-3 rounded-md text-sm",
+        "form-feedback flex items-center gap-2 p-3 rounded-md text-sm border",
+        "animate-fadeIn",
         VARIANTS[@variant] || VARIANTS[:info]
       )
     end

@@ -1,0 +1,201 @@
+/* Modern Form Components Styles */
+
+/* Form Field Styles */
+.form-field {
+  margin-bottom: var(--spacing-4);
+}
+
+.form-field-label {
+  display: block;
+  margin-bottom: var(--spacing-1);
+  color: var(--color-primary);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.form-field-error .form-field-label {
+  color: var(--color-destructive);
+}
+
+/* Input Styles */
+.form-input {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  padding: var(--spacing-2) var(--spacing-3);
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 2px var(--color-ring-light);
+}
+
+.form-field-error .form-input {
+  border-color: var(--color-destructive);
+}
+
+.form-field-error .form-input:focus {
+  box-shadow: 0 0 0 2px var(--color-destructive-light);
+}
+
+/* Select Styles */
+.form-select {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  padding: var(--spacing-2) var(--spacing-3);
+  padding-right: var(--spacing-8);
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  appearance: none;
+  transition: all 0.2s ease;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 2px var(--color-ring-light);
+}
+
+.form-field-error .form-select {
+  border-color: var(--color-destructive);
+}
+
+.form-field-error .form-select:focus {
+  box-shadow: 0 0 0 2px var(--color-destructive-light);
+}
+
+/* Checkbox and Radio Styles */
+.form-checkbox, .form-radio {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-primary);
+  transition: all 0.2s ease;
+}
+
+.form-checkbox:checked, .form-radio:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.form-checkbox:focus, .form-radio:focus {
+  outline: none;
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 2px var(--color-ring-light);
+}
+
+/* Textarea Styles */
+.form-textarea {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  padding: var(--spacing-2) var(--spacing-3);
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  resize: vertical;
+  min-height: 80px;
+  transition: all 0.2s ease;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 2px var(--color-ring-light);
+}
+
+.form-field-error .form-textarea {
+  border-color: var(--color-destructive);
+}
+
+.form-field-error .form-textarea:focus {
+  box-shadow: 0 0 0 2px var(--color-destructive-light);
+}
+
+/* Toggle Switch Styles */
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Tooltip Styles */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 10;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color-gray-700) transparent transparent transparent;
+}
+
+/* Form Feedback Styles */
+.form-feedback {
+  margin-top: var(--spacing-2);
+  border-width: 1px;
+}
+
+/* Form Actions Styles */
+.form-actions {
+  margin-top: var(--spacing-6);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+}
+
+/* Disabled State Styles */
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled,
+.form-checkbox:disabled,
+.form-radio:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-muted-light);
+}
+
+/* Focus Visible Styles for Accessibility */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible,
+.form-checkbox:focus-visible,
+.form-radio:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+}

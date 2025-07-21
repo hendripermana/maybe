@@ -1,5 +1,23 @@
 <%# Modern form feedback component template %>
-<div class="<%= feedback_classes %>" role="alert">
+<div class="<%= feedback_classes %>" role="alert" data-controller="<%= dismissible ? 'dismissible' : nil %>">
   <%= helpers.icon(icon, size: "sm") %>
   <span><%= message %></span>
+  
+  <% if dismissible %>
+    <button type="button" class="ml-auto text-current opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring rounded-sm" data-action="dismissible#dismiss">
+      <%= helpers.icon("x", size: "sm") %>
+      <span class="sr-only">Dismiss</span>
+    </button>
+  <% end %>
 </div>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+</style>

@@ -1,109 +1,81 @@
 # Settings Page Audit
 
-## Current Structure
-
-### Layout
-- Uses a dedicated `settings.html.erb` layout
-- Two-column design with navigation sidebar on the left and content on the right
-- Responsive design with different layouts for mobile and desktop
-- Navigation footer with previous/next links for easy movement between settings pages
-
-### Navigation
-- Organized into sections (General, Transactions, Other)
-- Uses a consistent navigation component (`_settings_nav.html.erb`)
-- Includes navigation between settings pages with previous/next links
-- Mobile-specific navigation with collapsible sections
-- Active state highlighting for current page
-
-### Content Structure
-- Each settings page uses a consistent section component (`_section.html.erb`)
-- Sections include title, optional subtitle, and content
-- Form-heavy interfaces with various input types
-- Consistent card-like containers for settings sections
+## Current State Analysis
 
 ### Settings Pages
-- Profile settings (user information, household management)
-- Preferences (language, currency, theme, etc.)
-- Security settings
-- API key management
-- Self-hosting settings
-- Billing settings
-- And links to other sections (Accounts, Imports, Tags, Categories, etc.)
+1. **Preferences** - User preferences including language, timezone, date format, theme
+2. **Profile** - User profile information, household management
+3. **API Keys** - API key management
+4. **Billing** - Subscription management
+5. **Hosting** - Self-hosting configuration
+6. **Securities** - Securities settings
 
-## Components Needing Modernization
+### Form Components Used
+1. **Legacy Form Components**
+   - `styled_form_with` - Legacy form builder
+   - Form field helpers (text_field, select, etc.) with direct styling
+   - Inconsistent form layouts and spacing
+   - Hardcoded colors in some form elements
 
-### Form Components
-- Currently using `styled_form_with` helper which is not using the modern Shadcn-inspired components
-- Form inputs (text fields, selects, checkboxes) need to be replaced with modern alternatives
-- Auto-submit forms need proper validation and error handling
-- Form field spacing and alignment needs to be standardized
-- Input labels need consistent styling and positioning
+2. **Modern Components (Partially Implemented)**
+   - Some pages have `.modernized.html.erb` versions using ViewComponents
+   - Modern components exist but aren't consistently applied
 
-### Navigation Components
-- Navigation items need consistent styling and hover/active states
-- Mobile navigation needs better touch interactions
-- Section headers could benefit from more modern styling
-- Navigation icons need consistent sizing and alignment
+### Issues Identified
+1. **Inconsistent Form Styling**
+   - Mix of legacy and modern form components
+   - Inconsistent spacing and layout
+   - Some forms lack proper feedback mechanisms
 
-### Layout Components
-- The two-column layout could be improved for better responsiveness
-- Spacing and alignment could be more consistent
-- Card components for settings sections should use the modern Card component
-- Mobile layout needs better use of available space
+2. **Accessibility Issues**
+   - Some form controls lack proper labels
+   - Focus states are inconsistent
+   - Missing ARIA attributes in some interactive elements
 
-### Theme Controls
-- Theme switcher needs to be updated to use the modern toggle component
-- Theme previews could be enhanced with better visual feedback
-- Theme selection needs better visual indication of current selection
+3. **Theme Inconsistencies**
+   - Some form elements use hardcoded colors
+   - Inconsistent application of theme variables
 
-### Button Components
-- Various buttons (save, delete, etc.) should use the modern Button component
-- Destructive actions need proper styling and confirmation dialogs
-- Button sizing and spacing needs to be consistent
+4. **Feedback Mechanisms**
+   - Inconsistent error and success states
+   - Some forms lack visual feedback on submission
 
-## Accessibility Issues
+## Modernization Plan
 
-### Keyboard Navigation
-- Need to ensure proper tab order and focus management
-- Keyboard shortcuts need proper visual indicators
-- Focus states need to be more visible and consistent
+### 1. Form Components
+- Replace all `styled_form_with` with `Ui::FormComponent`
+- Replace direct form helpers with component equivalents
+- Ensure consistent spacing and layout
 
-### Screen Reader Support
-- Need to ensure proper ARIA attributes for navigation and form elements
-- Form labels and error messages need to be properly associated with inputs
-- Section headings need proper heading levels
+### 2. Input Controls
+- Replace text inputs with `Ui::InputComponent`
+- Replace selects with `Ui::SelectComponent`
+- Replace checkboxes with `Ui::CheckboxComponent`
+- Replace radio buttons with `Ui::RadioButtonComponent`
+- Replace textareas with `Ui::TextareaComponent`
 
-### Color Contrast
-- Need to ensure proper color contrast for text and UI elements
-- Theme-aware styling needs to work correctly in both light and dark modes
-- Status indicators need sufficient contrast in both themes
+### 3. Toggle Switches
+- Implement proper toggle switches with `Ui::ToggleSwitchComponent`
+- Add Stimulus controller for toggle switch behavior
+- Ensure proper ARIA attributes and keyboard accessibility
 
-## Settings-Specific UI Patterns
+### 4. Form Feedback
+- Add clear visual feedback for form submissions
+- Implement consistent error states
+- Use `Ui::FormFeedbackComponent` for status messages
 
-### User Avatar Management
-- Avatar upload and preview needs modernization
-- Default avatar placeholder needs consistent styling
+### 5. Theme Consistency
+- Ensure all form elements use theme variables
+- Test in both light and dark modes
+- Remove any hardcoded colors
 
-### Household Management
-- User list needs consistent styling and better mobile layout
-- Invitation management needs better visual hierarchy
-- Role indicators need consistent styling
+### 6. Accessibility Improvements
+- Add proper labels for all form controls
+- Ensure keyboard navigation works correctly
+- Add appropriate ARIA attributes
+- Test with screen readers
 
-### Theme Selection
-- Theme preview cards need consistent sizing and styling
-- Selection indicators need to be more prominent
-
-### Danger Zone Actions
-- Destructive actions need clear visual separation
-- Confirmation dialogs need better content and styling
-
-## Recommendations
-
-1. Replace all form inputs with modern Shadcn-inspired components
-2. Implement consistent spacing and alignment throughout settings pages
-3. Update navigation components with better hover and active states
-4. Improve mobile layout for better touch interactions
-5. Enhance theme switcher with better visual feedback
-6. Standardize button styling and confirmation dialogs
-7. Improve accessibility with proper ARIA attributes and focus management
-8. Ensure consistent color contrast in both light and dark themes
+### 7. Layout Standardization
+- Consistent spacing between form elements
+- Responsive form layouts for mobile devices
+- Consistent action button placement

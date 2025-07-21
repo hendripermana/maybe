@@ -1,5 +1,15 @@
 <%# Modern checkbox component template %>
-<div class="flex items-center">
-  <%= form.check_box field, checkbox_options, "1", "0" %>
-  <%= form.label field, label_text, class: label_classes %>
+<div class="<%= container_classes %>">
+  <div class="flex items-center h-5">
+    <%= form.check_box field, checkbox_options, "1", "0" %>
+  </div>
+  <div class="ml-2">
+    <%= form.label field, label_text, class: label_classes, for: field_id %>
+    
+    <% if description %>
+      <p id="<%= field_id %>_description" class="text-xs text-secondary mt-1">
+        <%= description %>
+      </p>
+    <% end %>
+  </div>
 </div>

@@ -1,52 +1,62 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Toggle switch controller for handling toggle switch interactions
+/**
+ * Toggle Switch Controller
+ * 
+ * Controls the behavior of toggle switches in forms
+ */
 export default class extends Controller {
   static values = {
     field: String,
     checked: String,
     unchecked: String
   }
-  
+
   connect() {
-    // Initialize hidden field if needed
-    this.hiddenField = document.querySelector(`input[name="${this.fieldValue}"]`)
-    
-    if (!this.hiddenField) {
-      console.error(`Could not find hidden field for ${this.fieldValue}`)
-    }
+    // Initialize the toggle state based on the hidden input value
+    this.updateAriaChecked()
   }
-  
+
   toggle() {
     if (this.element.disabled) return
     
-    const isChecked = this.element.getAttribute('aria-checked') === 'true'
-    const newValue = isChecked ? this.uncheckedValue : this.checkedValue
+    // Find the hidden input field
+    const inputName = this.fieldValue
+    const input = document.querySelector(`input[name="${inputName}"]`)
     
-    // Update aria-checked attribute
+    if (!input) return
+    
+    // Toggle the value
+    const isChecked = input.value === this.checkedValue
+    input.value = isChecked ? this.uncheckedValue : this.checkedValue
+    
+    // Update the visual state
     this.element.setAttribute('aria-checked', !isChecked)
     
-    // Update hidden field value
-    if (this.hiddenField) {
-      this.hiddenField.value = newValue
-    }
+    // Dispatch change event for auto-submit forms
+    input.dispatchEvent(new Event('change', { bubbles: true }))
     
-    // Toggle classes
-    if (isChecked) {
-      this.element.classList.remove('bg-primary')
-      this.element.classList.add('bg-input')
-      this.element.querySelector('span:not(.sr-only)').classList.remove('translate-x-5')
-      this.element.querySelector('span:not(.sr-only)').classList.add('translate-x-0')
-    } else {
-      this.element.classList.add('bg-primary')
-      this.element.classList.remove('bg-input')
-      this.element.querySelector('span:not(.sr-only)').classList.add('translate-x-5')
-      this.element.querySelector('span:not(.sr-only)').classList.remove('translate-x-0')
-    }
+    // Add visual feedback animation
+    this.addFeedbackAnimation()
+  }
+  
+  updateAriaChecked() {
+    const inputName = this.fieldValue
+    const input = document.querySelector(`input[name="${inputName}"]`)
     
-    // Trigger change event for auto-submit forms
-    if (this.hiddenField) {
-      this.hiddenField.dispatchEvent(new Event('change', { bubbles: true }))
+    if (input) {
+      const isChecked = input.value === this.checkedValue
+      this.element.setAttribute('aria-checked', isChecked)
     }
+  }
+  
+  addFeedbackAnimation() {
+    // Add a subtle pulse animation for visual feedback
+    this.element.classList.add('toggle-animation')
+    
+    // Remove the animation class after animation completes
+    setTimeout(() => {
+      this.element.classList.remove('toggle-animation')
+    }, 300)
   }
 }

@@ -1,87 +1,62 @@
-import {
-  autoUpdate,
-  computePosition,
-  flip,
-  offset,
-  shift,
-} from "@floating-ui/dom";
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from "@hotwired/stimulus"
 
+/**
+ * Tooltip Controller
+ * 
+ * Controls the behavior of tooltips
+ */
 export default class extends Controller {
-  static targets = ["tooltip"];
-  static values = {
-    placement: { type: String, default: "top" },
-    offset: { type: Number, default: 10 },
-    crossAxis: { type: Number, default: 0 },
-    alignmentAxis: { type: Number, default: null },
-  };
-
+  static targets = ["tooltip"]
+  
   connect() {
-    this._cleanup = null;
-    this.boundUpdate = this.update.bind(this);
-    this.startAutoUpdate();
-    this.addEventListeners();
+    // Hide tooltip initially
+    this.hideTooltip()
+    
+    // Add event listeners
+    this.element.addEventListener("mouseenter", this.showTooltip.bind(this))
+    this.element.addEventListener("mouseleave", this.hideTooltip.bind(this))
+    this.element.addEventListener("focus", this.showTooltip.bind(this))
+    this.element.addEventListener("blur", this.hideTooltip.bind(this))
   }
-
+  
   disconnect() {
-    this.removeEventListeners();
-    this.stopAutoUpdate();
+    // Remove event listeners
+    this.element.removeEventListener("mouseenter", this.showTooltip.bind(this))
+    this.element.removeEventListener("mouseleave", this.hideTooltip.bind(this))
+    this.element.removeEventListener("focus", this.showTooltip.bind(this))
+    this.element.removeEventListener("blur", this.hideTooltip.bind(this))
   }
-
-  addEventListeners() {
-    this.element.addEventListener("mouseenter", this.show);
-    this.element.addEventListener("mouseleave", this.hide);
+  
+  showTooltip() {
+    this.tooltipTarget.classList.remove("opacity-0", "invisible")
+    this.tooltipTarget.classList.add("opacity-100", "visible")
+    
+    // Position the tooltip
+    this.positionTooltip()
   }
-
-  removeEventListeners() {
-    this.element.removeEventListener("mouseenter", this.show);
-    this.element.removeEventListener("mouseleave", this.hide);
+  
+  hideTooltip() {
+    this.tooltipTarget.classList.add("opacity-0", "invisible")
+    this.tooltipTarget.classList.remove("opacity-100", "visible")
   }
-
-  show = () => {
-    this.tooltipTarget.style.display = "block";
-    this.update(); // Ensure immediate update when shown
-  };
-
-  hide = () => {
-    this.tooltipTarget.style.display = "none";
-  };
-
-  startAutoUpdate() {
-    if (!this._cleanup) {
-      this._cleanup = autoUpdate(
-        this.element,
-        this.tooltipTarget,
-        this.boundUpdate,
-      );
+  
+  positionTooltip() {
+    // Default position is bottom
+    const tooltipRect = this.tooltipTarget.getBoundingClientRect()
+    const elementRect = this.element.getBoundingClientRect()
+    
+    // Position tooltip centered above the element
+    this.tooltipTarget.style.bottom = `${elementRect.height + 8}px`
+    this.tooltipTarget.style.left = `${(elementRect.width - tooltipRect.width) / 2}px`
+    
+    // Check if tooltip is off-screen and adjust if needed
+    const tooltipLeft = elementRect.left + (elementRect.width - tooltipRect.width) / 2
+    const tooltipRight = tooltipLeft + tooltipRect.width
+    
+    if (tooltipLeft < 0) {
+      this.tooltipTarget.style.left = `-${elementRect.left - 8}px`
+    } else if (tooltipRight > window.innerWidth) {
+      this.tooltipTarget.style.left = `${elementRect.width - tooltipRect.width - (tooltipRight - window.innerWidth) - 8}px`
     }
-  }
-
-  stopAutoUpdate() {
-    if (this._cleanup) {
-      this._cleanup();
-      this._cleanup = null;
-    }
-  }
-
-  update() {
-    // Update position even if not visible, to ensure correct positioning when shown
-    computePosition(this.element, this.tooltipTarget, {
-      placement: this.placementValue,
-      middleware: [
-        offset({
-          mainAxis: this.offsetValue,
-          crossAxis: this.crossAxisValue,
-          alignmentAxis: this.alignmentAxisValue,
-        }),
-        flip(),
-        shift({ padding: 5 }),
-      ],
-    }).then(({ x, y, placement, middlewareData }) => {
-      Object.assign(this.tooltipTarget.style, {
-        left: `${x}px`,
-        top: `${y}px`,
-      });
-    });
   }
 }

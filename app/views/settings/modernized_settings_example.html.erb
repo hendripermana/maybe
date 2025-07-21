@@ -1,0 +1,252 @@
+<%# Example of a fully modernized settings page using enhanced components %>
+
+<%= content_for :page_title, "Account Settings" %>
+
+<%= settings_section title: "Profile Information", subtitle: "Update your personal information" do %>
+  <%= render Ui::FormComponent.new(model: @user, url: user_path(@user)) do |form| %>
+    <%= render "settings/user_avatar_field", form: form, user: @user %>
+
+    <div>
+      <%= render Ui::FormFieldComponent.new(form: form, field: :email, label: "Email Address", required: true, help_text: "We'll never share your email with anyone else.") do %>
+        <%= render Ui::InputComponent.new(
+          form: form,
+          field: :email,
+          type: :email,
+          placeholder: "your.email@example.com",
+          required: true,
+          autocomplete: "email"
+        ) %>
+      <% end %>
+
+      <% if @user.unconfirmed_email.present? %>
+        <%= render Ui::FormFeedbackComponent.new(
+          message: "You have requested to change your email to #{@user.unconfirmed_email}. Please check your email and confirm the change.",
+          variant: :info,
+          dismissible: true
+        ) %>
+      <% end %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <%= render Ui::FormFieldComponent.new(form: form, field: :first_name, label: "First Name") do %>
+          <%= render Ui::InputComponent.new(
+            form: form,
+            field: :first_name,
+            placeholder: "First Name",
+            autocomplete: "given-name"
+          ) %>
+        <% end %>
+
+        <%= render Ui::FormFieldComponent.new(form: form, field: :last_name, label: "Last Name") do %>
+          <%= render Ui::InputComponent.new(
+            form: form,
+            field: :last_name,
+            placeholder: "Last Name",
+            autocomplete: "family-name"
+          ) %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="form-actions flex justify-end mt-6">
+      <%= render Ui::ButtonComponent.new(
+        variant: :primary,
+        text: "Save Changes",
+        type: "submit",
+        data: { turbo_submits_with: "Saving..." }
+      ) %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= settings_section title: "Preferences", subtitle: "Customize your experience" do %>
+  <%= render Ui::FormComponent.new(
+    model: @user,
+    data: { controller: "auto-submit-form" }
+  ) do |form| %>
+    <%= form.hidden_field :redirect_to, value: "preferences" %>
+
+    <%= form.fields_for :family do |family_form| %>
+      <%= render Ui::FormFieldComponent.new(
+        form: family_form,
+        field: :locale,
+        label: "Language",
+        tooltip: "Choose your preferred language for the application interface."
+      ) do %>
+        <%= render Ui::SelectComponent.new(
+          form: family_form,
+          field: :locale,
+          options: language_options,
+          data: { auto_submit_form_target: "auto" }
+        ) %>
+      <% end %>
+
+      <%= render Ui::FormFieldComponent.new(
+        form: family_form,
+        field: :timezone,
+        label: "Timezone",
+        tooltip: "Select your local timezone for accurate date and time display."
+      ) do %>
+        <%= render Ui::SelectComponent.new(
+          form: family_form,
+          field: :timezone,
+          options: timezone_options,
+          data: { auto_submit_form_target: "auto" }
+        ) %>
+      <% end %>
+
+      <%= render Ui::FormFieldComponent.new(
+        form: family_form,
+        field: :date_format,
+        label: "Date Format"
+      ) do %>
+        <%= render Ui::SelectComponent.new(
+          form: family_form,
+          field: :date_format,
+          options: Family::DATE_FORMATS,
+          data: { auto_submit_form_target: "auto" }
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= settings_section title: "Notification Settings", subtitle: "Control how and when you receive notifications" do %>
+  <%= render Ui::FormComponent.new(
+    model: @user,
+    data: { controller: "auto-submit-form" }
+  ) do |form| %>
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :email_notifications,
+      label: "Email Notifications"
+    ) do %>
+      <%= render Ui::ToggleSwitchComponent.new(
+        form: form,
+        field: :email_notifications,
+        label_text: "Receive email notifications",
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
+
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :notification_frequency,
+      label: "Notification Frequency",
+      help_text: "How often would you like to receive summary notifications?"
+    ) do %>
+      <%= render Ui::RadioGroupComponent.new(
+        form: form,
+        field: :notification_frequency,
+        orientation: :vertical,
+        data: { auto_submit_form_target: "auto" }
+      ) do |radio_group| %>
+        <% radio_group.radio_button(value: "daily", label: "Daily", description: "Receive a daily summary of your account activity") %>
+        <% radio_group.radio_button(value: "weekly", label: "Weekly", description: "Receive a weekly summary every Monday") %>
+        <% radio_group.radio_button(value: "monthly", label: "Monthly", description: "Receive a monthly summary on the 1st of each month") %>
+        <% radio_group.radio_button(value: "never", label: "Never", description: "Don't send any summary notifications") %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= settings_section title: "Privacy Settings", subtitle: "Control your data and privacy preferences" do %>
+  <%= render Ui::FormComponent.new(
+    model: @user,
+    data: { controller: "auto-submit-form" }
+  ) do |form| %>
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :data_sharing,
+      label: "Data Sharing"
+    ) do %>
+      <%= render Ui::CheckboxComponent.new(
+        form: form,
+        field: :data_sharing,
+        label_text: "Allow anonymous usage data collection to improve the service",
+        description: "We collect anonymous usage data to help improve our service. No personal information is shared.",
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
+
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :marketing_emails,
+      label: "Marketing Communications"
+    ) do %>
+      <%= render Ui::CheckboxComponent.new(
+        form: form,
+        field: :marketing_emails,
+        label_text: "Receive occasional emails about new features and updates",
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= settings_section title: "Feedback", subtitle: "Help us improve our service" do %>
+  <%= render Ui::FormComponent.new(url: feedback_path) do |form| %>
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :feedback_type,
+      label: "Feedback Type",
+      required: true
+    ) do %>
+      <%= render Ui::SelectComponent.new(
+        form: form,
+        field: :feedback_type,
+        options: [
+          ["General Feedback", "general"],
+          ["Bug Report", "bug"],
+          ["Feature Request", "feature"],
+          ["Other", "other"]
+        ],
+        required: true
+      ) %>
+    <% end %>
+
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :feedback_message,
+      label: "Your Feedback",
+      required: true
+    ) do %>
+      <%= render Ui::TextareaComponent.new(
+        form: form,
+        field: :feedback_message,
+        placeholder: "Please share your thoughts, suggestions, or report any issues you've encountered...",
+        rows: 5,
+        required: true,
+        max_length: 1000,
+        counter: true
+      ) %>
+    <% end %>
+
+    <div class="form-actions flex justify-end mt-6">
+      <%= render Ui::ButtonComponent.new(
+        variant: :primary,
+        text: "Submit Feedback",
+        type: "submit",
+        data: { turbo_submits_with: "Submitting..." }
+      ) %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= settings_section title: "Danger Zone" do %>
+  <div class="space-y-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="w-full md:w-2/3">
+        <h3 class="font-medium text-primary">Delete Account</h3>
+        <p class="text-secondary text-sm">Permanently delete your account and all associated data. This action cannot be undone.</p>
+      </div>
+
+      <%= render Ui::ButtonComponent.new(
+        text: "Delete Account",
+        variant: :destructive,
+        href: user_path(@user),
+        method: :delete,
+        confirm: CustomConfirm.for_resource_deletion("your account", high_severity: true)
+      ) %>
+    </div>
+  </div>
+<% end %>
