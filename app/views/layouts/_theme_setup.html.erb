@@ -1,7 +1,8 @@
 <%# This partial sets up the theme data attribute on the html element %>
 <% 
   # Get the user's theme preference or default to system
-  theme_preference = current_user&.theme || "system"
+  # Use try to handle cases where current_user is not defined (like in tests)
+  theme_preference = defined?(current_user) && current_user.try(:theme) || "system"
   
   # Initialize the theme controller with the user's preference
   # This will be used by the theme controller to apply the correct theme
