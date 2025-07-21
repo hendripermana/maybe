@@ -1,19 +1,17 @@
 import { Controller } from "@hotwired/stimulus";
 
+/**
+ * Theme Controller
+ * Handles theme switching and system preference detection
+ */
 export default class extends Controller {
   static values = { userPreference: String };
-<<<<<<< HEAD
-
-  connect() {
-    this.startSystemThemeListener();
-=======
-  static targets = ["toggle"];
+  static targets = ["toggle", "lightLabel", "darkLabel"];
 
   connect() {
     this.startSystemThemeListener();
     this.applyTheme();
     this.addTransitionClass();
->>>>>>> feature/modernation-design
   }
 
   disconnect() {
@@ -28,41 +26,11 @@ export default class extends Controller {
   // Called when a theme radio button is clicked
   updateTheme(event) {
     const selectedTheme = event.currentTarget.value;
-<<<<<<< HEAD
-    if (selectedTheme === "system") {
-      this.setTheme(this.systemPrefersDark());
-    } else if (selectedTheme === "dark") {
-      this.setTheme(true);
-    } else {
-      this.setTheme(false);
-    }
-=======
     this.applyThemePreference(selectedTheme);
->>>>>>> feature/modernation-design
   }
 
   // Applies theme based on the userPreferenceValue (from server)
   applyTheme() {
-<<<<<<< HEAD
-    if (this.userPreferenceValue === "system") {
-      this.setTheme(this.systemPrefersDark());
-    } else if (this.userPreferenceValue === "dark") {
-      this.setTheme(true);
-    } else {
-      this.setTheme(false);
-    }
-  }
-
-  // Sets or removes the data-theme attribute
-  setTheme(isDark) {
-    if (isDark) {
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-  }
-
-=======
     this.applyThemePreference(this.userPreferenceValue || "system");
   }
 
@@ -130,7 +98,6 @@ export default class extends Controller {
     document.dispatchEvent(event);
   }
 
->>>>>>> feature/modernation-design
   systemPrefersDark() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
@@ -139,18 +106,6 @@ export default class extends Controller {
     // Only apply system theme changes if the user preference is currently 'system'
     if (this.userPreferenceValue === "system") {
       this.setTheme(event.matches);
-<<<<<<< HEAD
-    }
-  };
-
-  toggle() {
-    const currentTheme = document.documentElement.getAttribute("data-theme");
-    if (currentTheme === "dark") {
-      this.setTheme(false);
-    } else {
-      this.setTheme(true);
-    }
-=======
       this.updateToggleState(event.matches);
       this.dispatchThemeChangeEvent(event.matches, "system");
     }
@@ -192,7 +147,6 @@ export default class extends Controller {
       bubbles: true
     });
     document.dispatchEvent(event);
->>>>>>> feature/modernation-design
   }
 
   startSystemThemeListener() {

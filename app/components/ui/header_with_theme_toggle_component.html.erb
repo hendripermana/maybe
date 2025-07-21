@@ -1,0 +1,25 @@
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+  <div>
+    <div class="flex items-center gap-2">
+      <% if back_url.present? %>
+        <%= link_to back_url, class: "text-primary hover:text-primary-hover rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-primary" do %>
+          <%= render Ui::IconComponent.new(icon: "arrow-left", size: :md) %>
+        <% end %>
+      <% end %>
+      
+      <h1 class="text-2xl font-bold text-primary"><%= title %></h1>
+    </div>
+    
+    <% if subtitle.present? %>
+      <p class="text-secondary mt-1"><%= subtitle %></p>
+    <% end %>
+  </div>
+  
+  <div class="flex items-center gap-4">
+    <%= render Ui::ThemeToggleComponent.new(size: :md, with_label: true) %>
+    
+    <% if content? %>
+      <%= content %>
+    <% end %>
+  </div>
+</header>

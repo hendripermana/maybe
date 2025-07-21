@@ -54,7 +54,9 @@ Rails.application.routes.draw do
 
   namespace :settings do
     resource :profile, only: [ :show, :destroy ]
-    resource :preferences, only: :show
+    resource :preferences, only: [:show, :update] do
+      post :update_theme, on: :collection
+    end
     resource :hosting, only: %i[show update] do
       delete :clear_cache, on: :collection
     end

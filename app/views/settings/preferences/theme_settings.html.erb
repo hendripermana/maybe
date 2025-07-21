@@ -1,0 +1,69 @@
+<%= settings_section title: t(".theme_title"), subtitle: t(".theme_subtitle") do %>
+  <%= render Ui::FormComponent.new(
+    model: @user,
+    html_id: "theme_form",
+    data: { controller: "auto-submit-form", auto_submit_form_trigger_event_value: "change" }
+  ) do |form| %>
+    <%= form.hidden_field :redirect_to, value: "preferences" %>
+    
+    <div data-controller="theme-preferences" data-theme-preferences-current-theme-value="<%= @user.theme %>">
+      <!-- Theme Switcher Component -->
+      <%= render Ui::ThemeSwitcherComponent.new(form: form, user: @user) %>
+      
+      <!-- Additional Theme Preferences -->
+      <div class="mt-8 border-t border-border pt-6">
+        <h4 class="text-base font-medium text-primary mb-4"><%= t(".theme_additional_preferences") %></h4>
+        
+        <!-- High Contrast Mode -->
+        <%= render Ui::FormFieldComponent.new(
+          form: form,
+          field: :high_contrast_mode,
+          label: t(".high_contrast_mode"),
+          help_text: t(".high_contrast_mode_help")
+        ) do %>
+          <%= render Ui::ToggleSwitchComponent.new(
+            form: form,
+            field: :high_contrast_mode,
+            label_text: t(".enable_high_contrast"),
+            data: { auto_submit_form_target: "auto" }
+          ) %>
+        <% end %>
+        
+        <!-- Reduced Motion -->
+        <%= render Ui::FormFieldComponent.new(
+          form: form,
+          field: :reduced_motion,
+          label: t(".reduced_motion"),
+          help_text: t(".reduced_motion_help")
+        ) do %>
+          <%= render Ui::ToggleSwitchComponent.new(
+            form: form,
+            field: :reduced_motion,
+            label_text: t(".enable_reduced_motion"),
+            data: { auto_submit_form_target: "auto" }
+          ) %>
+        <% end %>
+        
+        <!-- Font Size -->
+        <%= render Ui::FormFieldComponent.new(
+          form: form,
+          field: :font_size,
+          label: t(".font_size"),
+          help_text: t(".font_size_help")
+        ) do %>
+          <%= render Ui::SelectComponent.new(
+            form: form,
+            field: :font_size,
+            options: [
+              [t(".font_size_small"), "small"],
+              [t(".font_size_medium"), "medium"],
+              [t(".font_size_large"), "large"],
+              [t(".font_size_extra_large"), "extra_large"]
+            ],
+            data: { auto_submit_form_target: "auto" }
+          ) %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,126 @@
+/* Theme Controls Styles */
+
+/* Theme Switcher */
+.theme-option {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.theme-option:hover {
+  border-color: var(--color-ring);
+  box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+.theme-option.selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-ring-light);
+}
+
+.theme-option-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.theme-option-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+/* Theme Preview */
+.theme-preview {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.theme-preview[data-theme="light"] {
+  background-color: white;
+  color: #1a1a1a;
+}
+
+.theme-preview[data-theme="dark"] {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+}
+
+/* Theme Transition */
+.theme-transitioning,
+.theme-transitioning * {
+  transition: background-color 0.3s ease, 
+             color 0.3s ease, 
+             border-color 0.3s ease, 
+             box-shadow 0.3s ease !important;
+}
+
+/* Theme Badge */
+.theme-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.theme-badge-light {
+  background-color: #f5f5f5;
+  color: #1a1a1a;
+}
+
+.theme-badge-dark {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+}
+
+.theme-badge-system {
+  background-color: var(--color-muted);
+  color: var(--color-muted-foreground);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  position: relative;
+  width: 3rem;
+  height: 1.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-muted);
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle[data-theme-state="dark"] {
+  background-color: var(--color-primary);
+}
+
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--radius-full);
+  background-color: white;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle[data-theme-state="dark"]::after {
+  transform: translateX(1.5rem);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .theme-options-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,25 @@
+<div class="<%= container_classes %>" data-controller="theme">
+  <% if with_label %>
+    <span class="text-sm font-medium text-primary">
+      <span data-theme-target="lightLabel" class="hidden [data-theme=light]:inline">Light</span>
+      <span data-theme-target="darkLabel" class="hidden [data-theme=dark]:inline">Dark</span>
+    </span>
+  <% end %>
+  
+  <button 
+    type="button" 
+    class="<%= toggle_classes %>" 
+    data-theme-target="toggle"
+    data-action="theme#toggle"
+    aria-label="Toggle theme"
+    title="Toggle between dark and light mode"
+  >
+    <span class="sr-only">Toggle theme</span>
+    <span class="absolute inset-0 flex items-center justify-center transition-opacity [data-theme=dark]:opacity-0 [data-theme=dark]:pointer-events-none">
+      <%= render Ui::IconComponent.new(icon: "sun", size: size) %>
+    </span>
+    <span class="absolute inset-0 flex items-center justify-center transition-opacity opacity-0 [data-theme=dark]:opacity-100 pointer-events-none [data-theme=dark]:pointer-events-auto">
+      <%= render Ui::IconComponent.new(icon: "moon", size: size) %>
+    </span>
+  </button>
+</div>

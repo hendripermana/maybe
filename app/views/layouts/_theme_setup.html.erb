@@ -1,0 +1,33 @@
+<%# This partial sets up the theme data attribute on the html element %>
+<% 
+  # Get the user's theme preference or default to system
+  theme_preference = current_user&.theme || "system"
+  
+  # Initialize the theme controller with the user's preference
+  # This will be used by the theme controller to apply the correct theme
+%>
+
+<div 
+  data-controller="theme" 
+  data-theme-user-preference-value="<%= theme_preference %>"
+  class="hidden"
+></div>
+
+<script>
+  // Initialize theme on page load to prevent flash of wrong theme
+  (function() {
+    const preference = "<%= theme_preference %>";
+    let theme;
+    
+    if (preference === "dark") {
+      theme = "dark";
+    } else if (preference === "light") {
+      theme = "light";
+    } else {
+      // System preference
+      theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>

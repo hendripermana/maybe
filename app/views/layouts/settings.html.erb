@@ -16,11 +16,15 @@
             <%= render "layouts/shared/breadcrumbs", breadcrumbs: @breadcrumbs %>
           <% end %>
 
-          <%# Page title %>
+          <%# Page title with theme toggle %>
           <% if content_for?(:page_title) %>
-            <h1 class="text-primary text-3xl md:text-2xl font-semibold tracking-tight">
-              <%= content_for :page_title %>
-            </h1>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+              <h1 class="text-primary text-3xl md:text-2xl font-semibold tracking-tight">
+                <%= content_for :page_title %>
+              </h1>
+              
+              <%= render Ui::ThemeToggleComponent.new(size: :md, with_label: true) %>
+            </div>
           <% end %>
 
           <%# Main content %>

@@ -1,0 +1,77 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4" data-controller="theme" data-theme-user-preference-value="<%= user.theme %>">
+  <% theme_options.each do |theme| %>
+    <%= form.label :"theme_#{theme[:value]}", class: "group" do %>
+      <div class="<%= theme_option_class %> h-full flex flex-col">
+        <div class="relative mb-3 rounded-md overflow-hidden border border-border">
+          <%= image_tag(theme[:image], alt: "#{theme[:value].titleize} Theme Preview", class: "w-full aspect-video object-cover") %>
+          <% if user.theme == theme[:value] %>
+            <div class="absolute inset-0 bg-primary/10 flex items-center justify-center">
+              <div class="bg-primary text-primary-foreground rounded-full p-1">
+                <%= render Ui::IconComponent.new(icon: "check", size: :sm) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="flex items-center justify-center gap-2">
+          <%= form.radio_button :theme, theme[:value], 
+              checked: user.theme == theme[:value], 
+              class: "sr-only",
+              data: { 
+                auto_submit_form_target: "auto", 
+                autosubmit_trigger_event: "change", 
+                action: "theme#updateTheme" 
+              } 
+          %>
+          <span class="text-sm font-medium text-primary"><%= theme[:label] %></span>
+          <% if theme[:value] == "system" %>
+            <span class="text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground">
+              <%= I18n.t("settings.preferences.show.theme_system_auto") %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="mt-6">
+  <h4 class="text-sm font-medium text-primary mb-2"><%= I18n.t("settings.preferences.show.theme_preview") %></h4>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="p-4 rounded-lg border border-border">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full bg-primary"></div>
+        <div>
+          <div class="h-2 w-24 bg-primary rounded"></div>
+          <div class="h-2 w-16 bg-muted mt-1 rounded"></div>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="h-2 w-full bg-muted rounded"></div>
+        <div class="h-2 w-5/6 bg-muted rounded"></div>
+        <div class="h-2 w-4/6 bg-muted rounded"></div>
+      </div>
+      <div class="mt-4 flex gap-2">
+        <div class="h-8 w-16 rounded bg-primary"></div>
+        <div class="h-8 w-16 rounded bg-secondary"></div>
+      </div>
+    </div>
+    <div class="p-4 rounded-lg border border-border [data-theme=dark]:bg-gray-800 [data-theme=light]:bg-white">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full bg-primary"></div>
+        <div>
+          <div class="h-2 w-24 bg-primary rounded"></div>
+          <div class="h-2 w-16 bg-muted mt-1 rounded"></div>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="h-2 w-full bg-muted rounded"></div>
+        <div class="h-2 w-5/6 bg-muted rounded"></div>
+        <div class="h-2 w-4/6 bg-muted rounded"></div>
+      </div>
+      <div class="mt-4 flex gap-2">
+        <div class="h-8 w-16 rounded bg-primary"></div>
+        <div class="h-8 w-16 rounded bg-secondary"></div>
+      </div>
+    </div>
+  </div>
+</div>

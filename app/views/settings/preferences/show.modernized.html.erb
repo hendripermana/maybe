@@ -1,126 +1,195 @@
-<%= content_for :page_title, t(".page_title") %>
+<%= content_for :page_title, t(".title") %>
 
 <%= settings_section title: t(".general_title"), subtitle: t(".general_subtitle") do %>
   <%= render Ui::FormComponent.new(
-    model: @user,
+    model: @user.family,
     data: { controller: "auto-submit-form" }
   ) do |form| %>
-    <%= form.hidden_field :redirect_to, value: "preferences" %>
-
-    <%= form.fields_for :family do |family_form| %>
-      <%= render Ui::FormFieldComponent.new(
-        form: family_form,
-        field: :currency,
-        label: t(".currency")
-      ) do %>
-        <%= render Ui::SelectComponent.new(
-          form: family_form,
-          field: :currency,
-          options: Money::Currency.as_options.map { |currency| [ "#{currency.name} (#{currency.iso_code})", currency.iso_code ] },
-          disabled: true
-        ) %>
-      <% end %>
-
-      <%= render Ui::FormFieldComponent.new(
-        form: family_form,
-        field: :locale,
-        label: t(".language")
-      ) do %>
-        <%= render Ui::SelectComponent.new(
-          form: family_form,
-          field: :locale,
-          options: language_options,
-          data: { auto_submit_form_target: "auto" }
-        ) %>
-      <% end %>
-
-      <%= render Ui::FormFieldComponent.new(
-        form: family_form,
-        field: :timezone,
-        label: t(".timezone")
-      ) do %>
-        <%= render Ui::SelectComponent.new(
-          form: family_form,
-          field: :timezone,
-          options: timezone_options,
-          data: { auto_submit_form_target: "auto" }
-        ) %>
-      <% end %>
-
-      <%= render Ui::FormFieldComponent.new(
-        form: family_form,
-        field: :date_format,
-        label: t(".date_format")
-      ) do %>
-        <%= render Ui::SelectComponent.new(
-          form: family_form,
-          field: :date_format,
-          options: Family::DATE_FORMATS,
-          data: { auto_submit_form_target: "auto" }
-        ) %>
-      <% end %>
-
-      <%= render Ui::FormFieldComponent.new(
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :locale,
+      label: t(".language"),
+      tooltip: t(".language_tooltip")
+    ) do %>
+      <%= render Ui::SelectComponent.new(
         form: form,
-        field: :default_period,
-        label: t(".default_period")
-      ) do %>
-        <%= render Ui::SelectComponent.new(
-          form: form,
-          field: :default_period,
-          options: Period.all.map { |period| [ period.label, period.key ] },
-          data: { auto_submit_form_target: "auto" }
-        ) %>
-      <% end %>
+        field: :locale,
+        options: language_options,
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
 
-      <%= render Ui::FormFieldComponent.new(
-        form: family_form,
-        field: :country,
-        label: t(".country")
-      ) do %>
-        <%= render Ui::SelectComponent.new(
-          form: family_form,
-          field: :country,
-          options: country_options,
-          data: { auto_submit_form_target: "auto" }
-        ) %>
-        
-        <div class="mt-2">
-          <p class="text-xs italic text-secondary">Please note, we are still working on translations for various languages. Please see the <%= link_to "I18n issue", "https://github.com/maybe-finance/maybe/issues/1225", target: "_blank", class: "underline" %> for more information.</p>
-        </div>
-      <% end %>
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :timezone,
+      label: t(".timezone"),
+      tooltip: t(".timezone_tooltip")
+    ) do %>
+      <%= render Ui::SelectComponent.new(
+        form: form,
+        field: :timezone,
+        options: timezone_options,
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
+
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :date_format,
+      label: t(".date_format")
+    ) do %>
+      <%= render Ui::SelectComponent.new(
+        form: form,
+        field: :date_format,
+        options: Family::DATE_FORMATS,
+        data: { auto_submit_form_target: "auto" }
+      ) %>
     <% end %>
   <% end %>
 <% end %>
 
 <%= settings_section title: t(".theme_title"), subtitle: t(".theme_subtitle") do %>
-  <div data-controller="theme" data-theme-user-preference-value="<%= @user.theme %>">
-    <%= render Ui::FormComponent.new(
-      model: @user,
-      html_id: "theme_form",
-      class: "flex flex-col md:flex-row justify-between items-center gap-4",
-      data: { controller: "auto-submit-form", auto_submit_form_trigger_event_value: "change" }
-    ) do |form| %>
-      <%= form.hidden_field :redirect_to, value: "preferences" %>
+  <%= render Ui::FormComponent.new(
+    model: @user,
+    html_id: "theme_form",
+    data: { 
+      controller: "auto-submit-form theme-auto-save", 
+      auto_submit_form_trigger_event_value: "change",
+      theme_auto_save_url_value: update_theme_settings_preferences_path,
+      theme_auto_save_csrf_token_value: form_authenticity_token
+    }
+  ) do |form| %>
+    <%= form.hidden_field :redirect_to, value: "preferences" %>
+    
+    <!-- Theme Switcher Component -->
+    <%= render Ui::ThemeSwitcherComponent.new(form: form, user: @user) %>
+    
+    <!-- Additional Theme Preferences -->
+    <div class="mt-8 border-t border-border pt-6">
+      <h4 class="text-base font-medium text-primary mb-4"><%= t(".theme_additional_preferences") %></h4>
+      
+      <!-- High Contrast Mode -->
+      <%= render Ui::FormFieldComponent.new(
+        form: form,
+        field: :high_contrast_mode,
+        label: t(".high_contrast_mode"),
+        help_text: t(".high_contrast_mode_help")
+      ) do %>
+        <%= render Ui::ToggleSwitchComponent.new(
+          form: form,
+          field: :high_contrast_mode,
+          label_text: t(".enable_high_contrast"),
+          data: { auto_submit_form_target: "auto" }
+        ) %>
+      <% end %>
+      
+      <!-- Reduced Motion -->
+      <%= render Ui::FormFieldComponent.new(
+        form: form,
+        field: :reduced_motion,
+        label: t(".reduced_motion"),
+        help_text: t(".reduced_motion_help")
+      ) do %>
+        <%= render Ui::ToggleSwitchComponent.new(
+          form: form,
+          field: :reduced_motion,
+          label_text: t(".enable_reduced_motion"),
+          data: { auto_submit_form_target: "auto" }
+        ) %>
+      <% end %>
+      
+      <!-- Font Size -->
+      <%= render Ui::FormFieldComponent.new(
+        form: form,
+        field: :font_size,
+        label: t(".font_size"),
+        help_text: t(".font_size_help")
+      ) do %>
+        <%= render Ui::SelectComponent.new(
+          form: form,
+          field: :font_size,
+          options: [
+            [t(".font_size_small"), "small"],
+            [t(".font_size_medium"), "medium"],
+            [t(".font_size_large"), "large"],
+            [t(".font_size_extra_large"), "extra_large"]
+          ],
+          data: { auto_submit_form_target: "auto" }
+        ) %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
 
-      <% theme_option_class = "text-center transition-all duration-200 p-3 rounded-lg hover:bg-surface-hover cursor-pointer [&:has(input:checked)]:bg-surface-hover [&:has(input:checked)]:border [&:has(input:checked)]:border-primary [&:has(input:checked)]:shadow-xs" %>
+<%= settings_section title: t(".notification_title"), subtitle: t(".notification_subtitle") do %>
+  <%= render Ui::FormComponent.new(
+    model: @user,
+    data: { controller: "auto-submit-form" }
+  ) do |form| %>
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :email_notifications,
+      label: t(".email_notifications")
+    ) do %>
+      <%= render Ui::ToggleSwitchComponent.new(
+        form: form,
+        field: :email_notifications,
+        label_text: t(".receive_email_notifications"),
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
 
-      <% [
-        { value: "light", image: "light-mode-preview.png" },
-        { value: "dark", image: "dark-mode-preview.png" },
-        { value: "system", image: "system-mode-preview.png" }
-      ].each do |theme| %>
-        <%= form.label :"theme_#{theme[:value]}", class: "group" do %>
-          <div class="<%= theme_option_class %>">
-            <%= image_tag(theme[:image], alt: "#{theme[:value].titleize} Theme Preview", class: "h-44 mb-2") %>
-            <div class="<%= theme[:value] == "system" ? "flex items-center gap-2 justify-center" : "text-sm font-medium text-primary" %>">
-              <%= form.radio_button :theme, theme[:value], checked: @user.theme == theme[:value], class: "sr-only",
-                data: { auto_submit_form_target: "auto", autosubmit_trigger_event: "change", action: "theme#updateTheme" } %>
-              <%= t(".theme_#{theme[:value]}") %>
-            </div>
-          </div>
-        <% end %>
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :notification_frequency,
+      label: t(".notification_frequency"),
+      help_text: t(".notification_frequency_help")
+    ) do %>
+      <%= render Ui::RadioGroupComponent.new(
+        form: form,
+        field: :notification_frequency,
+        orientation: :vertical,
+        data: { auto_submit_form_target: "auto" }
+      ) do |radio_group| %>
+        <% radio_group.radio_button(value: "daily", label: t(".daily"), description: t(".daily_description")) %>
+        <% radio_group.radio_button(value: "weekly", label: t(".weekly"), description: t(".weekly_description")) %>
+        <% radio_group.radio_button(value: "monthly", label: t(".monthly"), description: t(".monthly_description")) %>
+        <% radio_group.radio_button(value: "never", label: t(".never"), description: t(".never_description")) %>
       <% end %>
     <% end %>
-  </div>
+  <% end %>
+<% end %>
+
+<%= settings_section title: t(".privacy_title"), subtitle: t(".privacy_subtitle") do %>
+  <%= render Ui::FormComponent.new(
+    model: @user,
+    data: { controller: "auto-submit-form" }
+  ) do |form| %>
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :data_sharing,
+      label: t(".data_sharing")
+    ) do %>
+      <%= render Ui::CheckboxComponent.new(
+        form: form,
+        field: :data_sharing,
+        label_text: t(".allow_data_collection"),
+        description: t(".data_collection_description"),
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
+
+    <%= render Ui::FormFieldComponent.new(
+      form: form,
+      field: :marketing_emails,
+      label: t(".marketing_communications")
+    ) do %>
+      <%= render Ui::CheckboxComponent.new(
+        form: form,
+        field: :marketing_emails,
+        label_text: t(".receive_marketing_emails"),
+        data: { auto_submit_form_target: "auto" }
+      ) %>
+    <% end %>
+  <% end %>
 <% end %>
