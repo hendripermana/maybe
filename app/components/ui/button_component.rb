@@ -140,7 +140,7 @@ module Ui
       return unless @icon
       
       if defined?(helpers) && helpers.respond_to?(:icon)
-        helpers.icon(@icon, size: icon_size, class: "shrink-0")
+        helpers.icon(@icon, size: icon_size_name, class: "shrink-0")
       else
         content_tag(:span, @icon, class: "shrink-0")
       end
@@ -150,7 +150,7 @@ module Ui
       return unless @icon
       
       if defined?(helpers) && helpers.respond_to?(:icon)
-        helpers.icon(@icon, size: icon_size, class: "shrink-0")
+        helpers.icon(@icon, size: icon_size_name, class: "shrink-0")
       else
         content_tag(:span, @icon, class: "shrink-0")
       end
@@ -163,6 +163,16 @@ module Ui
       when :lg then 18
       when :xl then 20
       else 16
+      end
+    end
+    
+    def icon_size_name
+      case @size
+      when :sm then :sm
+      when :md then :md
+      when :lg then :lg
+      when :xl then :xl
+      else :md
       end
     end
   end
