@@ -11,11 +11,7 @@
         </p>
 
         <% if series.trend.nil? %>
-<<<<<<< HEAD
-          <p class="text-sm text-muted-foreground">Data not available</p>
-=======
           <p class="text-muted-foreground">Data not available</p>
->>>>>>> feature/modernation-design
         <% else %>
           <%= render partial: "shared/trend_change", locals: { trend: series.trend, comparison_label: period.comparison_label } %>
         <% end %>
@@ -36,13 +32,8 @@
       <div class="text-center space-y-3">
         <%= icon "chart-line", size: "lg", class: "text-muted-foreground" %>
         <div>
-<<<<<<< HEAD
-          <p class="text-sm font-medium text-foreground">No data available</p>
-          <p class="text-xs text-muted-foreground">Add accounts to start tracking your net worth</p>
-=======
           <p class="font-medium text-foreground">No data available</p>
           <p class="text-muted-foreground">Add accounts to start tracking your net worth</p>
->>>>>>> feature/modernation-design
         </div>
       </div>
     </div>
