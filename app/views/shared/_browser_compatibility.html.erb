@@ -1,0 +1,81 @@
+<%# Browser compatibility partial %>
+<div data-controller="browser-compatibility" class="hidden"></div>
+
+<%# Add browser detection meta tags %>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<%# Add browser-specific CSS classes to html tag %>
+<script>
+  // Feature detection for browser-specific fixes
+  document.addEventListener('DOMContentLoaded', function() {
+    const html = document.documentElement;
+    
+    // Detect Safari
+    if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+      html.classList.add('safari');
+    }
+    
+    // Detect Firefox
+    if (typeof InstallTrigger !== 'undefined') {
+      html.classList.add('firefox');
+    }
+    
+    // Detect Edge
+    if (/Edg/.test(navigator.userAgent)) {
+      html.classList.add('edge');
+    }
+    
+    // Detect Chrome
+    if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+      html.classList.add('chrome');
+    }
+    
+    // Detect mobile
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      html.classList.add('mobile');
+    }
+    
+    // Detect reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      html.classList.add('reduced-motion');
+    }
+    
+    // Detect high contrast mode
+    if (window.matchMedia('(forced-colors: active)').matches) {
+      html.classList.add('high-contrast');
+    }
+  });
+</script>
+
+<%# Add browser-specific polyfills %>
+<script>
+  // Polyfill for :focus-visible
+  if (!('CSS' in window) || !CSS.supports || !CSS.supports('selector(:focus-visible)')) {
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Tab') {
+        document.documentElement.classList.add('js-focus-visible');
+      }
+    });
+    
+    document.addEventListener('mousedown', function() {
+      document.documentElement.classList.remove('js-focus-visible');
+    });
+  }
+  
+  // Polyfill for CSS custom properties in older browsers
+  if (!window.CSS || !window.CSS.supports || !window.CSS.supports('(--a: 0)')) {
+    // Load cssVars polyfill for older browsers
+    const script = document.createElement('script');
+    script.src = '<%= asset_path('css-vars-ponyfill.min.js') %>';
+    script.onload = function() {
+      cssVars({
+        watch: true,
+        onlyLegacy: true,
+        updateDOM: true,
+        silent: true
+      });
+    };
+    document.head.appendChild(script);
+  }
+</script>

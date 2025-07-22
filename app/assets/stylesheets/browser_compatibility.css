@@ -1,0 +1,279 @@
+/* Browser Compatibility CSS
+ * This file contains fixes and workarounds for cross-browser compatibility issues
+ * identified during the UI/UX modernization project.
+ */
+
+/* ===== Safari Compatibility ===== */
+
+/* Fix for Safari gap property in grid layouts */
+.grid,
+.dashboard-grid,
+.budget-grid,
+.settings-grid {
+  grid-gap: var(--spacing-4); /* Safari fallback */
+}
+
+/* Additional Safari grid fixes */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) {
+    /* Safari-specific grid fixes */
+    .dashboard-grid,
+    .budget-grid,
+    .settings-grid {
+      display: -webkit-grid;
+      display: grid;
+      width: 100%;
+    }
+    
+    /* Fix for Safari grid alignment issues */
+    .grid-item {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Fix for Safari grid auto-fill issues */
+    @supports (grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))) {
+      .auto-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+  }
+}
+
+/* Optimize theme transitions for Safari */
+[data-theme] {
+  will-change: background-color, color;
+  -webkit-transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Fix for Safari flexbox gap issues */
+@supports not (gap: 1rem) {
+  .flex-container > * + * {
+    margin-left: 0.5rem;
+  }
+  
+  .flex-container.vertical > * + * {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ===== Firefox Compatibility ===== */
+
+/* Firefox-specific form control styling */
+@-moz-document url-prefix() {
+  .form-input {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .form-select {
+    background-position: right 0.5rem center;
+  }
+  
+  /* Fix for Firefox checkbox alignment */
+  input[type="checkbox"] {
+    vertical-align: middle;
+  }
+  
+  /* Fix for Firefox progress bar styling */
+  progress {
+    appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background-color: var(--color-muted-background, #f3f4f6);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  
+  progress::-moz-progress-bar {
+    background-color: var(--color-primary, #3b82f6);
+    transition: width 0.3s ease;
+  }
+  
+  /* Fix for Firefox focus styles */
+  :focus-visible {
+    outline: 3px solid var(--color-ring, #3b82f6);
+    outline-offset: 2px;
+  }
+}
+
+/* ===== Edge Compatibility ===== */
+
+/* Fix for Edge CSS variable issues */
+@supports (-ms-ime-align: auto) {
+  /* Edge-specific overrides */
+  .theme-toggle {
+    border: 1px solid #ccc;
+  }
+  
+  /* Use hardcoded fallbacks for Edge */
+  .card {
+    background-color: #ffffff;
+    background-color: var(--color-card, #ffffff);
+  }
+  
+  /* Fix for Edge toggle switch rendering */
+  .toggle-component {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .toggle-component input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .toggle-component .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    background-color: var(--color-muted, #ccc);
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .toggle-component .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    background-color: var(--color-background, white);
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  .toggle-component input:checked + .toggle-slider {
+    background-color: #2196F3;
+    background-color: var(--color-primary, #2196F3);
+  }
+  
+  .toggle-component input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+  }
+}
+
+/* ===== Cross-Browser Normalization ===== */
+
+/* Consistent button styling */
+button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  overflow: visible;
+  text-transform: none;
+  -webkit-appearance: button;
+  appearance: button;
+}
+
+/* Fix inconsistent focus styles */
+:focus {
+  outline: 3px solid var(--color-ring, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Fix for inconsistent box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Fix for inconsistent font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fix for inconsistent image rendering */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fix for inconsistent SVG scaling */
+svg {
+  fill: currentColor;
+  vertical-align: middle;
+}
+
+/* Fix for inconsistent table cell rendering */
+table {
+  border-collapse: collapse;
+}
+
+/* Fix for inconsistent hr rendering */
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  height: 0;
+  overflow: visible;
+}
+
+/* Fix for inconsistent code rendering */
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Fix for inconsistent scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-muted, #6b7280) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-muted, #6b7280);
+  border-radius: 4px;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: black !important;
+  }
+  
+  .card, .container {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
