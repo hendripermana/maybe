@@ -41,7 +41,7 @@
     <section>
       <%= button_to helpers.session_path(current_session), method: :delete, class: "flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-surface-hover w-full transition-colors" do %>
         <%= helpers.icon("log-out", color: "current") %>
-        <span><%= I18n.t("settings._settings_nav.logout") %></span>
+        <span><%= I18n.t("settings.settings_nav.logout") %></span>
       <% end %>
     </section>
   </nav>
@@ -106,7 +106,7 @@
       <div class="pt-4">
         <%= button_to helpers.session_path(current_session), method: :delete, class: "flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-surface-hover w-full transition-colors" do %>
           <%= helpers.icon("log-out", color: "current") %>
-          <span><%= I18n.t("settings._settings_nav.logout") %></span>
+          <span><%= I18n.t("settings.settings_nav.logout") %></span>
         <% end %>
       </div>
     </div>
