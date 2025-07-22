@@ -1,0 +1,359 @@
+/* Responsive Design System
+ * This file contains responsive utilities and breakpoint-specific styles
+ * to ensure the application works well across all device sizes.
+ */
+
+/* Base Responsive Variables */
+:root {
+  --breakpoint-xs: 320px;  /* Extra small devices */
+  --breakpoint-sm: 640px;  /* Small devices (mobile) */
+  --breakpoint-md: 768px;  /* Medium devices (tablets) */
+  --breakpoint-lg: 1024px; /* Large devices (desktops) */
+  --breakpoint-xl: 1280px; /* Extra large devices */
+  --breakpoint-2xl: 1536px; /* 2X large devices */
+  
+  /* Touch target sizes */
+  --touch-target-size: 44px; /* Minimum recommended touch target size */
+  --touch-target-spacing: 8px; /* Minimum spacing between touch targets */
+}
+
+/* Base Mobile-First Styles */
+html {
+  font-size: 16px; /* Base font size */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Responsive Typography */
+h1 {
+  font-size: 1.5rem; /* 24px on mobile */
+}
+
+h2 {
+  font-size: 1.25rem; /* 20px on mobile */
+}
+
+p, li, td, th, input, button, select, textarea {
+  font-size: 1rem; /* 16px on mobile */
+}
+
+/* Small buttons and form elements should have minimum touch target size on mobile */
+button, 
+.btn,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+select,
+.interactive {
+  min-height: var(--touch-target-size);
+  min-width: var(--touch-target-size);
+}
+
+/* Responsive Grid System */
+.responsive-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+/* Responsive Container */
+.container {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive Spacing */
+.section {
+  padding: 1.5rem 0;
+}
+
+/* Responsive Tables */
+.responsive-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Responsive Images */
+img, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive Navigation */
+.mobile-menu {
+  display: block;
+}
+
+.desktop-menu {
+  display: none;
+}
+
+/* Responsive Card Layout */
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+/* Responsive Form Layout */
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+/* Responsive Chart Container */
+.chart-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Small Tablet Breakpoint (640px) */
+@media (min-width: 640px) {
+  h1 {
+    font-size: 1.75rem; /* 28px on small tablet */
+  }
+  
+  h2 {
+    font-size: 1.5rem; /* 24px on small tablet */
+  }
+  
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .container {
+    max-width: 640px;
+  }
+  
+  .section {
+    padding: 2rem 0;
+  }
+}
+
+/* Medium Tablet Breakpoint (768px) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+  
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop Breakpoint (1024px) */
+@media (min-width: 1024px) {
+  html {
+    font-size: 16px; /* Base font size remains the same */
+  }
+  
+  h1 {
+    font-size: 2rem; /* 32px on desktop */
+  }
+  
+  h2 {
+    font-size: 1.5rem; /* 24px on desktop */
+  }
+  
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .container {
+    max-width: 1024px;
+  }
+  
+  .section {
+    padding: 3rem 0;
+  }
+  
+  .mobile-menu {
+    display: none;
+  }
+  
+  .desktop-menu {
+    display: block;
+  }
+}
+
+/* Large Desktop Breakpoint (1280px) */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+  
+  .responsive-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .card-grid.large {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Extra Large Desktop Breakpoint (1536px) */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: #000;
+  }
+  
+  .container {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* Orientation-specific styles */
+@media (orientation: landscape) and (max-width: 1023px) {
+  /* Landscape mode for mobile and tablet */
+  .landscape-optimized {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .landscape-sidebar {
+    width: 30%;
+  }
+  
+  .landscape-content {
+    width: 70%;
+  }
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+  /* Ensure elements have proper borders in high contrast mode */
+  button, 
+  .btn,
+  .card,
+  input,
+  select,
+  textarea {
+    border: 1px solid;
+  }
+}
+
+/* Device-specific fixes */
+
+/* iPhone X and newer (notch handling) */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .fixed-header {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .fixed-footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Utility classes for responsive behavior */
+
+/* Hide on specific breakpoints */
+.hide-xs {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .hide-xs {
+    display: initial;
+  }
+  
+  .hide-sm {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-sm {
+    display: initial;
+  }
+  
+  .hide-md {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hide-md {
+    display: initial;
+  }
+  
+  .hide-lg {
+    display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hide-lg {
+    display: initial;
+  }
+  
+  .hide-xl {
+    display: none;
+  }
+}
+
+/* Touch-specific utility classes */
+@media (hover: none) {
+  .touch-only {
+    display: block;
+  }
+  
+  .no-touch-only {
+    display: none;
+  }
+}
+
+@media (hover: hover) {
+  .touch-only {
+    display: none;
+  }
+  
+  .no-touch-only {
+    display: block;
+  }
+}

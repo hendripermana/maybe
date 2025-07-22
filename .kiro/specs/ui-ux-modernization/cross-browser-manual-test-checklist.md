@@ -1,234 +1,184 @@
-# Cross-Browser Accessibility Manual Test Checklist
+# Cross-Browser and Responsive Design Manual Test Checklist
 
-This checklist provides a structured approach for manually testing accessibility across different browsers and screen readers. Use this checklist to verify that the Maybe finance application meets WCAG 2.1 AA standards across all supported platforms.
+## Instructions
+Use this checklist to manually verify responsive design across different devices and browsers. Mark each item as:
+- ✅ Pass: Works as expected
+- ⚠️ Minor Issue: Works but has minor visual or functional issues
+- ❌ Fail: Does not work properly or has major issues
+- N/A: Not applicable
 
-## Browsers to Test
+## Device Matrix
 
-- Chrome (latest version)
-- Firefox (latest version)
-- Safari (latest version)
-- Edge (latest version)
+| Page/Feature | Chrome Mobile | Safari Mobile | Chrome Tablet | Safari Tablet | Chrome Desktop | Firefox Desktop | Safari Desktop | Edge Desktop |
+|--------------|---------------|---------------|---------------|---------------|----------------|----------------|----------------|--------------|
+| Dashboard    |               |               |               |               |                |                |                |              |
+| Transactions |               |               |               |               |                |                |                |              |
+| Budgets      |               |               |               |               |                |                |                |              |
+| Settings     |               |               |               |               |                |                |                |              |
 
-## Screen Readers to Test
+## Detailed Checklist
 
-- VoiceOver (macOS/iOS)
-- NVDA (Windows)
-- JAWS (Windows) - if available
-- TalkBack (Android) - if testing mobile
+### Dashboard Page
 
-## Test Environment Setup
+#### Mobile (320px - 639px)
+- [ ] Header displays correctly
+- [ ] Navigation menu is accessible (hamburger menu)
+- [ ] Charts are properly sized and readable
+- [ ] Cards stack vertically with proper spacing
+- [ ] Touch targets are large enough (min 44px)
+- [ ] Landscape orientation displays content properly
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-1. **Desktop Testing**
-   - Test on macOS with VoiceOver
-   - Test on Windows with NVDA
-   - Use standard screen sizes (1920x1080, 1366x768)
+#### Tablet (640px - 1023px)
+- [ ] Header displays correctly
+- [ ] Navigation is appropriate for tablet size
+- [ ] Charts are properly sized and readable
+- [ ] Cards display in appropriate grid layout
+- [ ] Touch targets are properly sized
+- [ ] Landscape orientation optimizes space usage
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-2. **Mobile Testing**
-   - Test on iOS with VoiceOver
-   - Test on Android with TalkBack
-   - Test on both phone and tablet form factors
+#### Desktop (1024px+)
+- [ ] Header displays correctly
+- [ ] Full navigation is visible
+- [ ] Charts utilize available space effectively
+- [ ] Cards display in multi-column grid
+- [ ] Hover states work correctly
+- [ ] No unnecessary empty space
+- [ ] No horizontal scrolling required
+- [ ] Text is readable and properly sized
 
-3. **Theme Testing**
-   - Test in both light and dark themes
-   - Test with system preference set to high contrast mode
+### Transactions Page
 
-## Manual Test Checklist
+#### Mobile (320px - 639px)
+- [ ] Transaction list is readable
+- [ ] Filters/search are accessible
+- [ ] Transaction details are accessible
+- [ ] Forms are usable on small screens
+- [ ] Touch targets for actions are large enough
+- [ ] Landscape orientation displays content properly
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-### 1. Keyboard Navigation
+#### Tablet (640px - 1023px)
+- [ ] Transaction list displays appropriate columns
+- [ ] Filters/search are easily accessible
+- [ ] Transaction details display properly
+- [ ] Forms utilize space effectively
+- [ ] Touch targets are properly sized
+- [ ] Landscape orientation optimizes space usage
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-#### Tab Order and Focus
-- [ ] Tab through the entire page and verify logical focus order
-- [ ] Verify focus indicator is visible in all browsers
-- [ ] Check that all interactive elements are keyboard accessible
-- [ ] Verify that keyboard focus is not trapped (except in modals)
-- [ ] Check that skip links are available and functional
+#### Desktop (1024px+)
+- [ ] Transaction table shows all relevant columns
+- [ ] Filters/search are easily accessible
+- [ ] Transaction details display properly
+- [ ] Forms utilize space effectively
+- [ ] Hover states work correctly
+- [ ] No unnecessary empty space
+- [ ] No horizontal scrolling required
+- [ ] Text is readable and properly sized
 
-#### Keyboard Shortcuts
-- [ ] Test application-specific keyboard shortcuts
-- [ ] Verify that keyboard shortcuts don't conflict with screen reader shortcuts
-- [ ] Check that all keyboard interactions work consistently across browsers
+### Budgets Page
 
-### 2. Screen Reader Testing
+#### Mobile (320px - 639px)
+- [ ] Budget categories stack properly
+- [ ] Progress bars are readable
+- [ ] Budget forms are usable on small screens
+- [ ] Touch targets for actions are large enough
+- [ ] Landscape orientation displays content properly
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-#### Page Structure
-- [ ] Verify proper heading structure (h1, h2, etc.)
-- [ ] Check that landmark regions are properly identified
-- [ ] Verify that page title is descriptive and accurate
-- [ ] Check that language is properly specified
+#### Tablet (640px - 1023px)
+- [ ] Budget categories display in appropriate grid
+- [ ] Progress bars are properly sized
+- [ ] Budget forms utilize space effectively
+- [ ] Touch targets are properly sized
+- [ ] Landscape orientation optimizes space usage
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-#### Interactive Elements
-- [ ] Verify that buttons announce their purpose
-- [ ] Check that links describe their destination
-- [ ] Verify that form controls have proper labels
-- [ ] Check that custom widgets have appropriate ARIA roles and properties
+#### Desktop (1024px+)
+- [ ] Budget categories display in multi-column grid
+- [ ] Progress bars are properly sized
+- [ ] Budget forms utilize space effectively
+- [ ] Hover states work correctly
+- [ ] No unnecessary empty space
+- [ ] No horizontal scrolling required
+- [ ] Text is readable and properly sized
 
-#### Dynamic Content
-- [ ] Verify that dynamic content changes are announced
-- [ ] Check that error messages are announced
-- [ ] Verify that modal dialogs are properly announced
-- [ ] Check that loading states are communicated
+### Settings Page
 
-### 3. Visual Presentation
+#### Mobile (320px - 639px)
+- [ ] Settings categories are accessible
+- [ ] Form controls are usable on small screens
+- [ ] Toggle switches and checkboxes are large enough
+- [ ] Theme switcher works properly
+- [ ] Landscape orientation displays content properly
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-#### Color Contrast
-- [ ] Verify sufficient contrast for text elements (4.5:1 for normal text, 3:1 for large text)
-- [ ] Check that color is not the only means of conveying information
-- [ ] Verify that focus indicators have sufficient contrast
-- [ ] Check contrast in both light and dark themes
+#### Tablet (640px - 1023px)
+- [ ] Settings display in appropriate layout
+- [ ] Form controls utilize space effectively
+- [ ] Toggle switches and checkboxes are properly sized
+- [ ] Theme switcher works properly
+- [ ] Landscape orientation optimizes space usage
+- [ ] No horizontal scrolling required
+- [ ] Text is readable without zooming
 
-#### Text Resizing
-- [ ] Verify that text can be resized up to 200% without loss of content
-- [ ] Check that layout adapts properly when text is resized
-- [ ] Verify that no horizontal scrolling is required at 400% zoom
+#### Desktop (1024px+)
+- [ ] Settings display in optimal layout
+- [ ] Form controls utilize space effectively
+- [ ] Toggle switches and checkboxes are properly sized
+- [ ] Theme switcher works properly
+- [ ] Hover states work correctly
+- [ ] No unnecessary empty space
+- [ ] No horizontal scrolling required
+- [ ] Text is readable and properly sized
 
-#### Responsive Design
-- [ ] Check that content reflows appropriately at different screen sizes
-- [ ] Verify that touch targets are large enough (at least 44x44px)
-- [ ] Check that content is usable in both portrait and landscape orientations
+## Touch Interaction Tests
 
-### 4. Forms and Validation
+### Basic Touch Interactions
+- [ ] Buttons respond properly to taps
+- [ ] Form fields activate properly on touch
+- [ ] Dropdowns open and close properly
+- [ ] Checkboxes and radio buttons toggle correctly
+- [ ] Toggle switches respond to touch
 
-#### Form Controls
-- [ ] Verify that all form controls have visible labels
-- [ ] Check that form fields have proper instructions
-- [ ] Verify that required fields are clearly indicated
-- [ ] Check that form controls maintain proper states (focus, hover, active)
+### Advanced Touch Interactions
+- [ ] Swipe gestures work if implemented
+- [ ] Charts respond to touch interactions
+- [ ] Drag-and-drop works if implemented
+- [ ] Long-press actions work if implemented
+- [ ] Touch and hold actions work if implemented
 
-#### Error Handling
-- [ ] Verify that error messages are clearly associated with form fields
-- [ ] Check that error messages are descriptive and helpful
-- [ ] Verify that errors are identified by more than just color
-- [ ] Check that form validation works consistently across browsers
+## Orientation Change Tests
 
-### 5. Media and Interactive Elements
+### Mobile Devices
+- [ ] Portrait to landscape transition is smooth
+- [ ] Content reflows appropriately in landscape
+- [ ] No content is cut off in either orientation
+- [ ] Interactive elements remain accessible
+- [ ] Fixed elements (headers, footers) position correctly
 
-#### Images and Icons
-- [ ] Verify that all images have appropriate alt text
-- [ ] Check that decorative images have empty alt text or are hidden from screen readers
-- [ ] Verify that icon buttons have accessible names
-- [ ] Check that complex images have detailed descriptions
+### Tablet Devices
+- [ ] Portrait to landscape transition is smooth
+- [ ] Layout optimizes for landscape orientation
+- [ ] Sidebar/navigation adapts to orientation
+- [ ] No content is cut off in either orientation
+- [ ] Interactive elements remain accessible
 
-#### Charts and Data Visualizations
-- [ ] Verify that charts have text alternatives
-- [ ] Check that data visualizations are keyboard accessible
-- [ ] Verify that chart information is available to screen readers
-- [ ] Check that interactive charts work with keyboard and screen readers
+## Issues and Notes
 
-#### Videos and Animations
-- [ ] Verify that videos have captions
-- [ ] Check that animations respect reduced motion preferences
-- [ ] Verify that auto-playing content can be paused
-- [ ] Check that media controls are keyboard accessible
+Use this section to document any issues found during testing:
 
-### 6. Custom Components
-
-#### Modals and Dialogs
-- [ ] Verify that focus is trapped within modal dialogs
-- [ ] Check that modals return focus when closed
-- [ ] Verify that modals have proper ARIA attributes
-- [ ] Check that modals can be closed with Escape key
-
-#### Tabs and Accordions
-- [ ] Verify that tabs follow WAI-ARIA design patterns
-- [ ] Check that tab panels are properly associated with tab controls
-- [ ] Verify that accordions can be operated with keyboard
-- [ ] Check that current state is communicated to screen readers
-
-#### Dropdowns and Menus
-- [ ] Verify that dropdown menus can be operated with keyboard
-- [ ] Check that menu items are properly announced by screen readers
-- [ ] Verify that submenus are accessible
-- [ ] Check that menus close when Escape key is pressed
-
-#### Toast Notifications
-- [ ] Verify that notifications are announced to screen readers
-- [ ] Check that notifications are visible long enough to read
-- [ ] Verify that notifications can be dismissed with keyboard
-- [ ] Check that notifications don't block other content
-
-## Browser-Specific Checks
-
-### Chrome
-- [ ] Verify that form autofill works properly
-- [ ] Check that custom focus styles are consistent
-- [ ] Verify that high contrast mode is supported
-
-### Firefox
-- [ ] Check that form validation messages are accessible
-- [ ] Verify that custom scrollbars are accessible
-- [ ] Check that focus rings are visible
-
-### Safari
-- [ ] Verify that VoiceOver works properly with all components
-- [ ] Check that form controls have proper labels
-- [ ] Verify that custom keyboard handling works
-
-### Edge
-- [ ] Check that Windows high contrast mode is supported
-- [ ] Verify that immersive reader features work if applicable
-- [ ] Check that form controls are properly styled
-
-## Mobile-Specific Checks
-
-### Touch Interactions
-- [ ] Verify that touch targets are large enough
-- [ ] Check that swipe gestures work properly
-- [ ] Verify that pinch-to-zoom is not disabled
-
-### Screen Orientation
-- [ ] Check that content works in both portrait and landscape
-- [ ] Verify that orientation changes don't cause loss of context
-- [ ] Check that fixed elements don't obscure content
-
-### Mobile Screen Readers
-- [ ] Verify that VoiceOver gestures work on iOS
-- [ ] Check that TalkBack gestures work on Android
-- [ ] Verify that all content is accessible via mobile screen readers
-
-## Test Documentation
-
-For each test, document the following:
-
-1. **Test Environment**
-   - Browser name and version
-   - Operating system
-   - Screen reader (if applicable)
-   - Device type (desktop, tablet, mobile)
-
-2. **Test Results**
-   - Pass/Fail status
-   - Description of any issues found
-   - Screenshots or recordings of issues
-   - Steps to reproduce issues
-
-3. **Severity Rating**
-   - Critical: Prevents access to core functionality
-   - Major: Significantly impairs use but has workarounds
-   - Minor: Causes inconvenience but doesn't prevent use
-
-## Issue Reporting Template
-
-```
-Issue: [Brief description]
-Environment: [Browser, OS, Screen reader, etc.]
-URL: [Page where issue was found]
-Steps to Reproduce:
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
-
-Expected Result: [What should happen]
-Actual Result: [What actually happens]
-Severity: [Critical/Major/Minor]
-WCAG Success Criterion: [e.g., 1.1.1 Non-text Content]
-```
-
-## Regression Testing
-
-After fixing identified issues, perform regression testing to ensure:
-
-1. The fix resolves the original issue
-2. The fix doesn't introduce new accessibility issues
-3. The fix works consistently across all browsers and devices
-
-Use this checklist for regular accessibility testing and whenever significant changes are made to the user interface.
+| Issue | Device/Browser | Severity | Description |
+|-------|---------------|----------|-------------|
+|       |               |          |             |
+|       |               |          |             |
+|       |               |          |             |
