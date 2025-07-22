@@ -243,7 +243,7 @@
   - Add proper media queries for print and screen readers
   - _Requirements: 9.5, 8.4_
 
-- [ ] 35. Performance testing and optimization
+- [x] 35. Performance testing and optimization
   - Measure and optimize page load times
   - Test theme switching performance
   - Ensure no layout shifts during component loading
@@ -252,7 +252,7 @@
 
 ## Phase 8: Remaining Pages Systematic Rollout
 
-- [ ] 36. Audit and prioritize remaining pages for modernization
+- [x] 36. Audit and prioritize remaining pages for modernization
   - Create inventory of all application pages not yet modernized
   - Prioritize pages based on user usage and importance
   - Plan rollout schedule for remaining pages

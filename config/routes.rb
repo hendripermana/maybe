@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   # Component showcase
   get "ui/component-showcase", to: "ui#component_showcase"
 
+  # Performance metrics
+  post "performance/metrics", to: "performance_metrics#create"
+
   # Uses basic auth - see config/initializers/sidekiq.rb
   mount Sidekiq::Web => "/sidekiq"
 

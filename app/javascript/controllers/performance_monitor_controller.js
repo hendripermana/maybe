@@ -1,140 +1,94 @@
-// app/javascript/controllers/performance_monitor_controller.js
 import { Controller } from "@hotwired/stimulus"
-import { performanceMonitor } from "../services/performance_monitor"
 
-/**
- * Performance Monitor Controller
- * 
- * This controller integrates with the PerformanceMonitor service to track
- * component rendering and interaction performance.
- * 
- * Usage:
- * <div data-controller="performance-monitor" 
- *      data-performance-monitor-id-value="my-component">
- *   <!-- Component content -->
- * </div>
- */
+// This controller monitors and reports performance metrics
 export default class extends Controller {
-  static values = { 
-    id: String,
-    autoStart: { type: Boolean, default: true },
-    logReport: { type: Boolean, default: false }
-  }
-
+  static targets = ["result"]
+  
   connect() {
-    // Generate a unique ID if none provided
-    if (!this.hasIdValue) {
-      this.idValue = `component-${Math.random().toString(36).substring(2, 9)}`
-    }
-    
-    // Start measuring render time automatically if autoStart is true
-    if (this.autoStartValue) {
-      this.startMeasure()
-    }
-    
-    // Track when the component is fully rendered (after all resources are loaded)
-    window.addEventListener('load', this.componentLoaded.bind(this), { once: true })
-    
-    // Set up mutation observer to track DOM changes
-    this.setupMutationObserver()
+    this.monitorPageLoad()
+    this.monitorThemeSwitching()
+    this.detectLayoutShifts()
   }
   
-  disconnect() {
-    // Clean up observers
-    if (this.mutationObserver) {
-      this.mutationObserver.disconnect()
-    }
-    
-    // Log final report if enabled
-    if (this.logReportValue) {
-      console.log(`Performance report for ${this.idValue}:`, performanceMonitor.getReport())
-    }
-  }
-  
-  /**
-   * Start measuring component render time
-   */
-  startMeasure() {
-    performanceMonitor.startMeasure(this.idValue)
-  }
-  
-  /**
-   * End measuring component render time
-   */
-  endMeasure() {
-    const duration = performanceMonitor.endMeasure(this.idValue)
-    
-    // Dispatch custom event with render duration
-    this.dispatch('rendered', { 
-      detail: { 
-        id: this.idValue,
-        duration: duration 
-      }
-    })
-    
-    return duration
-  }
-  
-  /**
-   * Track an interaction within this component
-   * @param {Event} event - The DOM event
-   */
-  trackInteraction(event) {
-    const interactionId = `${this.idValue}-${event.type}`
-    
-    performanceMonitor.trackInteraction(interactionId, () => {
-      // The actual interaction handler would go here
-      console.log(`Interaction tracked: ${interactionId}`)
-    })
-  }
-  
-  /**
-   * Called when the component and all its resources are loaded
-   */
-  componentLoaded() {
-    // End the initial render measurement
-    if (this.autoStartValue) {
-      this.endMeasure()
-    }
-  }
-  
-  /**
-   * Set up mutation observer to track DOM changes
-   */
-  setupMutationObserver() {
-    this.mutationObserver = new MutationObserver((mutations) => {
-      // Only track significant mutations (not style changes)
-      const significantMutation = mutations.some(mutation => 
-        mutation.type === 'childList' || 
-        (mutation.type === 'attributes' && mutation.attributeName !== 'style')
-      )
+  monitorPageLoad() {
+    // Use Performance API to measure page load
+    if (window.performance) {
+      const perfData = window.performance.timing
+      const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart
       
-      if (significantMutation) {
-        // Start a new measurement for this update
-        this.startMeasure()
-        
-        // Use requestAnimationFrame to measure after the browser has rendered
-        requestAnimationFrame(() => {
-          // End measurement on next frame
-          requestAnimationFrame(() => {
-            this.endMeasure()
-          })
-        })
-      }
-    })
-    
-    // Start observing the component
-    this.mutationObserver.observe(this.element, {
-      childList: true,
-      attributes: true,
-      subtree: true
+      this.logMetric("Page Load Time", pageLoadTime + "ms")
+      
+      // Report to server
+      this.reportMetric("page_load", pageLoadTime)
+    }
+  }
+  
+  monitorThemeSwitching() {
+    // Add listener for theme changes
+    document.addEventListener("theme-changed", (event) => {
+      const switchTime = event.detail.switchTime
+      this.logMetric("Theme Switch Time", switchTime + "ms")
+      
+      // Report to server
+      this.reportMetric("theme_switch", switchTime)
     })
   }
   
-  /**
-   * Get the current performance report
-   */
-  getReport() {
-    return performanceMonitor.getReport()
+  detectLayoutShifts() {
+    // Use Layout Instability API if available
+    if ("LayoutShift" in window) {
+      let cumulativeLayoutShift = 0
+      
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          // Only count layout shifts without recent user input
+          if (!entry.hadRecentInput) {
+            cumulativeLayoutShift += entry.value
+          }
+        }
+        
+        this.logMetric("Cumulative Layout Shift", cumulativeLayoutShift.toFixed(3))
+        
+        // Report to server if significant
+        if (cumulativeLayoutShift > 0.1) {
+          this.reportMetric("layout_shift", cumulativeLayoutShift)
+        }
+      })
+      
+      observer.observe({ type: "layout-shift", buffered: true })
+    }
+  }
+  
+  logMetric(name, value) {
+    if (this.hasResultTarget) {
+      const item = document.createElement("div")
+      item.classList.add("performance-metric")
+      item.innerHTML = `<strong>${name}:</strong> ${value}`
+      this.resultTarget.appendChild(item)
+    }
+    
+    // Also log to console
+    console.log(`Performance: ${name} = ${value}`)
+  }
+  
+  reportMetric(name, value) {
+    // Send metric to server for logging
+    const csrfToken = document.querySelector("meta[name='csrf-token']").content
+    
+    fetch("/performance/metrics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken
+      },
+      body: JSON.stringify({
+        metric: {
+          name: name,
+          value: value,
+          path: window.location.pathname,
+          user_agent: navigator.userAgent
+        }
+      })
+    }).catch(error => console.error("Error reporting metric:", error))
   }
 }

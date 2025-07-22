@@ -1,0 +1,75 @@
+/* Performance metrics component styles */
+.performance-metrics__container {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  margin-top: var(--spacing-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.performance-metrics__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-foreground);
+}
+
+.performance-metrics__results {
+  font-size: var(--font-size-xs);
+  color: var(--color-muted);
+}
+
+.performance-metric {
+  padding: var(--spacing-1) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.performance-metric:last-child {
+  border-bottom: none;
+}
+
+/* Add CSS containment to improve performance */
+.chart-container,
+.dashboard-card,
+.transaction-list,
+.budget-progress {
+  contain: content;
+}
+
+/* Prevent layout shifts by setting explicit dimensions */
+img {
+  aspect-ratio: attr(width) / attr(height);
+}
+
+/* Optimize theme switching performance */
+[data-theme] {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Use content-visibility to improve rendering performance */
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Skeleton loaders to prevent layout shifts */
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    var(--color-muted-background) 25%,
+    var(--color-muted) 50%,
+    var(--color-muted-background) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

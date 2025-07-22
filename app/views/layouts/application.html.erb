@@ -131,6 +131,7 @@
 
       <div class="<%= 'dashboard-main-content' if controller_name == 'pages' && action_name == 'dashboard' %>">
         <%= yield %>
+        <%= render PerformanceMetricsComponent.new(show_in_ui: Rails.env.development? && params[:show_metrics]) %>
       </div>
     <% end %>
 
