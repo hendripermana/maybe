@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print Styles Preview</title>
+  <style>
+    /* Include the print styles directly for preview */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.5;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .controls {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #f0f0f0;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .content {
+      margin-top: 60px;
+    }
+    
+    button {
+      padding: 8px 16px;
+      background: #1570EF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background: #175CD3;
+    }
+    
+    .preview-section {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    
+    h2 {
+      margin-top: 0;
+    }
+    
+    /* Sample components for testing */
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .budget-card {
+      padding: 16px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .budget-progress-bar {
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+    
+    .budget-progress-fill {
+      height: 100%;
+      background: #1570EF;
+      width: 65%;
+    }
+    
+    .account-card {
+      padding: 16px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .chart-container {
+      height: 300px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .no-print {
+      background: #ffecec;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    
+    .print-only {
+      display: none;
+      background: #e6f7ff;
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+    }
+    
+    /* Apply print styles when in print preview mode */
+    .print-preview-mode {
+      background-color: white !important;
+      color: black !important;
+      font-size: 12pt !important;
+      line-height: 1.5 !important;
+      margin: 0 !important;
+      padding: 20px !important;
+      width: 100% !important;
+    }
+    
+    .print-preview-mode .controls {
+      display: none !important;
+    }
+    
+    .print-preview-mode .content {
+      margin-top: 0 !important;
+    }
+    
+    .print-preview-mode .no-print {
+      display: none !important;
+    }
+    
+    .print-preview-mode .print-only {
+      display: block !important;
+    }
+    
+    .print-preview-mode a[href]:after {
+      content: " (" attr(href) ")";
+      font-size: 90%;
+      color: #333;
+    }
+    
+    .print-preview-mode a[href^="#"]:after,
+    .print-preview-mode a[href^="javascript:"]:after {
+      content: "";
+    }
+    
+    .print-preview-mode .transaction-item,
+    .print-preview-mode .budget-card,
+    .print-preview-mode .account-card,
+    .print-preview-mode table,
+    .print-preview-mode .chart-container {
+      page-break-inside: avoid;
+      border: 1pt solid #ddd !important;
+    }
+    
+    .print-preview-mode h2 {
+      page-break-before: always;
+    }
+    
+    .print-preview-mode .budget-progress-bar {
+      height: 15pt !important;
+      border: 1pt solid #ddd !important;
+    }
+    
+    .print-preview-mode .budget-progress-fill {
+      background-color: #ddd !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <button onclick="togglePrintPreview()">Toggle Print Preview</button>
+    <button onclick="window.print()">Print This Page</button>
+  </div>
+  
+  <div class="content">
+    <h1>Print Styles Test Page</h1>
+    <p>This page demonstrates how the application will look when printed. Use the buttons above to toggle between normal view and print preview, or to print this page.</p>
+    
+    <div class="preview-section">
+      <h2>Transaction List</h2>
+      <div class="no-print">This control panel should not appear when printed</div>
+      <div class="print-only">This is additional information that only appears in print</div>
+      
+      <div class="transaction-list">
+        <div class="transaction-item">
+          <div>
+            <div>Grocery Store</div>
+            <div>July 15, 2025</div>
+          </div>
+          <div>$45.67</div>
+        </div>
+        <div class="transaction-item">
+          <div>
+            <div>Coffee Shop</div>
+            <div>July 14, 2025</div>
+          </div>
+          <div>$5.25</div>
+        </div>
+        <div class="transaction-item">
+          <div>
+            <div>Gas Station</div>
+            <div>July 12, 2025</div>
+          </div>
+          <div>$35.00</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="preview-section">
+      <h2>Budget Overview</h2>
+      
+      <div class="budget-container">
+        <div class="budget-card">
+          <h3>Groceries</h3>
+          <div>$350 / $500</div>
+          <div class="budget-progress-bar">
+            <div class="budget-progress-fill" style="width: 70%;"></div>
+          </div>
+        </div>
+        
+        <div class="budget-card">
+          <h3>Entertainment</h3>
+          <div>$120 / $200</div>
+          <div class="budget-progress-bar">
+            <div class="budget-progress-fill" style="width: 60%;"></div>
+          </div>
+        </div>
+        
+        <div class="budget-card">
+          <h3>Transportation</h3>
+          <div>$250 / $300</div>
+          <div class="budget-progress-bar">
+            <div class="budget-progress-fill" style="width: 83%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="preview-section">
+      <h2>Account Summary</h2>
+      
+      <div class="account-summary">
+        <div class="account-card">
+          <h3>Checking Account</h3>
+          <div>Balance: $2,450.75</div>
+          <div>Last updated: July 20, 2025</div>
+        </div>
+        
+        <div class="account-card">
+          <h3>Savings Account</h3>
+          <div>Balance: $15,230.42</div>
+          <div>Last updated: July 20, 2025</div>
+        </div>
+        
+        <div class="account-card">
+          <h3>Credit Card</h3>
+          <div>Balance: -$1,245.30</div>
+          <div>Last updated: July 19, 2025</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="preview-section">
+      <h2>Monthly Spending Report</h2>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>% of Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Housing</td>
+            <td>$1,500.00</td>
+            <td>35%</td>
+          </tr>
+          <tr>
+            <td>Food</td>
+            <td>$650.00</td>
+            <td>15%</td>
+          </tr>
+          <tr>
+            <td>Transportation</td>
+            <td>$400.00</td>
+            <td>9%</td>
+          </tr>
+          <tr>
+            <td>Utilities</td>
+            <td>$350.00</td>
+            <td>8%</td>
+          </tr>
+          <tr>
+            <td>Entertainment</td>
+            <td>$300.00</td>
+            <td>7%</td>
+          </tr>
+          <tr>
+            <td>Other</td>
+            <td>$1,100.00</td>
+            <td>26%</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="chart-container">
+        <div>[Spending Chart Placeholder]</div>
+      </div>
+    </div>
+    
+    <div class="preview-section">
+      <h2>Links and References</h2>
+      
+      <p>This section tests how links are displayed in print:</p>
+      <ul>
+        <li><a href="https://example.com/account">Account Details</a></li>
+        <li><a href="#budget-section">Jump to Budget Section</a></li>
+        <li><a href="javascript:void(0)">JavaScript Action</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <script>
+    function togglePrintPreview() {
+      document.body.classList.toggle('print-preview-mode');
+      if (document.body.classList.contains('print-preview-mode')) {
+        document.title = "Print Preview - Maybe Finance";
+      } else {
+        document.title = "Print Styles Preview";
+      }
+    }
+  </script>
+</body>
+</html>

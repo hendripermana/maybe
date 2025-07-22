@@ -111,7 +111,7 @@
     <% end %>
 
     <%# SHARED - Main content %>
-    <%= tag.main class: class_names("grow overflow-y-auto px-4 lg:px-12 w-full mx-auto max-w-7xl"), data: { app_layout_target: "content" } do %>
+    <%= tag.main id: "main-content", class: class_names("grow overflow-y-auto px-4 lg:px-12 w-full mx-auto max-w-7xl"), data: { app_layout_target: "content" } do %>
       <div class="hidden lg:flex gap-3 items-center justify-between mb-8 pt-6">
         <div class="flex items-center gap-3">
           <%= icon("panel-left", as_button: true, data: { action: "app-layout#toggleLeftSidebar" }, class: "btn-modern-ghost w-9 h-9 !p-0") %>

@@ -1,0 +1,357 @@
+/*
+  Accessibility CSS
+  This file contains styles for print, reduced motion, high contrast, and screen reader support.
+  These styles are designed to improve the accessibility of the application.
+*/
+
+/* Print Styles */
+@media print {
+  /* Global print styles */
+  body {
+    background-color: white !important;
+    color: black !important;
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Hide non-essential elements */
+  header, 
+  footer, 
+  nav, 
+  aside, 
+  .no-print,
+  button:not(.print-show),
+  [role="navigation"],
+  [data-controller="dialog"],
+  [data-controller="menu"],
+  .sidebar,
+  .actions-menu,
+  .filter-controls {
+    display: none !important;
+  }
+
+  /* Show full URLs for links */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 90%;
+    color: #333;
+  }
+
+  /* Don't show URLs for internal links */
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+
+  /* Ensure page breaks don't happen inside elements */
+  h1, h2, h3, h4, h5, h6, 
+  img, 
+  table, 
+  figure, 
+  .transaction-item, 
+  .budget-card, 
+  .account-card {
+    page-break-inside: avoid;
+  }
+
+  /* Add page breaks before major sections */
+  h1, h2, h3 {
+    page-break-before: always;
+  }
+
+  /* Ensure tables display properly */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  th, td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    text-align: left !important;
+  }
+
+  /* Financial report specific styles */
+  .financial-report {
+    margin: 20pt 0 !important;
+  }
+
+  .financial-report h1 {
+    font-size: 18pt !important;
+    margin-bottom: 10pt !important;
+  }
+
+  .financial-report h2 {
+    font-size: 16pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .financial-report h3 {
+    font-size: 14pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  /* Transaction list print styles */
+  .transaction-list {
+    margin: 10pt 0 !important;
+  }
+
+  .transaction-item {
+    border-bottom: 1pt solid #ddd !important;
+    padding: 5pt 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+  }
+
+  /* Budget print styles */
+  .budget-container {
+    margin: 10pt 0 !important;
+  }
+
+  .budget-card {
+    border: 1pt solid #ddd !important;
+    padding: 8pt !important;
+    margin-bottom: 10pt !important;
+  }
+
+  .budget-progress-bar {
+    height: 15pt !important;
+    border: 1pt solid #ddd !important;
+    position: relative !important;
+    margin: 5pt 0 !important;
+  }
+
+  .budget-progress-fill {
+    height: 100% !important;
+    background-color: #ddd !important;
+  }
+
+  /* Account summary print styles */
+  .account-summary {
+    margin: 10pt 0 !important;
+  }
+
+  .account-card {
+    border: 1pt solid #ddd !important;
+    padding: 8pt !important;
+    margin-bottom: 10pt !important;
+  }
+
+  /* Chart print optimizations */
+  .chart-container {
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
+  }
+
+  .chart-container svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Print-specific elements that should only show when printing */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Ensure all text is visible */
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  /* Stop all animations and transitions */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Specific component overrides */
+  .chart-animation,
+  .shimmer,
+  .fade-in,
+  .slide-in-from-top,
+  .slide-in-from-bottom,
+  .slide-in-from-left,
+  .slide-in-from-right,
+  .scale-in,
+  .spin-slow,
+  .bounce-gentle {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Dialog/modal specific */
+  [data-controller="dialog"] {
+    transition: none !important;
+  }
+
+  /* Transaction item specific */
+  .responsive-transaction-item,
+  .transaction-item {
+    transition: none !important;
+  }
+
+  /* Progress bars should still indicate progress but without animation */
+  .progress-bar {
+    transition: none !important;
+  }
+
+  /* Skeleton loading should use static styling instead of animation */
+  .skeleton {
+    animation: none !important;
+    background: var(--color-gray-200) !important;
+  }
+
+  [data-theme="dark"] .skeleton {
+    background: var(--color-gray-700) !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: more) {
+  /* Increase contrast for text */
+  body {
+    color: black !important;
+    background-color: white !important;
+  }
+
+  [data-theme="dark"] body {
+    color: white !important;
+    background-color: black !important;
+  }
+
+  /* Enhance borders for better visibility */
+  button,
+  input,
+  select,
+  textarea,
+  .card,
+  .form-field,
+  .transaction-item,
+  .budget-card,
+  .account-card {
+    border: 1px solid currentColor !important;
+  }
+
+  /* Ensure links are clearly visible */
+  a {
+    text-decoration: underline !important;
+    color: blue !important;
+  }
+
+  [data-theme="dark"] a {
+    color: cyan !important;
+  }
+
+  /* Enhance focus states */
+  :focus {
+    outline: 2px solid black !important;
+    outline-offset: 2px !important;
+  }
+
+  [data-theme="dark"] :focus {
+    outline: 2px solid white !important;
+  }
+
+  /* Ensure form controls have sufficient contrast */
+  input,
+  select,
+  textarea {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  [data-theme="dark"] input,
+  [data-theme="dark"] select,
+  [data-theme="dark"] textarea {
+    background-color: black !important;
+    color: white !important;
+  }
+
+  /* Enhance button contrast */
+  button,
+  .btn {
+    color: white !important;
+    background-color: black !important;
+    border: 2px solid black !important;
+  }
+
+  [data-theme="dark"] button,
+  [data-theme="dark"] .btn {
+    color: black !important;
+    background-color: white !important;
+    border: 2px solid white !important;
+  }
+
+  /* Ensure charts and visualizations have high contrast */
+  .chart-container svg path,
+  .chart-container svg rect,
+  .chart-container svg circle,
+  .chart-container svg line {
+    stroke-width: 2px !important;
+  }
+
+  /* Enhance progress bars */
+  .progress-bar {
+    border: 1px solid black !important;
+  }
+
+  .progress-bar-fill {
+    background-color: black !important;
+  }
+
+  [data-theme="dark"] .progress-bar {
+    border: 1px solid white !important;
+  }
+
+  [data-theme="dark"] .progress-bar-fill {
+    background-color: white !important;
+  }
+}
+
+/* Screen Reader Only Utilities */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border-width: 0 !important;
+}
+
+/* Focus visible utility for keyboard navigation */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--color-ring) !important;
+  outline-offset: 2px !important;
+}
+
+/* Skip to content link - visible only when focused */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.2s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}

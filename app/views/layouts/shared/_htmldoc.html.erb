@@ -13,6 +13,7 @@
   </head>
 
   <body class="h-full overflow-hidden lg:overflow-auto antialiased">
+    <%= render Ui::SkipToContentComponent.new(target: "#main-content") %>
     <%= render "layouts/theme_setup" %>
     
     <% if Rails.env.development? %>

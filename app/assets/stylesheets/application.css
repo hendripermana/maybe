@@ -17,3 +17,4 @@
 /* Import component-specific styles */
 @import "components/responsive_budget_grid.css";
 @import "components/touch_interactions.css";
+@import "accessibility.css";
