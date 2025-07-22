@@ -4,11 +4,15 @@ module Ui
   # Modern settings navigation component with responsive behavior
   # Provides consistent styling and theme support for settings navigation
   class SettingsNavComponent < BaseComponent
-    attr_reader :sections, :current_path
+    attr_reader :current_path, :sections
 
     def initialize(current_path:, **options)
       super(**options)
       @current_path = current_path
+      @sections = []
+    end
+
+    def before_render
       @sections = build_sections
     end
 

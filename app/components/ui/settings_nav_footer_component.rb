@@ -4,22 +4,21 @@ module Ui
   # Modern settings navigation footer component
   # Provides consistent styling for previous/next navigation in settings
   class SettingsNavFooterComponent < BaseComponent
-    attr_reader :current_path
+    attr_reader :current_path, :previous_setting, :next_setting
 
     def initialize(current_path:, **options)
       super(**options)
       @current_path = current_path
+      @previous_setting = nil
+      @next_setting = nil
+    end
+
+    def before_render
+      @previous_setting = adjacent_setting(-1)
+      @next_setting = adjacent_setting(1)
     end
 
     private
-
-    def previous_setting
-      adjacent_setting(-1)
-    end
-
-    def next_setting
-      adjacent_setting(1)
-    end
 
     def adjacent_setting(offset)
       visible_settings = settings_order.select { |setting| setting[:condition].nil? || helpers.send(setting[:condition]) }
