@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-=======
 @import "tailwindcss";
->>>>>>> feature/modernation-design
 
 @layer base {
   :root {
@@ -76,18 +70,11 @@
 
 @layer base {
   * {
-<<<<<<< HEAD
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-=======
     border-color: hsl(var(--border));
   }
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
->>>>>>> feature/modernation-design
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
@@ -99,12 +86,7 @@
 @import "./geist-font.css";
 @import "./geist-mono-font.css";
 
-<<<<<<< HEAD
-@plugin "@tailwindcss/typography";
-@plugin "@tailwindcss/forms";
-=======
 /* Plugins will be handled differently in v4 */
->>>>>>> feature/modernation-design
 
 @import "./simonweb_pickr.css";
 
@@ -135,14 +117,6 @@
 
   /* Modern Loading Components */
   .loading-skeleton {
-<<<<<<< HEAD
-    @apply bg-gray-200 dark:bg-gray-700 rounded animate-shimmer;
-    background: linear-gradient(
-      90deg,
-      theme('colors.gray.200') 0%,
-      theme('colors.gray.100') 50%,
-      theme('colors.gray.200') 100%
-=======
     background-color: #e5e7eb;
     border-radius: 0.25rem;
     animation: shimmer 2s ease-in-out infinite;
@@ -151,7 +125,6 @@
       #e5e7eb 0%,
       #f3f4f6 50%,
       #e5e7eb 100%
->>>>>>> feature/modernation-design
     );
     background-size: 200px 100%;
   }
@@ -159,38 +132,13 @@
   [data-theme="dark"] .loading-skeleton {
     background: linear-gradient(
       90deg,
-<<<<<<< HEAD
-      theme('colors.gray.700') 0%,
-      theme('colors.gray.600') 50%,
-      theme('colors.gray.700') 100%
-=======
       #374151 0%,
       #4b5563 50%,
       #374151 100%
->>>>>>> feature/modernation-design
     );
   }
 
   .loading-spinner {
-<<<<<<< HEAD
-    @apply inline-block w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin;
-  }
-
-  .loading-spinner-sm {
-    @apply w-3 h-3 border border-gray-300 border-t-blue-600;
-  }
-
-  .loading-spinner-lg {
-    @apply w-6 h-6 border-3 border-gray-300 border-t-blue-600;
-  }
-
-  .loading-dots {
-    @apply inline-flex space-x-1;
-  }
-
-  .loading-dots > div {
-    @apply w-2 h-2 bg-gray-400 rounded-full animate-bounce-gentle;
-=======
     display: inline-block;
     width: 1rem;
     height: 1rem;
@@ -225,7 +173,6 @@
     background-color: #9ca3af;
     border-radius: 50%;
     animation: bounce-gentle 2s ease-in-out infinite;
->>>>>>> feature/modernation-design
   }
 
   .loading-dots > div:nth-child(2) {
@@ -237,18 +184,6 @@
   }
 
   .loading-pulse-modern {
-<<<<<<< HEAD
-    @apply bg-gray-200 dark:bg-gray-700 rounded;
-    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .loading-shimmer {
-    @apply relative overflow-hidden bg-gray-200 dark:bg-gray-700 rounded;
-  }
-
-  .loading-shimmer::after {
-    @apply absolute inset-0;
-=======
     background-color: #e5e7eb;
     border-radius: 0.25rem;
     animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -275,7 +210,6 @@
     right: 0;
     bottom: 0;
     left: 0;
->>>>>>> feature/modernation-design
     content: '';
     background: linear-gradient(
       90deg,
@@ -296,25 +230,6 @@
   }
 
   .loading-ring {
-<<<<<<< HEAD
-    @apply inline-block w-4 h-4 border-2 border-gray-200 border-t-blue-600 rounded-full animate-spin-slow;
-  }
-
-  .loading-ring-sm {
-    @apply w-3 h-3 border border-gray-200 border-t-blue-600;
-  }
-
-  .loading-ring-lg {
-    @apply w-6 h-6 border-3 border-gray-200 border-t-blue-600;
-  }
-
-  .loading-bar {
-    @apply w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden;
-  }
-
-  .loading-bar::after {
-    @apply block h-full bg-blue-600 rounded-full;
-=======
     display: inline-block;
     width: 1rem;
     height: 1rem;
@@ -355,20 +270,13 @@
     height: 100%;
     background-color: #2563eb;
     border-radius: 9999px;
->>>>>>> feature/modernation-design
     content: '';
     animation: shimmer 2s infinite;
     background: linear-gradient(
       90deg,
-<<<<<<< HEAD
-      theme('colors.blue.600') 0%,
-      theme('colors.blue.500') 50%,
-      theme('colors.blue.600') 100%
-=======
       #2563eb 0%,
       #3b82f6 50%,
       #2563eb 100%
->>>>>>> feature/modernation-design
     );
     background-size: 200px 100%;
   }
@@ -377,33 +285,6 @@
 .combobox {
   .hw-combobox__main__wrapper,
   .hw-combobox__input {
-<<<<<<< HEAD
-    @apply bg-container text-primary w-full;
-  }
-
-  .hw-combobox__main__wrapper {
-    @apply border-0 p-0 focus:border-0 ring-0 focus:ring-0 shadow-none focus:shadow-none focus-within:shadow-none;
-  }
-
-  .hw-combobox__listbox {
-    @apply absolute top-[160%] right-0 w-full bg-transparent rounded z-30;
-  }
-
-  .hw-combobox__label {
-    @apply block text-xs text-gray-500 peer-disabled:text-gray-400;
-  }
-  
-  .hw-combobox__option {
-    @apply bg-container hover:bg-container-hover;
-  }
-
-  .hw_combobox__pagination__wrapper {
-    @apply h-px;
-
-    &:only-child {
-      @apply bg-transparent;
-    }
-=======
     background-color: var(--color-container);
     color: var(--color-text-primary);
     width: 100%;
@@ -459,7 +340,6 @@
 
   .hw_combobox__pagination__wrapper:only-child {
     background: transparent;
->>>>>>> feature/modernation-design
   }
 
   --hw-border-color: rgba(0, 0, 0, 0.2);
@@ -470,36 +350,6 @@
 
 /* Typography */
 .prose {
-<<<<<<< HEAD
-  @apply max-w-none text-primary; 
-
-  a {
-    @apply text-link;
-  }
-
-  h2 {
-    @apply text-xl font-medium text-primary;
-  }
-
-  h3 {
-    @apply text-lg font-medium text-primary;
-  }
-
-  li {
-    @apply m-0 text-primary;
-  }
-
-  details {
-    @apply mb-4 rounded-xl mt-3.5;
-  }
-
-  summary {
-    @apply flex items-center gap-1;
-  }
-
-  video {
-    @apply m-0 rounded-b-xl;
-=======
   max-width: none;
   color: var(--color-text-primary); 
 
@@ -540,23 +390,11 @@
     margin: 0;
     border-bottom-left-radius: 0.75rem;
     border-bottom-right-radius: 0.75rem;
->>>>>>> feature/modernation-design
   }
 }
 
 .prose--github-release-notes {
   .octicon {
-<<<<<<< HEAD
-    @apply inline-block overflow-visible align-text-bottom fill-current;
-  }
-
-  .dropdown-caret {
-    @apply content-none border-4 border-b-0 border-transparent border-t-gray-500 size-0 inline-block;
-  }
-
-  .user-mention {
-    @apply font-bold;
-=======
     display: inline-block;
     overflow: visible;
     vertical-align: text-bottom;
@@ -575,23 +413,15 @@
 
   .user-mention {
     font-weight: 700;
->>>>>>> feature/modernation-design
   }
 }
 
 .prose--ai-chat {
-<<<<<<< HEAD
-  @apply break-words;
-
-  p, li {
-    @apply text-sm text-primary;
-=======
   word-wrap: break-word;
 
   p, li {
     font-size: 0.875rem;
     color: var(--color-text-primary);
->>>>>>> feature/modernation-design
   }
 
   scrollbar-width: thin;
@@ -642,16 +472,6 @@
   }
 }
 
-<<<<<<< HEAD
-/* Sankey Chart Styles - Make it like a magical creature that adapts to any container */
-.chart-container {
-  position: relative;
-  overflow: visible !important; /* Allow chart to expand without being cut */
-  width: 100%;
-  height: 100%;
-  padding: 0 !important;
-  margin: 0 !important;
-=======
 /* Consolidated Chart Container Styles - Single source of truth */
 .chart-container {
   position: relative;
@@ -670,57 +490,12 @@
 
 .chart-container:hover {
   box-shadow: var(--shadow-floating);
->>>>>>> feature/modernation-design
 }
 
 .chart-container svg {
   width: 100%;
   height: 100%;
   display: block;
-<<<<<<< HEAD
-  overflow: visible !important; /* Critical: prevent cut-offs */
-}
-
-/* Fullscreen overlay styles */
-.fullscreen-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 9999 !important;
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(8px) !important;
-}
-
-.fullscreen-container {
-  width: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-}
-
-.fullscreen-chart-container {
-  flex: 1 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  padding: 1.5rem !important;
-}
-
-.fullscreen-chart-container .chart-container {
-  height: 100% !important;
-  width: 100% !important;
-  min-height: 600px !important;
-}
-
-/* Prevent body scroll when fullscreen */
-body.fullscreen-active {
-  overflow: hidden !important;
-  height: 100vh !important;
-}
-
-=======
   overflow: visible;
 }
 
@@ -755,82 +530,11 @@ body.fullscreen-active {
 
 /* Prevent body scroll when fullscreen - Only necessary !important */
 body.fullscreen-active,
->>>>>>> feature/modernation-design
 html.fullscreen-active {
   overflow: hidden !important;
   height: 100vh !important;
 }
 
-<<<<<<< HEAD
-/* Regular chart container sizing - creature's house */
-.regular-chart-container {
-  height: 540px !important;
-  width: 100% !important;
-  overflow: visible !important; /* Allow creature to expand */
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.regular-chart-container .chart-container {
-  width: 100% !important;
-  height: 100% !important;
-  overflow: visible !important;
-}
-
-/* Dashboard section container fixes */
-.dashboard-section {
-  overflow: visible !important; /* Critical: allow chart to expand */
-  width: 100%;
-  height: 100%;
-  padding: 0 !important;
-}
-
-.dashboard-section .chart-container {
-  position: relative;
-  background: transparent;
-  width: 100%;
-  height: 100%;
-  overflow: visible !important;
-}
-
-/* Fix potential scroll bars and ensure responsiveness */
-.sankey-svg-container {
-  overflow: visible !important;
-  width: 100% !important;
-  height: 100% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Fix white space at bottom - ensure proper page ending */
-.dashboard-page {
-  min-height: 100vh;
-  overflow-x: hidden;
-  padding-bottom: 0 !important; /* Remove all bottom padding */
-  margin-bottom: 0 !important;
-}
-
-.dashboard-page section:last-child {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-/* Global fixes for white space */
-body {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-/* Override main padding for dashboard pages */
-main:has(.dashboard-page) {
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* Ensure no extra space is added by any container */
-.space-y-6 > *:last-child {
-  margin-bottom: 0 !important;
-=======
 /* Regular chart container sizing */
 .regular-chart-container {
   height: 540px;
@@ -874,25 +578,9 @@ main:has(.dashboard-page) {
 /* Ensure no extra space is added by any container */
 .dashboard-page .space-y-6 > *:last-child {
   margin-bottom: 0;
->>>>>>> feature/modernation-design
 }
 
 /* Animation improvements */
 .chart-transition {
-<<<<<<< HEAD
-  transition: all 0.3s ease-in-out !important;
-}
-
-/* Fix white space at bottom */
-.dashboard-page {
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.dashboard-page section:last-child {
-  margin-bottom: 0 !important;
-  padding-bottom: 2rem !important;
-=======
   transition: all 0.3s ease-in-out;
->>>>>>> feature/modernation-design
 }
