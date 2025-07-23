@@ -3,7 +3,7 @@ class CreateUiMonitoringEvents < ActiveRecord::Migration[7.2]
     create_table :ui_monitoring_events do |t|
       t.string :event_type, null: false
       t.jsonb :data
-      t.references :user, foreign_key: true
+      t.references :user, type: :uuid, foreign_key: true
       t.string :session_id
       t.string :user_agent
       t.string :ip_address

@@ -6,6 +6,7 @@ export default class UiMonitoringService {
     this.setupThemeSwitchingMonitoring();
     this.setupComponentErrorMonitoring();
     this.setupCriticalInteractionLogging();
+    this.setupPerformanceMonitoring();
     
     console.log("UI Monitoring Service initialized");
   }
@@ -60,6 +61,12 @@ export default class UiMonitoringService {
           componentId: event.target.id,
           errorMessage: event.error?.message || 'Unknown component error'
         });
+      } else if (event.error) {
+        // Handle general JavaScript errors
+        this.reportError('javascript_error', event.error, {
+          url: window.location.href,
+          userAgent: navigator.userAgent
+        });
       }
     });
     
@@ -70,6 +77,43 @@ export default class UiMonitoringService {
         controllerName: controller.identifier,
         controllerElement: controller.element.outerHTML.substring(0, 100) // First 100 chars for context
       });
+    });
+    
+    // Monitor for unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
+      this.reportError('unhandled_promise_rejection', error, {
+        url: window.location.href,
+        userAgent: navigator.userAgent
+      });
+    });
+    
+    // Add MutationObserver to detect failed component renders
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              // Check for error indicators in the DOM
+              const errorElements = node.querySelectorAll('[data-error], .error-boundary, .component-error');
+              if (errorElements.length > 0) {
+                errorElements.forEach((element) => {
+                  this.reportError('component_render_failure', new Error(element.dataset.error || 'Component failed to render properly'), { 
+                    componentName: element.dataset.component || 'unknown',
+                    element: element.outerHTML.substring(0, 500)
+                  });
+                });
+              }
+            }
+          });
+        }
+      });
+    });
+    
+    // Start observing the document
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
     });
   }
 
@@ -103,8 +147,62 @@ export default class UiMonitoringService {
       });
     });
   }
+  
+  // Setup performance monitoring
+  static setupPerformanceMonitoring() {
+    // Track page load performance
+    window.addEventListener('load', () => {
+      if (window.performance && window.performance.timing) {
+        const timing = window.performance.timing;
+        
+        // Calculate key metrics
+        const loadTime = timing.loadEventEnd - timing.navigationStart;
+        const domReadyTime = timing.domComplete - timing.domLoading;
+        const networkLatency = timing.responseEnd - timing.fetchStart;
+        
+        // Log performance metrics
+        this.logPerformanceMetric('page_load', loadTime, {
+          dom_ready_time: domReadyTime,
+          network_latency: networkLatency,
+          url: window.location.href
+        });
+      }
+    });
+    
+    // Monitor Turbo navigation performance
+    let navigationStartTime;
+    
+    document.addEventListener('turbo:before-visit', () => {
+      navigationStartTime = performance.now();
+    });
+    
+    document.addEventListener('turbo:load', () => {
+      if (navigationStartTime) {
+        const duration = performance.now() - navigationStartTime;
+        this.logPerformanceMetric('turbo_navigation', duration, {
+          url: window.location.href
+        });
+      }
+    });
+    
+    // Monitor resource loading performance
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry) => {
+        // Only log resources that take longer than 1 second to load
+        if (entry.duration > 1000) {
+          this.logPerformanceMetric('slow_resource_load', entry.duration, {
+            resource_type: entry.initiatorType,
+            resource_name: entry.name.split('/').pop(),
+            resource_url: entry.name
+          });
+        }
+      });
+    });
+    
+    observer.observe({ entryTypes: ['resource'] });
+  }
 
-  // Report errors to monitoring service (Sentry)
+  // Report errors to monitoring service
   static reportError(errorType, error, context = {}) {
     console.error(`[${errorType}]`, error, context);
     
@@ -116,8 +214,8 @@ export default class UiMonitoringService {
       });
     }
     
-    // Send to server-side logging
-    this.sendToServer('/monitoring/ui_error', {
+    // Send to our UI monitoring system
+    this.sendToUiMonitoring('ui_error', {
       error_type: errorType,
       message: error?.message || 'Unknown error',
       stack: error?.stack,
@@ -139,8 +237,8 @@ export default class UiMonitoringService {
       });
     }
     
-    // Send to server for aggregation
-    this.sendToServer('/monitoring/performance_metric', {
+    // Send to our UI monitoring system
+    this.sendToUiMonitoring('performance_metric', {
       metric_name: metricName,
       value: value,
       context: JSON.stringify(context),
@@ -154,7 +252,7 @@ export default class UiMonitoringService {
     
     // Only log important events to server to avoid excessive data
     if (['theme_switch_started', 'theme_switch_error', 'component_render_error'].includes(eventName)) {
-      this.sendToServer('/monitoring/ui_event', {
+      this.sendToUiMonitoring('ui_event', {
         event_name: eventName,
         data: JSON.stringify(data),
         url: window.location.href
@@ -173,14 +271,38 @@ export default class UiMonitoringService {
       });
     }
     
-    this.sendToServer('/monitoring/performance_issue', {
+    this.sendToUiMonitoring('performance_issue', {
       issue_type: issueType,
       data: JSON.stringify(data),
       url: window.location.href
     });
   }
+  
+  // Send data to our UI monitoring system
+  static sendToUiMonitoring(eventType, data) {
+    // Get CSRF token
+    const token = document.querySelector('meta[name="csrf-token"]')?.content;
+    
+    fetch('/api/ui_monitoring_events', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': token
+      },
+      body: JSON.stringify({
+        ui_monitoring_event: {
+          event_type: eventType,
+          data: data
+        }
+      }),
+      // Use keepalive to ensure the request completes even if page is unloading
+      keepalive: true
+    }).catch(error => {
+      console.error('Error sending monitoring data:', error);
+    });
+  }
 
-  // Send data to server endpoint
+  // Send data to server endpoint (legacy method)
   static sendToServer(endpoint, data) {
     // Get CSRF token
     const token = document.querySelector('meta[name="csrf-token"]')?.content;
@@ -199,6 +321,36 @@ export default class UiMonitoringService {
       }).catch(error => {
         console.error('Error sending monitoring data:', error);
       });
+    }
+  }
+  
+  // Capture an error and send it to the monitoring system
+  static captureError(error, componentName = null, context = {}) {
+    this.reportError('captured_error', error, {
+      component_name: componentName,
+      ...context
+    });
+  }
+  
+  // Measure component render performance
+  static measureComponentRender(componentName, callback) {
+    const startTime = performance.now();
+    
+    try {
+      const result = callback();
+      const duration = performance.now() - startTime;
+      
+      this.logPerformanceMetric('component_render_time', duration, {
+        component_name: componentName
+      });
+      
+      return result;
+    } catch (error) {
+      this.captureError(error, componentName, {
+        operation: 'component_render',
+        duration: performance.now() - startTime
+      });
+      throw error;
     }
   }
 }

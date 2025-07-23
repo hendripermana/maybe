@@ -748,6 +748,38 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_21_052702) do
     t.index ["outflow_transaction_id"], name: "index_transfers_on_outflow_transaction_id"
   end
 
+  create_table "ui_monitoring_events", force: :cascade do |t|
+    t.string "event_type", null: false
+    t.jsonb "data"
+    t.uuid "user_id"
+    t.string "session_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_ui_monitoring_events_on_created_at"
+    t.index ["event_type"], name: "index_ui_monitoring_events_on_event_type"
+    t.index ["session_id"], name: "index_ui_monitoring_events_on_session_id"
+    t.index ["user_id"], name: "index_ui_monitoring_events_on_user_id"
+  end
+
+  create_table "user_feedbacks", force: :cascade do |t|
+    t.string "feedback_type", null: false
+    t.text "message", null: false
+    t.string "page", null: false
+    t.uuid "user_id"
+    t.string "browser"
+    t.string "theme"
+    t.boolean "resolved", default: false
+    t.datetime "resolved_at"
+    t.uuid "resolved_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feedback_type"], name: "index_user_feedbacks_on_feedback_type"
+    t.index ["resolved"], name: "index_user_feedbacks_on_resolved"
+    t.index ["user_id"], name: "index_user_feedbacks_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "family_id", null: false
     t.string "first_name"
@@ -849,6 +881,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_21_052702) do
   add_foreign_key "transactions", "merchants"
   add_foreign_key "transfers", "transactions", column: "inflow_transaction_id", on_delete: :cascade
   add_foreign_key "transfers", "transactions", column: "outflow_transaction_id", on_delete: :cascade
+  add_foreign_key "ui_monitoring_events", "users"
+  add_foreign_key "user_feedbacks", "users"
   add_foreign_key "users", "chats", column: "last_viewed_chat_id"
   add_foreign_key "users", "families"
 end

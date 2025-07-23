@@ -4,12 +4,12 @@ class CreateUserFeedbacks < ActiveRecord::Migration[7.2]
       t.string :feedback_type, null: false
       t.text :message, null: false
       t.string :page, null: false
-      t.references :user, foreign_key: true
+      t.references :user, type: :uuid, foreign_key: true
       t.string :browser
       t.string :theme
       t.boolean :resolved, default: false
       t.datetime :resolved_at
-      t.integer :resolved_by
+      t.uuid :resolved_by
       t.timestamps
     end
     
