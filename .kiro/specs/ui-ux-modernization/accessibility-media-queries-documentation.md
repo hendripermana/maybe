@@ -1,189 +1,186 @@
-# Accessibility Media Queries Implementation
-
-This document outlines the implementation of print styles and special media queries for the Maybe Finance application as part of the UI/UX modernization project.
+# Accessibility Media Queries Documentation
 
 ## Overview
 
-We've implemented the following accessibility features:
+This document outlines the accessibility-focused media queries implemented in the Maybe finance application. These media queries ensure that the application respects user preferences for reduced motion, contrast, and other accessibility features.
 
-1. **Print Styles**: Optimized styles for printing financial reports and pages
-2. **Reduced Motion Preferences**: Support for users who prefer reduced motion
-3. **High Contrast Mode**: Enhanced visibility for users who need higher contrast
-4. **Screen Reader Support**: Improved accessibility for screen reader users
+## Media Query Implementation
 
-## Implementation Details
+### Reduced Motion
 
-### 1. Print Styles
+The `prefers-reduced-motion` media query is used to detect if the user has requested minimized motion effects. When this preference is detected, animations and transitions are either disabled or significantly reduced.
 
-Print styles have been implemented to ensure that when users print pages from the application, they receive well-formatted, readable output that focuses on the essential content.
-
-Key features:
-- Removal of non-essential UI elements (navigation, buttons, etc.)
-- Optimized layout for paper format
-- Proper page breaks to avoid splitting important content
-- Enhanced readability with appropriate font sizes and contrast
-- Special formatting for financial data and tables
-- URL display for relevant links
-
-**Usage Example:**
 ```css
+/* Base animation */
+.animate-fade {
+  transition: opacity 0.3s ease;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade {
+    transition: none;
+  }
+}
+```
+
+#### Implementation Details
+
+- **CSS Variables**: A `--motion-reduce` CSS variable is set to either `reduce` or `no-preference` based on the user's system preference
+- **Class Toggle**: A `reduce-motion` class is added to the body element when reduced motion is preferred
+- **JavaScript Detection**: The application detects the preference using `window.matchMedia('(prefers-reduced-motion: reduce)').matches`
+- **User Override**: Users can override their system preference in the accessibility settings
+
+#### Affected Elements
+
+- Chart animations
+- Page transitions
+- Hover effects
+- Loading indicators
+- Modal dialogs
+- Dropdown menus
+
+### High Contrast Mode
+
+The `prefers-contrast: more` media query is used to detect if the user has requested higher contrast. When this preference is detected, contrast ratios are increased for better readability.
+
+```css
+/* Base styling */
+.card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+/* High contrast mode */
+@media (prefers-contrast: more) {
+  .card {
+    background-color: var(--color-card-high-contrast);
+    border: 2px solid var(--color-border-high-contrast);
+  }
+}
+```
+
+#### Implementation Details
+
+- **CSS Variables**: Additional high-contrast color variables are defined with stronger contrast ratios
+- **Class Toggle**: A `high-contrast` class is added to the body element when high contrast is preferred
+- **JavaScript Detection**: The application detects the preference using `window.matchMedia('(prefers-contrast: more)').matches`
+- **User Override**: Users can override their system preference in the accessibility settings
+
+#### Affected Elements
+
+- Text and background colors
+- Border colors and widths
+- Button styles
+- Form controls
+- Charts and visualizations
+- Icons and decorative elements
+
+### Print Styles
+
+Print-specific styles are implemented to ensure that printed content is optimized for readability and ink usage.
+
+```css
+/* Print styles */
 @media print {
-  /* Hide non-essential elements */
-  header, footer, nav, .no-print {
+  .print-hidden {
     display: none !important;
   }
   
-  /* Ensure page breaks don't happen inside elements */
-  .transaction-item, .budget-card {
-    page-break-inside: avoid;
-  }
-}
-```
-
-### 2. Reduced Motion Preferences
-
-Support for the `prefers-reduced-motion` media query has been implemented to accommodate users who experience motion sickness or are distracted by animations.
-
-Key features:
-- Disabled or significantly reduced animations
-- Eliminated transitions that could cause discomfort
-- Static alternatives for animated components
-- Preserved functionality without motion effects
-
-**Usage Example:**
-```css
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
+  .print-expanded {
+    display: block !important;
   }
   
-  .chart-animation, .shimmer {
-    animation: none !important;
-  }
-}
-```
-
-### 3. High Contrast Mode
-
-Support for the `prefers-contrast: more` media query has been implemented to improve visibility for users with visual impairments.
-
-Key features:
-- Enhanced contrast between text and background
-- Stronger borders and visual indicators
-- Clear focus states
-- Improved color differentiation for charts and data visualizations
-
-**Usage Example:**
-```css
-@media (prefers-contrast: more) {
   body {
-    color: black !important;
     background-color: white !important;
-  }
-  
-  [data-theme="dark"] body {
-    color: white !important;
-    background-color: black !important;
-  }
-  
-  button, input, .card {
-    border: 1px solid currentColor !important;
+    color: black !important;
   }
 }
 ```
 
-### 4. Screen Reader Support
+#### Implementation Details
 
-Improvements for screen reader users have been implemented to ensure the application is accessible to users with visual impairments.
+- **Print-Only Classes**: Classes like `print:hidden` and `print:block` control visibility in print mode
+- **Color Optimization**: Colors are simplified to optimize for black and white printing
+- **Layout Adjustments**: Page layouts are adjusted to be more suitable for printed media
+- **Font Adjustments**: Font sizes and styles are optimized for print readability
 
-Key features:
-- Skip-to-content link for keyboard navigation
-- Proper ARIA attributes for interactive elements
-- Screen reader only text for visual elements
-- Focus management for modals and dialogs
+#### Affected Elements
 
-**Usage Example:**
+- Financial reports
+- Transaction lists
+- Budget summaries
+- Charts and graphs (simplified versions)
+- Navigation and UI controls (hidden in print)
+
+### Color Scheme Preference
+
+The `prefers-color-scheme` media query is used to detect the user's preferred color scheme (light or dark) at the system level.
+
 ```css
-.sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border-width: 0 !important;
+/* Default light theme */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
 }
 
-.skip-to-content {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: var(--color-primary);
-  color: var(--color-primary-foreground);
-  padding: 8px;
-  z-index: 100;
-  transition: top 0.2s;
-}
-
-.skip-to-content:focus {
-  top: 0;
+/* Dark theme based on system preference */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
 }
 ```
 
-## Testing
+#### Implementation Details
 
-The implementation includes comprehensive testing to ensure accessibility features work correctly:
+- **Theme System Integration**: The system preference is used when the user selects the "System" theme option
+- **JavaScript Detection**: The application detects the preference using `window.matchMedia('(prefers-color-scheme: dark)').matches`
+- **Real-Time Updates**: The application listens for changes to the system preference and updates accordingly
+- **User Override**: Users can override their system preference by explicitly selecting light or dark theme
 
-1. **Automated Tests**: Unit tests for media query functionality
-2. **Manual Testing**: Visual verification of print styles and media query effects
-3. **Screen Reader Testing**: Verification with popular screen readers (NVDA, VoiceOver)
-4. **Browser Compatibility**: Testing across Chrome, Firefox, Safari, and Edge
+## Testing Accessibility Media Queries
 
-## Usage Guidelines
+### Manual Testing
 
-### For Developers
+1. **Reduced Motion**: Enable "Reduce motion" in your operating system accessibility settings and verify that animations are reduced or eliminated
+2. **High Contrast**: Enable "Increase contrast" in your operating system accessibility settings and verify that contrast is improved
+3. **Print Preview**: Use browser print preview to verify that print styles are applied correctly
+4. **Color Scheme**: Switch between light and dark mode in your operating system and verify that the application respects this preference when set to "System" theme
 
-When developing new components or pages:
+### Automated Testing
 
-1. **Print Styles**: 
-   - Use the `no-print` class to hide non-essential elements
-   - Use the `print-only` class for elements that should only appear when printing
-   - Test print output using browser print preview
+The application includes automated tests for accessibility media queries:
 
-2. **Motion Sensitivity**:
-   - Avoid adding unnecessary animations
-   - Ensure all animations respect the reduced motion preference
-   - Test with the reduced motion setting enabled
+1. **Simulation Tests**: Tests that simulate media query matches using JavaScript
+2. **Class Application Tests**: Tests that verify the correct classes are applied based on media queries
+3. **Visual Regression Tests**: Tests that capture screenshots with different media query settings
+4. **CSS Variable Tests**: Tests that verify CSS variables are updated correctly based on media queries
 
-3. **High Contrast**:
-   - Avoid relying solely on color to convey information
-   - Test components in high contrast mode
-   - Ensure sufficient contrast ratios for text and UI elements
+## Best Practices for Developers
 
-4. **Screen Readers**:
-   - Use semantic HTML elements
-   - Add appropriate ARIA attributes
-   - Include screen reader text for visual elements using the `sr-only` class
-   - Test with a screen reader
+When working with accessibility media queries, follow these best practices:
 
-### For Users
+1. **Always provide non-animated alternatives** for motion effects
+2. **Test with actual assistive technologies** whenever possible
+3. **Use CSS variables** to manage theme and contrast variations
+4. **Avoid hard-coded colors** that might override user preferences
+5. **Test print styles** with different types of content
+6. **Respect user preferences** but provide options to override them
+7. **Combine media queries with feature detection** for the best compatibility
 
-Users can benefit from these accessibility features in the following ways:
+## Browser Support
 
-1. **Printing**: Use the browser's print function to generate clean, readable printouts of financial reports
-2. **Motion Sensitivity**: Enable reduced motion in your operating system settings
-3. **High Contrast**: Enable high contrast mode in your operating system settings
-4. **Screen Readers**: Use the skip-to-content link to bypass navigation and go directly to the main content
+| Browser | prefers-reduced-motion | prefers-contrast | prefers-color-scheme | print |
+|---------|------------------------|------------------|----------------------|-------|
+| Chrome  | ✅ 74+                 | ✅ 96+           | ✅ 76+               | ✅ All |
+| Firefox | ✅ 63+                 | ✅ 101+          | ✅ 67+               | ✅ All |
+| Safari  | ✅ 10.1+               | ✅ 15.4+         | ✅ 12.1+             | ✅ All |
+| Edge    | ✅ 79+                 | ✅ 96+           | ✅ 79+               | ✅ All |
 
-## Future Enhancements
+For browsers that don't support certain media queries, the application provides JavaScript-based fallbacks and user preference settings.
 
-Potential future improvements to accessibility features:
+## Conclusion
 
-1. **Print Templates**: Dedicated print templates for financial reports and statements
-2. **Custom Motion Settings**: In-app controls for animation speed and effects
-3. **Theme Customization**: Additional contrast and color options beyond light/dark
-4. **Keyboard Navigation**: Enhanced keyboard shortcuts and navigation patterns
+By implementing and properly testing these accessibility media queries, the Maybe finance application ensures a better experience for all users, including those with specific accessibility needs. These implementations help the application meet WCAG 2.1 AA standards and provide a more inclusive user experience.

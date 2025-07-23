@@ -1,208 +1,189 @@
 # Responsive Design Manual Test Script
 
-## Introduction
+## Overview
 
-This document provides a step-by-step manual testing script to verify that the Maybe finance application works properly across all device sizes. Follow these instructions to test the responsive design implementation.
+This test script provides step-by-step instructions for manually testing the responsive design of modernized pages across different device sizes and orientations. Follow these instructions to verify that all pages adapt correctly to different viewport sizes and provide a consistent user experience.
 
-## Prerequisites
+## Test Environment Setup
 
-- Access to the following devices or device emulators:
-  - Mobile phone (iPhone or Android)
-  - Tablet (iPad or Android tablet)
-  - Desktop computer
-- Latest versions of Chrome, Safari, and Firefox browsers
-- Test user account with sample data
+### Required Devices/Emulators
+- Desktop computer (1920×1080 or higher resolution)
+- Tablet device or emulator (iPad or similar, 768×1024)
+- Mobile device or emulator (iPhone or similar, 375×667)
+
+### Browsers to Test
+- Chrome (desktop and mobile)
+- Safari (desktop and mobile)
+- Firefox (desktop)
+
+### Device Orientations
+- Portrait (default for mobile and tablet)
+- Landscape (rotated mobile and tablet)
 
 ## Test Procedure
 
-### 1. Dashboard Page Testing
+### 1. Dashboard Page Tests
 
-#### Mobile Device (Portrait)
-1. Open the application on a mobile device in portrait orientation
-2. Log in with test credentials
-3. Verify that:
-   - Header is properly sized and contains essential navigation
-   - Dashboard cards stack vertically with proper spacing
-   - Charts are properly sized and readable
-   - No horizontal scrolling is required
-   - All interactive elements have adequate touch targets (min 44px)
-   - Text is readable without zooming
+#### Desktop View (1920×1080)
+1. Navigate to the dashboard page
+2. Verify that the layout uses the full width of the screen appropriately
+3. Verify that charts and cards are arranged in a multi-column grid
+4. Verify that all dashboard elements are visible without scrolling (except for intentionally scrollable areas)
+5. Toggle between light and dark themes and verify appearance
 
-#### Mobile Device (Landscape)
-1. Rotate the device to landscape orientation
-2. Verify that:
-   - Layout adjusts appropriately to landscape orientation
-   - Content is still accessible without scrolling horizontally
-   - Charts and cards adapt to the wider viewport
-   - Navigation remains accessible
+#### Tablet View (768×1024)
+1. Navigate to the dashboard page
+2. Verify that the layout adapts to the smaller screen size
+3. Verify that charts and cards are arranged in a 2-column grid
+4. Verify that all important information is visible without excessive scrolling
+5. Rotate to landscape orientation and verify layout adjusts appropriately
+6. Toggle between light and dark themes and verify appearance
 
-#### Tablet Device
-1. Open the application on a tablet
-2. Log in with test credentials
-3. Verify in both portrait and landscape orientations:
-   - Dashboard displays a grid layout appropriate for tablet size
-   - Charts utilize available space effectively
-   - Navigation is appropriate for tablet size
-   - Touch targets are properly sized
+#### Mobile View (375×667)
+1. Navigate to the dashboard page
+2. Verify that the layout adapts to the mobile screen size
+3. Verify that charts and cards are stacked in a single column
+4. Verify that navigation is accessible (hamburger menu or similar)
+5. Verify that all content is readable without zooming
+6. Rotate to landscape orientation and verify layout adjusts appropriately
+7. Toggle between light and dark themes and verify appearance
 
-#### Desktop Device
-1. Open the application on a desktop browser
-2. Log in with test credentials
-3. Verify that:
-   - Dashboard utilizes the full screen width effectively
-   - Multi-column layout for cards and charts
-   - Hover states work correctly on interactive elements
-   - Navigation shows full menu options
+### 2. Transactions Page Tests
 
-### 2. Transactions Page Testing
+#### Desktop View (1920×1080)
+1. Navigate to the transactions page
+2. Verify that the transaction list displays with all columns visible
+3. Verify that filters and search are easily accessible
+4. Verify that pagination controls are visible and functional
+5. Click on a transaction and verify details display correctly
+6. Toggle between light and dark themes and verify appearance
 
-#### Mobile Device (Portrait)
-1. Navigate to the Transactions page
-2. Verify that:
-   - Transaction list is readable and properly formatted
-   - Filters and search are accessible
-   - Transaction details can be viewed without horizontal scrolling
-   - Touch targets for actions are large enough
+#### Tablet View (768×1024)
+1. Navigate to the transactions page
+2. Verify that the transaction list adapts to the smaller screen size
+3. Verify that less important columns are hidden or collapsed
+4. Verify that filters and search remain accessible
+5. Click on a transaction and verify details display correctly
+6. Rotate to landscape orientation and verify layout adjusts appropriately
+7. Toggle between light and dark themes and verify appearance
 
-#### Mobile Device (Landscape)
-1. Rotate the device to landscape orientation
-2. Verify that:
-   - More transaction information is visible in landscape
-   - Filters and actions remain accessible
-   - No horizontal scrolling is required
+#### Mobile View (375×667)
+1. Navigate to the transactions page
+2. Verify that the transaction list is optimized for mobile viewing
+3. Verify that only essential information is shown for each transaction
+4. Verify that filters and search are accessible but don't take up too much space
+5. Verify that touch targets are large enough (at least 44×44 pixels)
+6. Click on a transaction and verify details display correctly
+7. Rotate to landscape orientation and verify layout adjusts appropriately
+8. Toggle between light and dark themes and verify appearance
 
-#### Tablet Device
-1. Navigate to the Transactions page on a tablet
-2. Verify in both portrait and landscape orientations:
-   - Transaction list shows appropriate columns for tablet size
-   - Filters and search are easily accessible
-   - Transaction details display properly
+### 3. Budgets Page Tests
 
-#### Desktop Device
-1. Navigate to the Transactions page on desktop
-2. Verify that:
-   - Full transaction table is visible with all columns
-   - Filters and search are easily accessible
-   - Hover states work correctly on interactive elements
+#### Desktop View (1920×1080)
+1. Navigate to the budgets page
+2. Verify that budget cards display in a multi-column grid
+3. Verify that progress bars and budget information are clearly visible
+4. Click on a budget and verify details display correctly
+5. Test budget creation/editing functionality
+6. Toggle between light and dark themes and verify appearance
 
-### 3. Budgets Page Testing
+#### Tablet View (768×1024)
+1. Navigate to the budgets page
+2. Verify that budget cards adapt to the smaller screen size
+3. Verify that all important budget information remains visible
+4. Click on a budget and verify details display correctly
+5. Test budget creation/editing functionality
+6. Rotate to landscape orientation and verify layout adjusts appropriately
+7. Toggle between light and dark themes and verify appearance
 
-#### Mobile Device (Portrait)
-1. Navigate to the Budgets page
-2. Verify that:
-   - Budget categories stack vertically with proper spacing
-   - Progress bars are readable and properly sized
-   - Budget forms are usable on small screens
-   - Touch targets for actions are large enough
+#### Mobile View (375×667)
+1. Navigate to the budgets page
+2. Verify that budget cards stack in a single column
+3. Verify that all budget information is readable without zooming
+4. Verify that touch targets are large enough
+5. Click on a budget and verify details display correctly
+6. Test budget creation/editing functionality
+7. Rotate to landscape orientation and verify layout adjusts appropriately
+8. Toggle between light and dark themes and verify appearance
 
-#### Mobile Device (Landscape)
-1. Rotate the device to landscape orientation
-2. Verify that:
-   - Budget layout adjusts appropriately
-   - More budget categories are visible if applicable
-   - Forms remain usable in landscape orientation
+### 4. Settings Page Tests
 
-#### Tablet Device
-1. Navigate to the Budgets page on a tablet
-2. Verify in both portrait and landscape orientations:
-   - Budget categories display in an appropriate grid layout
-   - Progress bars are properly sized
-   - Budget forms utilize space effectively
+#### Desktop View (1920×1080)
+1. Navigate to the settings page
+2. Verify that settings navigation is displayed on the left side
+3. Verify that settings content is displayed on the right side
+4. Test various settings controls (toggles, dropdowns, etc.)
+5. Verify that theme switching works correctly
+6. Toggle between light and dark themes and verify appearance
 
-#### Desktop Device
-1. Navigate to the Budgets page on desktop
-2. Verify that:
-   - Budget categories display in a multi-column grid
-   - Progress bars are properly sized
-   - Budget forms utilize space effectively
-   - Hover states work correctly on interactive elements
+#### Tablet View (768×1024)
+1. Navigate to the settings page
+2. Verify that settings layout adapts to the smaller screen size
+3. Verify that navigation remains accessible
+4. Test various settings controls
+5. Verify that theme switching works correctly
+6. Rotate to landscape orientation and verify layout adjusts appropriately
+7. Toggle between light and dark themes and verify appearance
 
-### 4. Settings Page Testing
+#### Mobile View (375×667)
+1. Navigate to the settings page
+2. Verify that settings navigation collapses to a dropdown or tabs
+3. Verify that settings content is stacked vertically
+4. Verify that all form controls are large enough for touch input
+5. Test various settings controls
+6. Verify that theme switching works correctly
+7. Rotate to landscape orientation and verify layout adjusts appropriately
+8. Toggle between light and dark themes and verify appearance
 
-#### Mobile Device (Portrait)
-1. Navigate to the Settings page
-2. Verify that:
-   - Settings categories are accessible via tabs or accordion
-   - Form controls are usable on small screens
-   - Toggle switches and checkboxes are large enough
-   - Theme switcher works properly
+### 5. Touch Interaction Tests (Mobile and Tablet)
 
-#### Mobile Device (Landscape)
-1. Rotate the device to landscape orientation
-2. Verify that:
-   - Settings layout adjusts appropriately
-   - Forms remain usable in landscape orientation
-   - No content is cut off or requires horizontal scrolling
+1. Verify that all buttons and links have touch targets of at least 44×44 pixels
+2. Verify that there is adequate spacing between touch targets
+3. Test swipe gestures if implemented
+4. Verify that hover states are properly translated to touch states
+5. Test form inputs for touch-friendly behavior
+6. Verify that dropdowns and menus are easy to use with touch
 
-#### Tablet Device
-1. Navigate to the Settings page on a tablet
-2. Verify in both portrait and landscape orientations:
-   - Settings display in an appropriate layout for tablet
-   - Form controls utilize space effectively
-   - Toggle switches and checkboxes are properly sized
+### 6. Keyboard Navigation Tests (Desktop)
 
-#### Desktop Device
-1. Navigate to the Settings page on desktop
-2. Verify that:
-   - Settings display in optimal layout with sidebar navigation
-   - Form controls utilize space effectively
-   - Hover states work correctly on interactive elements
+1. Navigate through each page using only the Tab key
+2. Verify that focus order is logical and follows visual layout
+3. Verify that focus indicators are clearly visible in both themes
+4. Test keyboard shortcuts if implemented
+5. Verify that all interactive elements can be activated with keyboard
 
-### 5. Touch Interaction Testing
+### 7. Screen Size Transition Tests
 
-#### Basic Touch Interactions
-1. On a mobile device, test the following interactions:
-   - Tap buttons and verify they respond properly
-   - Tap form fields and verify they activate properly
-   - Open and close dropdowns
-   - Toggle checkboxes and radio buttons
-   - Operate toggle switches
+1. Use browser developer tools to gradually resize from desktop to mobile
+2. Note the breakpoints where layout changes occur
+3. Verify that layout transitions smoothly between breakpoints
+4. Verify that no content becomes inaccessible at any viewport size
+5. Verify that text remains readable at all sizes without zooming
 
-#### Advanced Touch Interactions
-1. If implemented, test the following interactions:
-   - Swipe gestures (e.g., for navigation or dismissing items)
-   - Pinch-to-zoom on charts
-   - Drag-and-drop interactions
-   - Long-press actions
+## Reporting Issues
 
-### 6. Text Scaling Testing
+For each issue found, document the following:
 
-1. On each device, go to the browser settings and increase the font size to 200%
-2. Navigate through the application and verify that:
-   - Text remains readable
-   - Layouts adapt to larger text sizes
-   - No content is cut off or overlapping
-   - Interactive elements remain usable
+1. **Page**: Which page the issue occurs on
+2. **Device/Viewport**: The device or viewport size where the issue occurs
+3. **Orientation**: Portrait or landscape
+4. **Browser**: Which browser and version
+5. **Theme**: Light or dark theme
+6. **Description**: Clear description of the issue
+7. **Screenshots**: Visual evidence of the issue
+8. **Severity**: Critical, Major, Minor, or Cosmetic
+9. **Steps to Reproduce**: Detailed steps to reproduce the issue
 
-### 7. Orientation Change Testing
+## Test Results Summary
 
-1. On mobile and tablet devices, test the following:
-   - Open each main page (Dashboard, Transactions, Budgets, Settings)
-   - Rotate the device between portrait and landscape orientations
-   - Verify that the transition is smooth
-   - Verify that no content is lost or cut off after rotation
-   - Verify that interactive elements remain accessible
+| Page | Desktop | Tablet (Portrait) | Tablet (Landscape) | Mobile (Portrait) | Mobile (Landscape) |
+|------|---------|-------------------|-------------------|-------------------|-------------------|
+| Dashboard |  |  |  |  |  |
+| Transactions |  |  |  |  |  |
+| Budgets |  |  |  |  |  |
+| Settings |  |  |  |  |  |
 
-## Test Results Documentation
-
-For each test scenario, document the following:
-
-- Pass/Fail status
-- Any issues encountered
-- Screenshots of issues (if applicable)
-- Browser and device information
-
-Use the following format:
-
-```
-Test: [Test Name]
-Device: [Device Name]
-Browser: [Browser Name and Version]
-Orientation: [Portrait/Landscape]
-Status: [Pass/Fail]
-Issues: [Description of any issues]
-```
-
-## Conclusion
-
-After completing all tests, summarize the findings and identify any patterns or common issues that need to be addressed. Prioritize issues based on their impact on user experience and the requirements of the UI/UX modernization project.
+Use the following ratings:
+- ✅ Pass: No issues found
+- ⚠️ Minor: Minor visual or functional issues that don't impact usability
+- ❌ Fail: Significant issues that impact usability or functionality

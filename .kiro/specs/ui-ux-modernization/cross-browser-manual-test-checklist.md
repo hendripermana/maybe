@@ -1,184 +1,205 @@
-# Cross-Browser and Responsive Design Manual Test Checklist
+# Cross-Browser Manual Test Checklist
 
-## Instructions
-Use this checklist to manually verify responsive design across different devices and browsers. Mark each item as:
-- ✅ Pass: Works as expected
-- ⚠️ Minor Issue: Works but has minor visual or functional issues
-- ❌ Fail: Does not work properly or has major issues
-- N/A: Not applicable
+## Overview
 
-## Device Matrix
+This checklist provides a structured approach for manually testing the modernized UI/UX across different browsers. Use this checklist to verify that all pages display and function correctly across all supported browsers.
 
-| Page/Feature | Chrome Mobile | Safari Mobile | Chrome Tablet | Safari Tablet | Chrome Desktop | Firefox Desktop | Safari Desktop | Edge Desktop |
-|--------------|---------------|---------------|---------------|---------------|----------------|----------------|----------------|--------------|
-| Dashboard    |               |               |               |               |                |                |                |              |
-| Transactions |               |               |               |               |                |                |                |              |
-| Budgets      |               |               |               |               |                |                |                |              |
-| Settings     |               |               |               |               |                |                |                |              |
+## Browsers to Test
 
-## Detailed Checklist
+- [ ] Chrome (latest version)
+- [ ] Firefox (latest version)
+- [ ] Safari (latest version)
+- [ ] Edge (latest version)
+- [ ] Mobile Safari (iOS)
+- [ ] Chrome for Android
 
-### Dashboard Page
+## Dashboard Page
 
-#### Mobile (320px - 639px)
-- [ ] Header displays correctly
-- [ ] Navigation menu is accessible (hamburger menu)
-- [ ] Charts are properly sized and readable
-- [ ] Cards stack vertically with proper spacing
-- [ ] Touch targets are large enough (min 44px)
-- [ ] Landscape orientation displays content properly
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+### Layout and Appearance
+- [ ] Page layout is consistent across browsers
+- [ ] Charts render correctly
+- [ ] Card components display with proper spacing and shadows
+- [ ] Icons render correctly
+- [ ] Typography is consistent
 
-#### Tablet (640px - 1023px)
-- [ ] Header displays correctly
-- [ ] Navigation is appropriate for tablet size
-- [ ] Charts are properly sized and readable
-- [ ] Cards display in appropriate grid layout
-- [ ] Touch targets are properly sized
-- [ ] Landscape orientation optimizes space usage
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+### Theme Switching
+- [ ] Light theme displays correctly
+- [ ] Dark theme displays correctly
+- [ ] Theme switching works properly
+- [ ] No hardcoded colors visible in either theme
 
-#### Desktop (1024px+)
-- [ ] Header displays correctly
-- [ ] Full navigation is visible
-- [ ] Charts utilize available space effectively
-- [ ] Cards display in multi-column grid
-- [ ] Hover states work correctly
-- [ ] No unnecessary empty space
-- [ ] No horizontal scrolling required
-- [ ] Text is readable and properly sized
+### Functionality
+- [ ] Chart interactions work (hover, click)
+- [ ] Fullscreen modal works for charts
+- [ ] Data loads and displays correctly
+- [ ] All buttons and links function properly
 
-### Transactions Page
+### Responsive Behavior
+- [ ] Layout adapts correctly to different screen sizes
+- [ ] Touch interactions work on mobile browsers
+- [ ] No horizontal scrolling on mobile devices
 
-#### Mobile (320px - 639px)
-- [ ] Transaction list is readable
-- [ ] Filters/search are accessible
-- [ ] Transaction details are accessible
-- [ ] Forms are usable on small screens
-- [ ] Touch targets for actions are large enough
-- [ ] Landscape orientation displays content properly
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+## Transactions Page
 
-#### Tablet (640px - 1023px)
-- [ ] Transaction list displays appropriate columns
-- [ ] Filters/search are easily accessible
-- [ ] Transaction details display properly
-- [ ] Forms utilize space effectively
-- [ ] Touch targets are properly sized
-- [ ] Landscape orientation optimizes space usage
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+### Layout and Appearance
+- [ ] Transaction list displays correctly
+- [ ] Filter components render properly
+- [ ] Search input displays correctly
+- [ ] Transaction items have consistent styling
 
-#### Desktop (1024px+)
-- [ ] Transaction table shows all relevant columns
-- [ ] Filters/search are easily accessible
-- [ ] Transaction details display properly
-- [ ] Forms utilize space effectively
-- [ ] Hover states work correctly
-- [ ] No unnecessary empty space
-- [ ] No horizontal scrolling required
-- [ ] Text is readable and properly sized
+### Theme Switching
+- [ ] Light theme displays correctly
+- [ ] Dark theme displays correctly
+- [ ] Theme switching works properly
+- [ ] No hardcoded colors visible in either theme
 
-### Budgets Page
+### Functionality
+- [ ] Transaction search works
+- [ ] Filters function correctly
+- [ ] Transaction details can be viewed
+- [ ] Pagination works properly
+- [ ] Transaction editing works
 
-#### Mobile (320px - 639px)
-- [ ] Budget categories stack properly
-- [ ] Progress bars are readable
-- [ ] Budget forms are usable on small screens
-- [ ] Touch targets for actions are large enough
-- [ ] Landscape orientation displays content properly
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+### Responsive Behavior
+- [ ] Layout adapts correctly to different screen sizes
+- [ ] Touch interactions work on mobile browsers
+- [ ] Column prioritization works on small screens
 
-#### Tablet (640px - 1023px)
-- [ ] Budget categories display in appropriate grid
-- [ ] Progress bars are properly sized
-- [ ] Budget forms utilize space effectively
-- [ ] Touch targets are properly sized
-- [ ] Landscape orientation optimizes space usage
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+## Budgets Page
 
-#### Desktop (1024px+)
-- [ ] Budget categories display in multi-column grid
-- [ ] Progress bars are properly sized
-- [ ] Budget forms utilize space effectively
-- [ ] Hover states work correctly
-- [ ] No unnecessary empty space
-- [ ] No horizontal scrolling required
-- [ ] Text is readable and properly sized
+### Layout and Appearance
+- [ ] Budget cards display correctly
+- [ ] Progress bars render properly
+- [ ] Budget categories display with correct styling
+- [ ] Budget summary information is properly formatted
 
-### Settings Page
+### Theme Switching
+- [ ] Light theme displays correctly
+- [ ] Dark theme displays correctly
+- [ ] Theme switching works properly
+- [ ] No hardcoded colors visible in either theme
 
-#### Mobile (320px - 639px)
-- [ ] Settings categories are accessible
-- [ ] Form controls are usable on small screens
-- [ ] Toggle switches and checkboxes are large enough
-- [ ] Theme switcher works properly
-- [ ] Landscape orientation displays content properly
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+### Functionality
+- [ ] Budget creation works
+- [ ] Budget editing works
+- [ ] Category management functions properly
+- [ ] Progress bars reflect correct values
 
-#### Tablet (640px - 1023px)
-- [ ] Settings display in appropriate layout
-- [ ] Form controls utilize space effectively
-- [ ] Toggle switches and checkboxes are properly sized
-- [ ] Theme switcher works properly
-- [ ] Landscape orientation optimizes space usage
-- [ ] No horizontal scrolling required
-- [ ] Text is readable without zooming
+### Responsive Behavior
+- [ ] Layout adapts correctly to different screen sizes
+- [ ] Touch interactions work on mobile browsers
+- [ ] Budget cards stack properly on small screens
 
-#### Desktop (1024px+)
-- [ ] Settings display in optimal layout
-- [ ] Form controls utilize space effectively
-- [ ] Toggle switches and checkboxes are properly sized
-- [ ] Theme switcher works properly
-- [ ] Hover states work correctly
-- [ ] No unnecessary empty space
-- [ ] No horizontal scrolling required
-- [ ] Text is readable and properly sized
+## Settings Page
 
-## Touch Interaction Tests
+### Layout and Appearance
+- [ ] Settings navigation displays correctly
+- [ ] Form controls render properly
+- [ ] Toggle switches display correctly
+- [ ] Theme selector displays properly
 
-### Basic Touch Interactions
-- [ ] Buttons respond properly to taps
-- [ ] Form fields activate properly on touch
-- [ ] Dropdowns open and close properly
-- [ ] Checkboxes and radio buttons toggle correctly
-- [ ] Toggle switches respond to touch
+### Theme Switching
+- [ ] Light theme displays correctly
+- [ ] Dark theme displays correctly
+- [ ] Theme switching works properly
+- [ ] No hardcoded colors visible in either theme
 
-### Advanced Touch Interactions
-- [ ] Swipe gestures work if implemented
-- [ ] Charts respond to touch interactions
-- [ ] Drag-and-drop works if implemented
-- [ ] Long-press actions work if implemented
-- [ ] Touch and hold actions work if implemented
+### Functionality
+- [ ] Theme selection works
+- [ ] Language selection works
+- [ ] Accessibility preferences can be changed
+- [ ] Settings are saved correctly
 
-## Orientation Change Tests
+### Responsive Behavior
+- [ ] Layout adapts correctly to different screen sizes
+- [ ] Touch interactions work on mobile browsers
+- [ ] Settings navigation collapses properly on small screens
 
-### Mobile Devices
-- [ ] Portrait to landscape transition is smooth
-- [ ] Content reflows appropriately in landscape
-- [ ] No content is cut off in either orientation
-- [ ] Interactive elements remain accessible
-- [ ] Fixed elements (headers, footers) position correctly
+## Accessibility Features
 
-### Tablet Devices
-- [ ] Portrait to landscape transition is smooth
-- [ ] Layout optimizes for landscape orientation
-- [ ] Sidebar/navigation adapts to orientation
-- [ ] No content is cut off in either orientation
-- [ ] Interactive elements remain accessible
+### Keyboard Navigation
+- [ ] Tab order is logical and consistent
+- [ ] Focus indicators are visible in all browsers
+- [ ] All interactive elements can be accessed via keyboard
 
-## Issues and Notes
+### Screen Reader Compatibility
+- [ ] ARIA attributes are interpreted correctly
+- [ ] Screen reader announcements are appropriate
+- [ ] Form labels are properly associated with inputs
 
-Use this section to document any issues found during testing:
+### High Contrast Mode
+- [ ] High contrast mode displays correctly
+- [ ] Text remains readable in high contrast mode
+- [ ] Interactive elements remain distinguishable
 
-| Issue | Device/Browser | Severity | Description |
-|-------|---------------|----------|-------------|
-|       |               |          |             |
-|       |               |          |             |
-|       |               |          |             |
+### Reduced Motion
+- [ ] Animations are reduced or disabled when preference is set
+- [ ] No motion-sensitive content causes issues
+
+## Special Media Queries
+
+### Print Styles
+- [ ] Print preview displays correctly
+- [ ] Unnecessary elements are hidden in print view
+- [ ] Financial reports print in a readable format
+
+### Prefers Color Scheme
+- [ ] System theme preference is respected
+- [ ] Theme changes when system preference changes
+
+## Browser-Specific Issues
+
+### Chrome
+- [ ] Note any Chrome-specific issues here
+
+### Firefox
+- [ ] Note any Firefox-specific issues here
+
+### Safari
+- [ ] Note any Safari-specific issues here
+
+### Edge
+- [ ] Note any Edge-specific issues here
+
+### Mobile Safari
+- [ ] Note any Mobile Safari-specific issues here
+
+### Chrome for Android
+- [ ] Note any Chrome for Android-specific issues here
+
+## Performance
+
+### Load Time
+- [ ] Pages load within acceptable time across browsers
+- [ ] No significant performance differences between browsers
+
+### Animations and Transitions
+- [ ] Animations play smoothly across browsers
+- [ ] No jank or stuttering in transitions
+
+### Memory Usage
+- [ ] No memory leaks observed during extended use
+- [ ] Performance remains consistent over time
+
+## Instructions for Testers
+
+1. Use this checklist for each browser being tested
+2. Mark items as passed (✓), failed (✗), or not applicable (N/A)
+3. For failed items, provide detailed notes including:
+   - Browser version
+   - Operating system
+   - Steps to reproduce
+   - Expected vs. actual behavior
+   - Screenshots if possible
+4. Submit completed checklists to the development team for review
+
+## Test Results Summary
+
+| Browser | Version | OS | Tester | Date | Status |
+|---------|---------|-------|--------|------|--------|
+| Chrome  |         |       |        |      |        |
+| Firefox |         |       |        |      |        |
+| Safari  |         |       |        |      |        |
+| Edge    |         |       |        |      |        |
+| Mobile Safari |   |       |        |      |        |
+| Chrome for Android | |    |        |      |        |
