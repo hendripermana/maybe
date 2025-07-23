@@ -18,3 +18,9 @@ run_security_health_checks:
   class: "SecurityHealthCheckJob"
   queue: "scheduled"
   description: "Runs security health checks to detect issues with security data"
+
+ui_monitoring_alerts:
+  cron: "0 */4 * * *" # Every 4 hours
+  class: "UiMonitoringAlertJob"
+  queue: "scheduled"
+  description: "Analyzes UI monitoring data and sends alerts for accessibility or performance regressions"

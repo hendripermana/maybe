@@ -21,6 +21,15 @@ Rails.application.routes.draw do
 
   # Performance metrics
   post "performance/metrics", to: "performance_metrics#create"
+  
+  # UI/UX Monitoring
+  namespace :monitoring do
+    post "ui_error", to: "monitoring#ui_error"
+    post "performance_metric", to: "monitoring#performance_metric"
+    post "ui_event", to: "monitoring#ui_event"
+    post "performance_issue", to: "monitoring#performance_issue"
+    post "user_feedback", to: "monitoring#user_feedback"
+  end
 
   # Uses basic auth - see config/initializers/sidekiq.rb
   mount Sidekiq::Web => "/sidekiq"

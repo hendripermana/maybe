@@ -1,0 +1,48 @@
+<%# UI Monitoring Components %>
+<div data-controller="theme-monitor" class="hidden">
+  <%# Hidden container for theme monitoring %>
+</div>
+
+<% if current_user && !Rails.env.test? %>
+  <%= feedback_form %>
+<% end %>
+
+<%# Add Sentry browser monitoring if configured %>
+<% if ENV["SENTRY_DSN"].present? && !Rails.env.development? && !Rails.env.test? %>
+  <script src="https://browser.sentry-cdn.com/7.64.0/bundle.min.js" integrity="sha384-2KWrS1A8CmYrDlHAHpOsj9X7Z9yCjwZBr9VeTe9R7XPEmjU/LGLJhnfJIHZSF40" crossorigin="anonymous"></script>
+  <script>
+    Sentry.init({
+      dsn: "<%= ENV["SENTRY_DSN"] %>",
+      environment: "<%= Rails.env %>",
+      tracesSampleRate: 0.1,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+      
+      // Add UI/UX specific tags
+      defaultIntegrations: false,
+      integrations: [
+        new Sentry.BrowserTracing({
+          tracePropagationTargets: ["localhost", "<%= request.host %>"]
+        }),
+        new Sentry.Replay({
+          maskAllText: true,
+          blockAllMedia: true,
+        })
+      ],
+      
+      // Add theme information to all events
+      beforeSend(event) {
+        event.tags = event.tags || {};
+        event.tags.theme = document.documentElement.dataset.theme || 'light';
+        return event;
+      }
+    });
+    
+    <% if current_user %>
+      Sentry.setUser({
+        id: "<%= current_user.id %>",
+        email: "<%= current_user.email %>"
+      });
+    <% end %>
+  </script>
+<% end %>
