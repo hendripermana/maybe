@@ -1,15 +1,43 @@
-<%
-  header_title t(".title")
-%>
+<%= render Ui::CardComponent.new(
+  title: t(".title"),
+  variant: :elevated,
+  size: :lg,
+  class: "max-w-md mx-auto mt-8"
+) do %>
+  <%= render Ui::FormComponent.new(url: sessions_path, method: :post, html_options: { data: { turbo: false } }) do |form| %>
+    <%= render Ui::FormFieldComponent.new(form: form, field: :email, label: t(".email"), required: true) do %>
+      <%= render Ui::InputComponent.new(
+        form: form,
+        field: :email,
+        type: :email,
+        placeholder: t(".email_placeholder"),
+        autocomplete: "email",
+        required: true
+      ) %>
+    <% end %>
 
-<%= styled_form_with url: sessions_path, class: "space-y-4", data: { turbo: false } do |form| %>
-  <%= form.email_field :email, label: t(".email"), autofocus: false, autocomplete: "email", required: "required", placeholder: t(".email_placeholder") %>
+    <%= render Ui::FormFieldComponent.new(form: form, field: :password, label: t(".password"), required: true) do %>
+      <%= render Ui::InputComponent.new(
+        form: form,
+        field: :password,
+        type: :password,
+        placeholder: t(".password_placeholder"),
+        autocomplete: "current-password",
+        required: true
+      ) %>
+    <% end %>
 
-  <%= form.password_field :password, label: t(".password"), required: "required", placeholder: t(".password_placeholder") %>
+    <% form.with_actions do %>
+      <%= render Ui::ButtonComponent.new(
+        text: t(".submit"),
+        variant: :primary,
+        type: "submit",
+        full_width: true
+      ) %>
+    <% end %>
+  <% end %>
 
-  <%= form.submit t(".submit") %>
+  <div class="mt-6 text-center">
+    <%= link_to t(".forgot_password"), new_password_reset_path, class: "text-sm text-primary hover:underline transition" %>
+  </div>
 <% end %>
-
-<div class="mt-6 text-center">
-  <%= link_to t(".forgot_password"), new_password_reset_path, class: "font-medium text-sm text-primary hover:underline transition" %>
-</div>

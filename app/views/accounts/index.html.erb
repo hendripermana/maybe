@@ -1,28 +1,36 @@
-<header class="flex justify-between items-center text-primary font-medium">
-  <h1 class="text-xl"><%= t(".accounts") %></h1>
-  <div class="flex items-center gap-5">
-    <div class="flex items-center gap-2">
-      <%= render LinkComponent.new(
-        text: "New account",
-        href: new_account_path(return_to: accounts_path),
-        variant: "primary",
-        icon: "plus",
-        frame: :modal
-      ) %>
-    </div>
-  </div>
-</header>
+<%= render Ui::HeaderWithThemeToggleComponent.new(
+  title: t(".accounts")
+) do %>
+  <%= render Ui::ButtonComponent.new(
+    text: "New account",
+    href: new_account_path(return_to: accounts_path),
+    variant: :primary,
+    icon: "plus",
+    size: :md,
+    options: { data: { turbo_frame: "modal" } }
+  ) %>
+<% end %>
 
 <% if @manual_accounts.empty? && @plaid_items.empty? %>
   <%= render "empty" %>
 <% else %>
-  <div class="space-y-2">
+  <div class="space-y-4">
     <% if @plaid_items.any? %>
-      <%= render @plaid_items.sort_by(&:created_at) %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @plaid_items.sort_by(&:created_at).each do |plaid_item| %>
+          <%= render plaid_item %>
+        <% end %>
+      </div>
     <% end %>
 
     <% if @manual_accounts.any? %>
-      <%= render "accounts/index/manual_accounts", accounts: @manual_accounts %>
+      <%= render Ui::CardComponent.new(
+        title: "Manual Accounts",
+        variant: :default,
+        size: :md
+      ) do %>
+        <%= render "accounts/index/manual_accounts", accounts: @manual_accounts %>
+      <% end %>
     <% end %>
   </div>
 <% end %>
