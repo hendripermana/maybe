@@ -1,0 +1,27 @@
+<%# Navigation item component with consistent styling and active state indicators %>
+<% if variant == "sidebar" %>
+  <%= link_to path, class: class_names(
+    "flex items-center gap-2 whitespace-nowrap px-3 py-2 rounded-lg text-sm transition-colors",
+    active ? "text-primary bg-card shadow-border-xs" : "text-secondary hover:bg-surface-hover"
+  ), aria: { current: ("page" if active) }, role: "menuitem" do %>
+    <%= helpers.icon(icon, custom: icon_custom) if icon %>
+    <span><%= name %></span>
+  <% end %>
+<% else %>
+  <%= link_to path, class: "nav-item-modern group block relative px-3 py-3 rounded-xl transition-all duration-300 #{active ? '' : color_classes[:hover]}", aria: { current: ("page" if active) }, role: "menuitem" do %>
+    <div class="flex flex-col items-center gap-2">
+      <!-- Active indicator bar -->
+      <div class="<%= "w-1 h-4 rounded-full absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 #{active ? color_classes[:bg_active] : 'bg-transparent'}" %>" aria-hidden="true"></div>
+
+      <!-- Icon container -->
+      <div class="<%= "w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-300 #{active ? color_classes[:bg_active] + ' ' + color_classes[:text_active] + ' shadow-lg ' + color_classes[:shadow_active] : color_classes[:bg_inactive] + ' ' + color_classes[:text_inactive] + ' shadow-sm ' + color_classes[:shadow_inactive]} group-#{color_classes[:hover]}" %>" aria-hidden="true">
+        <%= helpers.icon(icon, color: active ? "current" : "default", custom: icon_custom, class: "w-6 h-6") %>
+      </div>
+
+      <!-- Text label -->
+      <p class="<%= "font-semibold text-xs transition-colors duration-300 text-center leading-tight #{active ? color_classes[:text_active] : color_classes[:text_inactive_label]} group-hover:#{color_classes[:text_inactive]}" %>">
+        <%= name %>
+      </p>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,20 @@
+<%# Modern breadcrumbs component with consistent styling %>
+<nav class="py-2 flex items-center gap-2" aria-label="Breadcrumb">
+  <ol class="flex items-center gap-2">
+    <% breadcrumbs.each_with_index do |(name, path), index| %>
+      <li class="flex items-center">
+        <% if index > 0 %>
+          <%= helpers.icon("chevron-right", color: "gray", size: "sm", class: "mx-1", aria: { hidden: true }) %>
+        <% end %>
+
+        <% if path.present? && index < breadcrumbs.size - 1 %>
+          <%= link_to name, path, class: "text-sm text-secondary font-medium hover:text-primary transition-colors" %>
+        <% elsif index == breadcrumbs.size - 1 %>
+          <span class="text-primary font-medium text-sm" aria-current="page"><%= name %></span>
+        <% else %>
+          <span class="text-sm text-secondary font-medium"><%= name %></span>
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+</nav>

@@ -46,8 +46,18 @@ module ApplicationHelper
     content_for(:header_description) { page_description }
   end
 
-  def page_active?(path)
-    current_page?(path) || (request.path.start_with?(path) && path != "/")
+  # Enhanced page_active? helper for navigation components
+  # Determines if a navigation item should be marked as active based on the current path
+  # @param path [String] The path to check
+  # @param exact [Boolean] Whether to require an exact match (default: false)
+  # @return [Boolean] Whether the path is active
+  def page_active?(path, exact = false)
+    return true if current_page?(path)
+    return false if exact || path == "/"
+    
+    # Check if the current path starts with the given path
+    # This handles nested routes (e.g. /settings/profile should activate /settings)
+    request.path.start_with?(path)
   end
 
   # Wrapper around I18n.l to support custom date formats

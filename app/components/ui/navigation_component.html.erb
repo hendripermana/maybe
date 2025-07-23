@@ -1,0 +1,42 @@
+<%# Modern navigation component with consistent styling and active state indicators %>
+<% if variant == "desktop" %>
+  <nav class="sidebar-modern h-full flex flex-col shrink-0 w-[84px] py-6 mr-4" data-controller="ui--navigation">
+    <div class="pl-2 mb-6">
+      <%= link_to helpers.root_path, class: "block", aria: { label: "Home" } do %>
+        <%= image_tag "logomark-color.svg", class: "w-10 h-10 mx-auto hover:scale-110 transition-transform duration-200", alt: "Maybe Finance" %>
+      <% end %>
+    </div>
+
+    <ul class="space-y-2 flex-1" role="menubar" aria-label="Main Navigation">
+      <% desktop_items.each do |item| %>
+        <li role="none">
+          <div data-ui--navigation-target="item">
+            <%= render "ui/navigation_item_component", **item, color_classes: color_classes(item) %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% elsif variant == "mobile" %>
+  <nav class="flex justify-between items-center p-3 lg:hidden" aria-label="Mobile Navigation">
+    <%= helpers.icon("panel-left", as_button: true, data: { action: "app-layout#openMobileSidebar"}, aria: { label: "Open sidebar" }) %>
+
+    <%= link_to helpers.root_path, class: "block", aria: { label: "Home" } do %>
+      <%= image_tag "logomark-color.svg", class: "w-9 h-9 mx-auto", alt: "Maybe Finance" %>
+    <% end %>
+
+    <%= render "users/user_menu", user: helpers.current_user, placement: "bottom-end", offset: 12 %>
+  </nav>
+
+  <%= tag.nav class: "lg:hidden bg-surface shrink-0 z-10 pb-[env(safe-area-inset-bottom)] border-t border-tertiary flex justify-around", aria: { label: "Mobile Bottom Navigation" } do %>
+    <% mobile_items.each do |item| %>
+      <%= render "ui/navigation_item_component", **item, color_classes: color_classes(item) %>
+    <% end %>
+  <% end %>
+<% elsif variant == "sidebar" %>
+  <nav class="space-y-2" aria-label="Sidebar Navigation">
+    <% sidebar_items.each do |item| %>
+      <%= render "ui/navigation_item_component", **item, color_classes: color_classes(item), variant: "sidebar" %>
+    <% end %>
+  </nav>
+<% end %>

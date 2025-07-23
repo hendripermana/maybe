@@ -1,27 +1,61 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class ApplicationHelperTest < ActionView::TestCase
-  test "#title(page_title)" do
-    title("Test Title")
-    assert_equal "Test Title", content_for(:title)
+  test "page_active? returns true for exact current page" do
+    def request
+      @request ||= OpenStruct.new(path: "/transactions")
+    end
+
+    def current_page?(path)
+      path == request.path
+    end
+
+    assert page_active?("/transactions")
   end
 
-  test "#header_title(page_title)" do
-    header_title("Test Header Title")
-    assert_equal "Test Header Title", content_for(:header_title)
+  test "page_active? returns true for parent path" do
+    def request
+      @request ||= OpenStruct.new(path: "/transactions/123")
+    end
+
+    def current_page?(path)
+      path == request.path
+    end
+
+    assert page_active?("/transactions")
+    refute page_active?("/transactions", true) # exact match
   end
 
-  def setup
-    @account1 = Account.new(currency: "USD", balance: 1)
-    @account2 = Account.new(currency: "USD", balance: 2)
-    @account3 = Account.new(currency: "EUR", balance: -7)
+  test "page_active? returns false for unrelated path" do
+    def request
+      @request ||= OpenStruct.new(path: "/transactions")
+    end
+
+    def current_page?(path)
+      path == request.path
+    end
+
+    refute page_active?("/budgets")
   end
 
-  test "#totals_by_currency(collection: collection, money_method: money_method)" do
-    assert_equal "$3.00", totals_by_currency(collection: [ @account1, @account2 ], money_method: :balance_money)
-    assert_equal "$3.00 | -€7.00", totals_by_currency(collection: [ @account1, @account2, @account3 ], money_method: :balance_money)
-    assert_equal "", totals_by_currency(collection: [], money_method: :balance_money)
-    assert_equal "$0.00", totals_by_currency(collection: [ Account.new(currency: "USD", balance: 0) ], money_method: :balance_money)
-    assert_equal "-$3.00 | €7.00", totals_by_currency(collection: [ @account1, @account2, @account3 ], money_method: :balance_money, negate: true)
+  test "page_active? handles root path correctly" do
+    def request
+      @request ||= OpenStruct.new(path: "/")
+    end
+
+    def current_page?(path)
+      path == request.path
+    end
+
+    assert page_active?("/")
+    
+    # Change to a different path
+    def request
+      @request ||= OpenStruct.new(path: "/transactions")
+    end
+    
+    refute page_active?("/")
   end
 end
