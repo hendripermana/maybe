@@ -1,0 +1,36 @@
+bug_report:
+  feedback_type: bug_report
+  message: "I found a bug in the dashboard"
+  page: "/dashboard"
+  user: regular_user
+  browser: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+  theme: "light"
+  resolved: false
+
+feature_request:
+  feedback_type: feature_request
+  message: "Please add dark mode"
+  page: "/settings"
+  user: regular_user
+  browser: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+  theme: "light"
+  resolved: true
+  resolved_at: <%= 1.day.ago %>
+  resolved_by: <%= ActiveRecord::FixtureSet.identify(:admin) %>
+  resolution_notes: "Dark mode has been implemented"
+
+ui_feedback:
+  feedback_type: ui_feedback
+  message: "The buttons are hard to see"
+  page: "/transactions"
+  browser: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+  theme: "dark"
+  resolved: false
+
+anonymous_feedback:
+  feedback_type: general_feedback
+  message: "Great app!"
+  page: "/dashboard"
+  browser: "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)"
+  theme: "light"
+  resolved: false

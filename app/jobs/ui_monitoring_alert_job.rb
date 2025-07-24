@@ -165,6 +165,16 @@ class UiMonitoringAlertJob < ApplicationJob
   end
 
   def send_alert(title, message, category, severity)
+    # Generate a unique key for this alert for throttling
+    alert_key = "#{category}:#{title.parameterize}"
+    
+    # Check if this alert should be throttled
+    throttler = AlertThrottler.new
+    if throttler.throttled?(alert_key, category)
+      Rails.logger.info "[UI Monitoring Alert] Throttled alert: #{title}"
+      return
+    end
+    
     # Log the alert
     Rails.logger.send(severity, "[UI Monitoring Alert] #{title}: #{message}")
     
@@ -178,7 +188,10 @@ class UiMonitoringAlertJob < ApplicationJob
       )
     end
     
-    # You could also send emails to administrators or create notifications
-    # AdminMailer.ui_monitoring_alert(title, message, category, severity).deliver_later
+    # Send email notification
+    MonitoringMailer.ui_monitoring_alert(title, message, category, severity).deliver_later
+    
+    # Send Slack notification if configured
+    SlackNotifier.notify(title, message, category, severity)
   end
 end

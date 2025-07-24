@@ -29,6 +29,15 @@ class MonitoringController < ApplicationController
       items: 10,
       page_param: :feedback_page
     )
+    
+    # Alert throttling information
+    @throttler = AlertThrottler.new
+    @throttled_alerts = {
+      error: @throttler.throttled_count(:error),
+      performance: @throttler.throttled_count(:performance),
+      accessibility: @throttler.throttled_count(:accessibility),
+      general: @throttler.throttled_count(:general)
+    }
   end
   
   # Events listing with filtering and search
@@ -108,9 +117,56 @@ class MonitoringController < ApplicationController
   # Mark feedback as resolved
   def resolve_feedback
     @feedback = UserFeedback.find(params[:id])
-    @feedback.mark_as_resolved(current_user)
+    resolution_notes = params[:resolution_notes]
     
-    redirect_to monitoring_feedback_path, notice: "Feedback marked as resolved"
+    if @feedback.mark_as_resolved(current_user, resolution_notes)
+      redirect_to monitoring_feedback_path, notice: "Feedback marked as resolved"
+    else
+      redirect_to monitoring_feedback_path, alert: "Failed to resolve feedback: #{@feedback.errors.full_messages.join(', ')}"
+    end
+  end
+  
+  # Mark feedback as unresolved
+  def unresolve_feedback
+    @feedback = UserFeedback.find(params[:id])
+    
+    if @feedback.update(resolved: false, resolved_at: nil, resolved_by: nil, resolution_notes: nil)
+      redirect_to monitoring_feedback_path, notice: "Feedback marked as unresolved"
+    else
+      redirect_to monitoring_feedback_path, alert: "Failed to update feedback status: #{@feedback.errors.full_messages.join(', ')}"
+    end
+  end
+  
+  # Export feedback as CSV
+  def export_feedback
+    @feedback = UserFeedback.includes(:user)
+    
+    # Apply the same filters as in the feedback action
+    if params[:feedback_type].present?
+      @feedback = @feedback.where(feedback_type: params[:feedback_type])
+    end
+    
+    if params[:resolved].present?
+      @feedback = @feedback.where(resolved: params[:resolved] == 'true')
+    end
+    
+    if params[:start_date].present? && params[:end_date].present?
+      start_date = Date.parse(params[:start_date])
+      end_date = Date.parse(params[:end_date])
+      @feedback = @feedback.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+    end
+    
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @feedback = @feedback.where("message ILIKE ? OR page ILIKE ?", search_term, search_term)
+    end
+    
+    respond_to do |format|
+      format.csv do
+        headers['Content-Disposition'] = "attachment; filename=\"user-feedback-#{Date.today}.csv\""
+        headers['Content-Type'] ||= 'text/csv'
+      end
+    end
   end
 
   # Handle UI errors from client-side

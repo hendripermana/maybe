@@ -35,7 +35,9 @@ Rails.application.routes.draw do
   get "monitoring", to: "monitoring#index"
   get "monitoring/events", to: "monitoring#events"
   get "monitoring/feedback", to: "monitoring#feedback"
+  get "monitoring/feedback/export", to: "monitoring#export_feedback", as: :export_feedback
   post "monitoring/feedback/:id/resolve", to: "monitoring#resolve_feedback", as: :resolve_feedback
+  post "monitoring/feedback/:id/unresolve", to: "monitoring#unresolve_feedback", as: :unresolve_feedback
 
   # Uses basic auth - see config/initializers/sidekiq.rb
   mount Sidekiq::Web => "/sidekiq"

@@ -1,0 +1,16 @@
+UI Monitoring Alert: <%= @title %>
+===============================================
+
+Category: <%= @category.to_s.humanize %>
+Severity: <%= @severity.to_s.humanize %>
+Time: <%= @timestamp.strftime("%Y-%m-%d %H:%M:%S %Z") %>
+
+Alert Details:
+--------------
+<%= @message %>
+
+View Monitoring Dashboard: <%= monitoring_url(host: ENV.fetch('APPLICATION_HOST', 'localhost:3000')) %>
+
+---
+This is an automated message from the Maybe Finance UI Monitoring System.
+Please do not reply to this email.

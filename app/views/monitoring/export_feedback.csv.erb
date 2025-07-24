@@ -1,0 +1,18 @@
+<%- headers = ['ID', 'Type', 'Message', 'Page', 'User', 'Browser', 'Theme', 'Status', 'Created At', 'Resolved At', 'Resolved By', 'Resolution Notes'] -%>
+<%= CSV.generate_line headers %>
+<%- @feedback.each do |feedback| -%>
+<%= CSV.generate_line([
+  feedback.id,
+  feedback.feedback_type.humanize,
+  feedback.message,
+  feedback.page,
+  feedback.user&.email || 'Anonymous',
+  feedback.browser,
+  feedback.theme,
+  feedback.resolved ? 'Resolved' : 'Open',
+  feedback.created_at,
+  feedback.resolved_at,
+  feedback.resolver&.email,
+  feedback.resolution_notes
+]) %>
+<%- end -%>

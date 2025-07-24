@@ -290,12 +290,20 @@
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
   <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
     <h3 class="text-lg font-medium">Feedback List</h3>
-    <span class="text-sm text-gray-500 dark:text-gray-400">
-      <%= @pagy.count %> items found
-      <% if @pagy.count > 0 %>
-        (showing <%= @pagy.from %>-<%= @pagy.to %>)
+    <div class="flex items-center space-x-4">
+      <%= link_to export_feedback_path(format: :csv, feedback_type: params[:feedback_type], resolved: params[:resolved], start_date: params[:start_date], end_date: params[:end_date], search: params[:search]), class: "px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center" do %>
+        <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Export CSV
       <% end %>
-    </span>
+      <span class="text-sm text-gray-500 dark:text-gray-400">
+        <%= @pagy.count %> items found
+        <% if @pagy.count > 0 %>
+          (showing <%= @pagy.from %>-<%= @pagy.to %>)
+        <% end %>
+      </span>
+    </div>
   </div>
   
   <div class="overflow-x-auto">
@@ -339,7 +347,19 @@
                 <div class="truncate max-w-xs"><%= feedback.page %></div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <%= feedback.user ? feedback.user.email : 'Anonymous' %>
+                <div>
+                  <%= feedback.user ? feedback.user.email : 'Anonymous' %>
+                </div>
+                <% if feedback.browser.present? || feedback.theme.present? %>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <% if feedback.browser.present? %>
+                      <span class="browser-info block"><%= feedback.browser.truncate(30) %></span>
+                    <% end %>
+                    <% if feedback.theme.present? %>
+                      <span class="theme-info block">Theme: <%= feedback.theme %></span>
+                    <% end %>
+                  </div>
+                <% end %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
                 <%= status_badge(feedback.resolved, feedback.resolved ? "Resolved" : "Open") %>
@@ -350,16 +370,32 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
                 <% unless feedback.resolved %>
-                  <%= button_to "Resolve", resolve_feedback_path(feedback), method: :post, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
+                  <button type="button" class="resolve-feedback-btn text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" data-feedback-id="<%= feedback.id %>">
+                    Resolve
+                  </button>
                 <% else %>
-                  <span class="text-gray-400 text-xs">
-                    <% if feedback.resolved_by %>
-                      <% resolver = User.find_by(id: feedback.resolved_by) %>
-                      Resolved by <%= resolver&.email || 'Unknown' %>
-                    <% else %>
-                      System resolved
-                    <% end %>
-                  </span>
+                  <div class="flex flex-col space-y-1">
+                    <span class="text-gray-400 text-xs" data-resolution-notes="<%= feedback.resolution_notes %>">
+                      <% if feedback.resolved_by %>
+                        <% resolver = User.find_by(id: feedback.resolved_by) %>
+                        Resolved by <%= resolver&.email || 'Unknown' %>
+                        <% if feedback.resolved_at %>
+                          on <%= feedback.resolved_at.strftime('%Y-%m-%d') %>
+                        <% end %>
+                      <% else %>
+                        System resolved
+                      <% end %>
+                      <% if feedback.resolution_notes.present? %>
+                        <span class="block mt-1">
+                          <svg class="h-3 w-3 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Has notes
+                        </span>
+                      <% end %>
+                    </span>
+                    <%= button_to "Unresolve", unresolve_feedback_path(feedback), method: :post, class: "text-xs text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300" %>
+                  </div>
                 <% end %>
               </td>
             </tr>
@@ -408,6 +444,40 @@
   </div>
 </div>
 
+<!-- Resolve Feedback Modal -->
+<div id="resolve-feedback-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-lg w-full">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+      <h3 class="text-lg font-medium">Resolve Feedback</h3>
+      <button type="button" id="close-resolve-modal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <%= form_with url: "#", method: :post, id: "resolve-feedback-form", class: "p-6" do |f| %>
+      <input type="hidden" name="feedback_id" id="resolve-feedback-id">
+      
+      <div class="mb-4">
+        <div id="feedback-summary" class="p-4 bg-gray-50 dark:bg-gray-700 rounded mb-4">
+          <!-- Feedback summary will be inserted here -->
+        </div>
+        
+        <%= f.label :resolution_notes, "Resolution Notes", class: "block text-sm font-medium mb-1" %>
+        <%= f.text_area :resolution_notes, rows: 4, class: "form-textarea w-full", placeholder: "Enter notes about how this feedback was resolved..." %>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">These notes will be stored with the feedback for future reference.</p>
+      </div>
+      
+      <div class="flex justify-end space-x-2">
+        <button type="button" id="cancel-resolve" class="px-4 py-2 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+          Cancel
+        </button>
+        <%= f.submit "Mark as Resolved", class: "px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Toggle filter panel
@@ -451,46 +521,152 @@
         const status = row.cells[4].textContent.trim();
         const time = row.cells[5].textContent.trim();
         
-        detailsContent.innerHTML = `
-          <div class="space-y-4">
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Feedback ID</h4>
-              <p>${feedbackId}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</h4>
-              <p>${type}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Message</h4>
-              <p class="whitespace-pre-wrap">${message}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Page</h4>
-              <p>${page}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">User</h4>
-              <p>${user}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h4>
-              <p>${status}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Submitted</h4>
-              <p>${time}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Browser Information</h4>
-              <p>This would show browser and system information.</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Theme</h4>
-              <p>This would show the theme that was active when the feedback was submitted.</p>
-            </div>
-          </div>
-        `;
+        // Get resolution info if available
+        const actionCell = row.cells[6];
+        let resolutionInfo = '';
+        if (status.includes('Resolved')) {
+          resolutionInfo = actionCell.querySelector('.text-gray-400')?.textContent.trim() || '';
+        }
+        
+        // Fetch the feedback details from the server
+        fetch(`/monitoring/feedback?search=${feedbackId}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(html => {
+            // Extract resolution notes if available
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Find the row with this feedback ID
+            const rows = tempDiv.querySelectorAll('tr');
+            let resolutionNotes = '';
+            
+            rows.forEach(row => {
+              const links = row.querySelectorAll('a[data-feedback-id]');
+              links.forEach(link => {
+                if (link.getAttribute('data-feedback-id') === feedbackId) {
+                  // This is our row, try to find resolution notes
+                  const actionCell = row.querySelector('td:last-child');
+                  if (actionCell && actionCell.textContent.includes('Resolved by')) {
+                    // This feedback is resolved, try to get notes from data attribute
+                    const resolvedInfo = actionCell.querySelector('.text-gray-400');
+                    if (resolvedInfo) {
+                      resolutionNotes = resolvedInfo.getAttribute('data-resolution-notes') || '';
+                    }
+                  }
+                }
+              });
+            });
+            
+            // Fall back to the table data if fetch didn't work
+            detailsContent.innerHTML = `
+              <div class="space-y-4">
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Feedback ID</h4>
+                  <p>${feedbackId}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</h4>
+                  <p>${type}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Message</h4>
+                  <p class="whitespace-pre-wrap">${message}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Page</h4>
+                  <p>${page}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">User</h4>
+                  <p>${user}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h4>
+                  <p>${status}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Submitted</h4>
+                  <p>${time}</p>
+                </div>
+                ${resolutionInfo ? `
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Resolution</h4>
+                  <p>${resolutionInfo}</p>
+                </div>
+                ` : ''}
+                ${resolutionNotes ? `
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Resolution Notes</h4>
+                  <p class="whitespace-pre-wrap">${resolutionNotes}</p>
+                </div>
+                ` : ''}
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Browser Information</h4>
+                  <p>${row.cells[3].querySelector('.browser-info')?.textContent || 'Not available'}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Theme</h4>
+                  <p>${row.cells[3].querySelector('.theme-info')?.textContent || 'Not available'}</p>
+                </div>
+              </div>
+            `;
+          })
+          .catch(error => {
+            console.error('Error fetching feedback details:', error);
+            
+            // Fall back to the table data if fetch didn't work
+            detailsContent.innerHTML = `
+              <div class="space-y-4">
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Feedback ID</h4>
+                  <p>${feedbackId}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</h4>
+                  <p>${type}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Message</h4>
+                  <p class="whitespace-pre-wrap">${message}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Page</h4>
+                  <p>${page}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">User</h4>
+                  <p>${user}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h4>
+                  <p>${status}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Submitted</h4>
+                  <p>${time}</p>
+                </div>
+                ${resolutionInfo ? `
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Resolution</h4>
+                  <p>${resolutionInfo}</p>
+                </div>
+                ` : ''}
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Browser Information</h4>
+                  <p>Browser information not available</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Theme</h4>
+                  <p>Theme information not available</p>
+                </div>
+              </div>
+            `;
+          });
         
         modal.classList.remove('hidden');
       });
@@ -508,6 +684,57 @@
     modal.addEventListener('click', function(e) {
       if (e.target === modal) {
         modal.classList.add('hidden');
+      }
+    });
+    
+    // Resolve feedback modal
+    const resolveModal = document.getElementById('resolve-feedback-modal');
+    const closeResolveModal = document.getElementById('close-resolve-modal');
+    const cancelResolve = document.getElementById('cancel-resolve');
+    const resolveFeedbackForm = document.getElementById('resolve-feedback-form');
+    const resolveFeedbackId = document.getElementById('resolve-feedback-id');
+    const feedbackSummary = document.getElementById('feedback-summary');
+    const resolveBtns = document.querySelectorAll('.resolve-feedback-btn');
+    
+    resolveBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const feedbackId = this.getAttribute('data-feedback-id');
+        resolveFeedbackId.value = feedbackId;
+        
+        // Set the form action
+        resolveFeedbackForm.action = `/monitoring/feedback/${feedbackId}/resolve`;
+        
+        // Get feedback details from the table row
+        const row = this.closest('tr');
+        const type = row.cells[0].textContent.trim();
+        const message = row.cells[1].textContent.trim();
+        const page = row.cells[2].textContent.trim();
+        
+        // Display feedback summary
+        feedbackSummary.innerHTML = `
+          <div class="text-sm">
+            <div class="font-medium">${type}</div>
+            <div class="mt-1 text-gray-700 dark:text-gray-300">${message}</div>
+            <div class="mt-1 text-gray-500 dark:text-gray-400 text-xs">${page}</div>
+          </div>
+        `;
+        
+        resolveModal.classList.remove('hidden');
+      });
+    });
+    
+    closeResolveModal.addEventListener('click', function() {
+      resolveModal.classList.add('hidden');
+    });
+    
+    cancelResolve.addEventListener('click', function() {
+      resolveModal.classList.add('hidden');
+    });
+    
+    // Close modal when clicking outside
+    resolveModal.addEventListener('click', function(e) {
+      if (e.target === resolveModal) {
+        resolveModal.classList.add('hidden');
       }
     });
   });

@@ -23,12 +23,29 @@ class UserFeedback < ApplicationRecord
   scope :ui_related, -> { where(feedback_type: ['ui_feedback', 'accessibility_issue']) }
   
   # Instance methods
-  def mark_as_resolved(admin_user = nil)
+  def mark_as_resolved(admin_user = nil, notes = nil)
     update(
       resolved: true,
       resolved_at: Time.current,
-      resolved_by: admin_user&.id
+      resolved_by: admin_user&.id,
+      resolution_notes: notes
     )
+  end
+  
+  def resolver
+    return nil unless resolved_by
+    User.find_by(id: resolved_by)
+  end
+  
+  def resolution_info
+    return nil unless resolved
+    
+    info = "Resolved #{resolved_at.strftime('%Y-%m-%d %H:%M')}"
+    if resolver
+      info += " by #{resolver.email}"
+    end
+    
+    info
   end
   
   def summary

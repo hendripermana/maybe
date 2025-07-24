@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_21_052702) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_24_054721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -775,6 +775,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_21_052702) do
     t.uuid "resolved_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "resolution_notes"
     t.index ["feedback_type"], name: "index_user_feedbacks_on_feedback_type"
     t.index ["resolved"], name: "index_user_feedbacks_on_resolved"
     t.index ["user_id"], name: "index_user_feedbacks_on_user_id"
