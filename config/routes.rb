@@ -225,6 +225,18 @@ Rails.application.routes.draw do
   # User feedback
   resources :user_feedbacks, only: [:create]
   
+  # Data privacy and GDPR compliance
+  namespace :data_privacy do
+    get :export, to: "data_privacy#export"
+    match :delete_request, to: "data_privacy#delete_request", via: [:get, :post]
+    
+    # Admin routes
+    get :admin, to: "data_privacy#admin_index", as: :admin
+    post :admin_purge, to: "data_privacy#admin_purge"
+    get :admin_audit, to: "data_privacy#admin_audit"
+    post :admin_anonymize, to: "data_privacy#admin_anonymize"
+  end
+  
   # API routes
   namespace :api do
     resources :ui_monitoring_events, only: [:create]

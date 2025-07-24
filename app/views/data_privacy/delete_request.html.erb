@@ -1,0 +1,63 @@
+<% content_for :title, "Request Data Deletion" %>
+
+<div class="max-w-4xl mx-auto p-6">
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h1 class="text-2xl font-semibold text-gray-900 mb-4">Request Data Deletion</h1>
+    
+    <p class="text-gray-600 mb-6">
+      In accordance with GDPR Article 17 (Right to erasure), you can request the deletion of your personal data
+      that we have collected for UI monitoring and feedback purposes.
+    </p>
+
+    <div class="bg-red-50 p-4 rounded-lg mb-6">
+      <div class="flex">
+        <svg class="w-5 h-5 text-red-400 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <h4 class="text-sm font-medium text-red-800">Important Notice</h4>
+          <p class="text-sm text-red-700 mt-1">
+            This action will anonymize all your UI monitoring events and feedback submissions. 
+            This process cannot be undone. Your data will be permanently anonymized.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <h3 class="font-medium text-gray-900 mb-2">What will be anonymized:</h3>
+      <ul class="list-disc pl-5 text-gray-600 space-y-1">
+        <li>Your user association with UI monitoring events</li>
+        <li>Your user association with feedback submissions</li>
+        <li>IP addresses in monitoring events</li>
+        <li>Detailed browser information</li>
+        <li>Any personal identifiable information in feedback messages</li>
+      </ul>
+    </div>
+
+    <div class="border-t pt-6">
+      <%= form_with url: data_privacy_delete_request_path, method: :post do |f| %>
+        <div class="mb-4">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <%= f.check_box :confirm, required: true, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= f.label :confirm, class: "font-medium text-gray-700" do %>
+                I understand that this action will anonymize my data and cannot be undone.
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <%= link_to "Cancel", root_path, class: "mr-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          
+          <%= f.submit "Request Data Deletion", 
+              class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500",
+              data: { confirm: "Are you absolutely sure you want to anonymize your data? This action cannot be undone." } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

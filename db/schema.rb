@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_24_054721) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_24_063953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -757,7 +757,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_24_054721) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "data_anonymized", default: false, null: false
+    t.datetime "anonymized_at"
     t.index ["created_at"], name: "index_ui_monitoring_events_on_created_at"
+    t.index ["data_anonymized"], name: "index_ui_monitoring_events_on_data_anonymized"
     t.index ["event_type"], name: "index_ui_monitoring_events_on_event_type"
     t.index ["session_id"], name: "index_ui_monitoring_events_on_session_id"
     t.index ["user_id"], name: "index_ui_monitoring_events_on_user_id"
@@ -776,6 +779,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_24_054721) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "resolution_notes"
+    t.boolean "data_anonymized", default: false, null: false
+    t.datetime "anonymized_at"
+    t.index ["data_anonymized"], name: "index_user_feedbacks_on_data_anonymized"
     t.index ["feedback_type"], name: "index_user_feedbacks_on_feedback_type"
     t.index ["resolved"], name: "index_user_feedbacks_on_resolved"
     t.index ["user_id"], name: "index_user_feedbacks_on_user_id"

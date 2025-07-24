@@ -75,9 +75,8 @@ module MonitoringHelper
     
     content_tag :span, text, class: "px-2 inline-flex text-xs leading-5 font-semibold rounded-full #{class_name}"
   end
-end  # Sen
-try integration helpers
   
+  # Sentry integration helpers
   def sentry_link(event)
     return nil unless event.has_sentry_event?
     
@@ -101,3 +100,4 @@ try integration helpers
     content_tag :span, "Sentry ID: #{event.sentry_event_id}", 
       class: "text-xs text-gray-500 dark:text-gray-400"
   end
+end

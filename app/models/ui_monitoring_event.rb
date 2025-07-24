@@ -61,6 +61,62 @@ class UiMonitoringEvent < ApplicationRecord
       'Other'
     end
   end
+
+  # Data privacy methods
+  def anonymize!
+    return if data_anonymized?
+    
+    DataPrivacyService.anonymize_monitoring_event(self)
+    update!(data_anonymized: true, anonymized_at: Time.current)
+  end
+
+  def contains_sensitive_data?
+    return false if data_anonymized?
+    return true if user_id.present?
+    return true if session_id.present?
+    return true if ip_address.present? && !ip_address.end_with?('.0.0')
+    return true if user_agent.present? && !user_agent.include?('anonymized')
+    
+    # Check data field for sensitive information
+    if data.present?
+      sensitive_keys = %w[user_agent url stack backtrace context email phone_number api_key token]
+      return true if (data.keys & sensitive_keys).any?
+    end
+    
+    false
+  end
+
+  # Scope for old records that should be purged
+  scope :old_records, ->(retention_days = 90) { where('created_at < ?', retention_days.days.ago) }
+  
+  # Scope for records that need anonymization
+  scope :needs_anonymization, -> { where(data_anonymized: false).where.not(user_id: nil).or(where(data_anonymized: false).where.not(session_id: nil)) }
+  
+  # Scope for anonymized records
+  scope :anonymized, -> { where(data_anonymized: true) }
+  
+  # GDPR compliance methods
+  def self.purge_old_records(retention_days = 90)
+    old_records(retention_days).delete_all
+  end
+  
+  def self.anonymize_user_data(user)
+    where(user: user).find_each(&:anonymize!)
+  end
+  
+  def self.export_user_data(user)
+    where(user: user).map do |event|
+      {
+        id: event.id,
+        event_type: event.event_type,
+        created_at: event.created_at.iso8601,
+        data: DataPrivacyService.send(:anonymize_event_data, event.data || {}),
+        session_id: event.session_id,
+        user_agent: DataPrivacyService.send(:anonymize_user_agent, event.user_agent),
+        ip_address: DataPrivacyService.send(:anonymize_ip_address, event.ip_address)
+      }
+    end
+  end
   
   # Sentry integration methods
   def sentry_event_id

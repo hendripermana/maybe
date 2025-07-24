@@ -24,3 +24,9 @@ ui_monitoring_alerts:
   class: "UiMonitoringAlertJob"
   queue: "scheduled"
   description: "Analyzes UI monitoring data and sends alerts for accessibility or performance regressions"
+
+data_privacy_purge:
+  cron: "0 2 * * 0" # 2:00 AM every Sunday
+  class: "DataPrivacyPurgeJob"
+  queue: "scheduled"
+  description: "Purges old UI monitoring events and user feedback based on retention policies"

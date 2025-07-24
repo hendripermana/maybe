@@ -1,0 +1,62 @@
+<% content_for :title, "Export Your Data" %>
+
+<div class="max-w-4xl mx-auto p-6">
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h1 class="text-2xl font-semibold text-gray-900 mb-4">Export Your Data</h1>
+    
+    <p class="text-gray-600 mb-6">
+      In accordance with GDPR Article 15 (Right of access), you can export all data we have collected about you.
+      This includes your UI monitoring events and feedback submissions.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <h3 class="font-medium text-blue-900 mb-2">UI Monitoring Events</h3>
+        <p class="text-sm text-blue-700 mb-2">
+          <%= pluralize(@user_data[:ui_monitoring_events].count, 'event') %> recorded
+        </p>
+        <p class="text-xs text-blue-600">
+          Error reports, performance metrics, and usage analytics
+        </p>
+      </div>
+      
+      <div class="bg-green-50 p-4 rounded-lg">
+        <h3 class="font-medium text-green-900 mb-2">User Feedback</h3>
+        <p class="text-sm text-green-700 mb-2">
+          <%= pluralize(@user_data[:user_feedbacks].count, 'feedback submission') %>
+        </p>
+        <p class="text-xs text-green-600">
+          Bug reports, feature requests, and general feedback
+        </p>
+      </div>
+    </div>
+
+    <div class="border-t pt-6">
+      <h3 class="font-medium text-gray-900 mb-4">Download Options</h3>
+      
+      <div class="flex flex-col sm:flex-row gap-3">
+        <%= link_to data_privacy_export_path(format: :json), 
+            class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Download as JSON
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mt-8 p-4 bg-yellow-50 rounded-lg">
+      <div class="flex">
+        <svg class="w-5 h-5 text-yellow-400 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <h4 class="text-sm font-medium text-yellow-800">Privacy Notice</h4>
+          <p class="text-sm text-yellow-700 mt-1">
+            The exported data has been anonymized to protect your privacy. Personal identifiers like IP addresses and detailed browser information have been removed or generalized.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

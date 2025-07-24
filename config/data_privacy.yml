@@ -1,0 +1,134 @@
+# Data Privacy Configuration for UI Monitoring and Feedback System
+# This file defines retention periods, anonymization rules, and GDPR compliance settings
+
+# Data retention periods (in days)
+retention_periods:
+  # UI monitoring events - keep for 90 days (3 months)
+  ui_monitoring_events: 90
+  
+  # User feedback - keep unresolved for 2 years, resolved for 1 year
+  user_feedbacks_unresolved: 730  # 2 years
+  user_feedbacks_resolved: 365    # 1 year
+  
+  # Session data - keep for 30 days
+  session_data: 30
+
+# Anonymization settings
+anonymization:
+  # Automatically anonymize data after creation
+  auto_anonymize_on_create: true
+  
+  # Anonymize data older than specified days
+  auto_anonymize_after_days: 30
+  
+  # Fields to always anonymize
+  sensitive_fields:
+    - user_agent
+    - ip_address
+    - session_id
+    - email
+    - phone_number
+    - api_key
+    - token
+    - credit_card
+    - ssn
+  
+  # IP address anonymization settings
+  ip_anonymization:
+    # For IPv4, keep only first N octets
+    ipv4_octets_to_keep: 2
+    # For IPv6, keep only network portion
+    ipv6_keep_network_only: true
+
+# GDPR compliance settings
+gdpr:
+  # Enable GDPR compliance features
+  enabled: true
+  
+  # Data subject rights
+  rights:
+    # Right of access (Article 15)
+    data_export: true
+    
+    # Right to rectification (Article 16)
+    data_correction: true
+    
+    # Right to erasure (Article 17)
+    data_deletion: true
+    
+    # Right to restrict processing (Article 18)
+    processing_restriction: true
+    
+    # Right to data portability (Article 20)
+    data_portability: true
+  
+  # Consent management
+  consent:
+    # Require explicit consent for data collection
+    explicit_consent_required: false  # Set to true for EU users
+    
+    # Consent expiry (in days)
+    consent_expiry_days: 365
+  
+  # Data breach notification
+  breach_notification:
+    # Enable automatic breach detection
+    enabled: true
+    
+    # Notification timeframe (in hours)
+    notification_timeframe: 72
+
+# Alert thresholds for privacy violations
+alerts:
+  # Alert when retention period is exceeded
+  retention_violation_threshold: 7  # days past retention period
+  
+  # Alert when anonymization fails
+  anonymization_failure_alert: true
+  
+  # Alert when sensitive data is detected
+  sensitive_data_detection_alert: true
+
+# Data export formats
+export_formats:
+  - json
+  - csv
+  - xml
+
+# Audit settings
+audit:
+  # Enable audit logging for privacy operations
+  enabled: true
+  
+  # Audit log retention (in days)
+  audit_log_retention: 2555  # 7 years (legal requirement)
+  
+  # Operations to audit
+  operations_to_audit:
+    - data_export
+    - data_deletion
+    - data_anonymization
+    - consent_changes
+    - privacy_settings_changes
+
+# Development and testing settings
+development:
+  # Use fake data in development
+  use_fake_data: true
+  
+  # Skip some privacy checks in development
+  skip_privacy_checks: false
+  
+  # Enable debug logging
+  debug_logging: true
+
+# Production settings
+production:
+  # Strict privacy enforcement
+  strict_mode: true
+  
+  # Enable all privacy features
+  full_compliance: true
+  
+  # Regular compliance audits
+  automated_audits: true

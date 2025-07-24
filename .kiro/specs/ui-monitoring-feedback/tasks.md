@@ -76,7 +76,7 @@
   - Add links between monitoring systems
   - _Requirements: 5.1, 5.2, 5.4_
 
-- [ ] 12. Implement data privacy measures
+- [x] 12. Implement data privacy measures
   - Add data anonymization for monitoring events
   - Implement data retention policies
   - Create data purging functionality
