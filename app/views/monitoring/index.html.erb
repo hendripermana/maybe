@@ -1,0 +1,224 @@
+<h1 class="text-2xl font-bold mb-6">UI Monitoring Dashboard</h1>
+
+<div class="mb-8">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold">Overview</h2>
+    
+    <div class="flex items-center space-x-2">
+      <span>Time period:</span>
+      <%= form_with url: monitoring_path, method: :get, class: "inline-flex" do |f| %>
+        <%= f.select :period, 
+          options_for_select([
+            ["Last 24 hours", "24"], 
+            ["Last 48 hours", "48"], 
+            ["Last 7 days", "168"],
+            ["Last 30 days", "720"]
+          ], params[:period] || "24"),
+          {}, 
+          { class: "form-select", onchange: "this.form.submit()" } %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium mb-4">Error Summary</h3>
+      <% if @error_summary.any? %>
+        <div class="space-y-2">
+          <% @error_summary.each do |error| %>
+            <div class="flex justify-between items-center">
+              <span class="text-sm"><%= error.error_type %></span>
+              <span class="font-medium"><%= error.count %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400">No errors recorded in this period</p>
+      <% end %>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium mb-4">Performance Metrics</h3>
+      <% if @performance_metrics.any? %>
+        <div class="space-y-2">
+          <% @performance_metrics.each do |metric| %>
+            <div class="flex justify-between items-center">
+              <span class="text-sm"><%= metric.metric_name %></span>
+              <span class="font-medium"><%= number_with_precision(metric.avg_value, precision: 2) %>ms</span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400">No performance metrics recorded in this period</p>
+      <% end %>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium mb-4">Theme Switching</h3>
+      <% if @theme_switch_performance %>
+        <div class="text-center">
+          <div class="text-3xl font-bold"><%= number_with_precision(@theme_switch_performance, precision: 2) %>ms</div>
+          <div class="text-sm text-gray-500 dark:text-gray-400">Average theme switch duration</div>
+        </div>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400">No theme switching data recorded in this period</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="mb-8">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold">Recent Events</h2>
+    <%= link_to "View All Events", monitoring_events_path, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Details</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <% if @recent_events.any? %>
+          <% @recent_events.each do |event| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <%= event.event_type %>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <% if event.event_type == 'ui_error' %>
+                  <div class="font-medium"><%= event.data['error_type'] %></div>
+                  <div class="text-gray-500 dark:text-gray-400 truncate max-w-xs"><%= event.data['message'] %></div>
+                <% elsif event.event_type == 'performance_metric' %>
+                  <div><%= event.data['metric_name'] %>: <%= event.data['value'] %>ms</div>
+                <% else %>
+                  <div class="truncate max-w-xs"><%= event.data.to_json %></div>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= event.user ? event.user.email : 'Anonymous' %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <%= time_ago_in_words(event.created_at) %> ago
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+              No events recorded
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
+  </div>
+</div>
+
+<div class="mb-8">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold">User Feedback</h2>
+    <%= link_to "View All Feedback", monitoring_feedback_path, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium mb-4">Feedback Summary</h3>
+      <% if @feedback_summary.any? %>
+        <div class="space-y-2">
+          <% @feedback_summary.each do |feedback| %>
+            <div class="flex justify-between items-center">
+              <span class="text-sm"><%= feedback.feedback_type.humanize %></span>
+              <span class="font-medium"><%= feedback.resolved_count %>/<%= feedback.count %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400">No feedback recorded</p>
+      <% end %>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium mb-4">Unresolved Feedback</h3>
+      <% unresolved_count = @feedback_summary.sum { |f| f.count - f.resolved_count } %>
+      <% if unresolved_count > 0 %>
+        <div class="text-center">
+          <div class="text-3xl font-bold"><%= unresolved_count %></div>
+          <div class="text-sm text-gray-500 dark:text-gray-400">Unresolved feedback items</div>
+        </div>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400">All feedback has been resolved</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Message</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <% if @recent_feedback.any? %>
+          <% @recent_feedback.each do |feedback| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <%= feedback.feedback_type.humanize %>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <div class="truncate max-w-xs"><%= feedback.message %></div>
+                <div class="text-gray-500 dark:text-gray-400 text-xs"><%= feedback.page %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= feedback.user ? feedback.user.email : 'Anonymous' %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <% if feedback.resolved %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                    Resolved
+                  </span>
+                <% else %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                    Open
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <%= time_ago_in_words(feedback.created_at) %> ago
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+              No feedback recorded
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700">
+      <%== pagy_nav(@pagy_feedback) if @pagy_feedback.pages > 1 %>
+    </div>
+  </div>
+</div>
+
+<div class="flex space-x-4">
+  <%= link_to "View All Events", monitoring_events_path, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" %>
+  <%= link_to "View All Feedback", monitoring_feedback_path, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" %>
+</div>

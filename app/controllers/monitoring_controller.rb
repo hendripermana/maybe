@@ -1,6 +1,117 @@
 class MonitoringController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:ui_error, :performance_metric, :ui_event, :performance_issue]
   before_action :require_valid_api_key, only: [:ui_error, :performance_metric, :ui_event, :performance_issue]
+  before_action :require_admin, only: [:index, :events, :feedback, :resolve_feedback]
+  
+  include Pagy::Backend
+  
+  # Dashboard index page
+  def index
+    @period = params[:period].present? ? params[:period].to_i.hours : 24.hours
+    
+    @error_summary = UiMonitoringEvent.error_summary(@period)
+    @performance_metrics = UiMonitoringEvent.performance_metrics_summary(@period)
+    @theme_switch_performance = UiMonitoringEvent.theme_switch_performance(@period)
+    
+    # Recent events with pagination
+    @pagy, @recent_events = pagy(
+      UiMonitoringEvent.includes(:user).order(created_at: :desc),
+      items: 10
+    )
+    
+    # Feedback summary
+    @feedback_summary = UserFeedback.group(:feedback_type)
+                                   .select('feedback_type, COUNT(*) as count, COUNT(CASE WHEN resolved = true THEN 1 END) as resolved_count')
+    
+    # Recent feedback with pagination
+    @pagy_feedback, @recent_feedback = pagy(
+      UserFeedback.includes(:user).order(created_at: :desc),
+      items: 10,
+      page_param: :feedback_page
+    )
+  end
+  
+  # Events listing with filtering and search
+  def events
+    @events = UiMonitoringEvent.includes(:user)
+    
+    # Apply filters
+    if params[:event_type].present?
+      @events = @events.where(event_type: params[:event_type])
+    end
+    
+    if params[:component].present?
+      @events = @events.where("data->>'component_name' = ?", params[:component])
+    end
+    
+    if params[:error_type].present?
+      @events = @events.where("data->>'error_type' = ?", params[:error_type])
+    end
+    
+    if params[:start_date].present? && params[:end_date].present?
+      start_date = Date.parse(params[:start_date])
+      end_date = Date.parse(params[:end_date])
+      @events = @events.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+    end
+    
+    # Search functionality
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @events = @events.where("data::text ILIKE ?", search_term)
+    end
+    
+    # Pagination
+    @pagy, @events = pagy(@events.order(created_at: :desc), items: 20)
+    
+    # Get unique values for filters
+    @event_types = UiMonitoringEvent.distinct.pluck(:event_type)
+    @components = UiMonitoringEvent.where("data->>'component_name' IS NOT NULL")
+                                  .distinct
+                                  .pluck("data->>'component_name'")
+    @error_types = UiMonitoringEvent.where("data->>'error_type' IS NOT NULL")
+                                   .distinct
+                                   .pluck("data->>'error_type'")
+  end
+  
+  # Feedback listing with filtering and search
+  def feedback
+    @feedback = UserFeedback.includes(:user)
+    
+    # Apply filters
+    if params[:feedback_type].present?
+      @feedback = @feedback.where(feedback_type: params[:feedback_type])
+    end
+    
+    if params[:resolved].present?
+      @feedback = @feedback.where(resolved: params[:resolved] == 'true')
+    end
+    
+    if params[:start_date].present? && params[:end_date].present?
+      start_date = Date.parse(params[:start_date])
+      end_date = Date.parse(params[:end_date])
+      @feedback = @feedback.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+    end
+    
+    # Search functionality
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @feedback = @feedback.where("message ILIKE ? OR page ILIKE ?", search_term, search_term)
+    end
+    
+    # Pagination
+    @pagy, @feedback = pagy(@feedback.order(created_at: :desc), items: 20)
+    
+    # Get unique values for filters
+    @feedback_types = UserFeedback.feedback_types.keys
+  end
+  
+  # Mark feedback as resolved
+  def resolve_feedback
+    @feedback = UserFeedback.find(params[:id])
+    @feedback.mark_as_resolved(current_user)
+    
+    redirect_to monitoring_feedback_path, notice: "Feedback marked as resolved"
+  end
 
   # Handle UI errors from client-side
   def ui_error
@@ -120,5 +231,12 @@ class MonitoringController < ApplicationController
   def valid_api_key?
     # Simple API key validation - in a real app, use a more secure approach
     request.headers['X-API-Key'] == ENV['UI_MONITORING_API_KEY']
+  end
+  
+  def require_admin
+    unless current_user&.admin?
+      flash[:alert] = "You are not authorized to access this page"
+      redirect_to root_path
+    end
   end
 end

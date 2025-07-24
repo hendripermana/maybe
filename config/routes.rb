@@ -30,6 +30,12 @@ Rails.application.routes.draw do
     post "performance_issue", to: "monitoring#performance_issue"
     post "user_feedback", to: "monitoring#user_feedback"
   end
+  
+  # Monitoring Dashboard
+  get "monitoring", to: "monitoring#index"
+  get "monitoring/events", to: "monitoring#events"
+  get "monitoring/feedback", to: "monitoring#feedback"
+  post "monitoring/feedback/:id/resolve", to: "monitoring#resolve_feedback", as: :resolve_feedback
 
   # Uses basic auth - see config/initializers/sidekiq.rb
   mount Sidekiq::Web => "/sidekiq"
