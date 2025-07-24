@@ -93,6 +93,12 @@
         <%= yield %>
         <%= render PerformanceMetricsComponent.new(show_in_ui: Rails.env.development? && params[:show_metrics]) %>
       </div>
+      
+      <%= render FeedbackFormComponent.new(
+        position: :bottom_right,
+        current_page: request.path,
+        current_user: Current.user
+      ) %>
     <% end %>
 
     <%# DESKTOP - Right sidebar %>
