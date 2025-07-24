@@ -21,7 +21,7 @@ export default class extends Controller {
   }
   
   handleOutsideClick = (event) => {
-    if (this.panelTarget.classList.contains("open") && 
+    if (!this.panelTarget.classList.contains("hidden") && 
         !this.element.contains(event.target)) {
       this.closeForm()
     }
@@ -29,11 +29,11 @@ export default class extends Controller {
   
   toggleForm(event) {
     event.preventDefault()
-    this.panelTarget.classList.toggle("open")
+    this.panelTarget.classList.toggle("hidden")
   }
   
   closeForm() {
-    this.panelTarget.classList.remove("open")
+    this.panelTarget.classList.add("hidden")
     this.resetForm()
   }
   

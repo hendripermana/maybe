@@ -85,4 +85,21 @@ class UserFeedbacksControllerTest < ActionDispatch::IntegrationTest
     
     assert_equal user, UserFeedback.last.user
   end
+  
+  test "should sanitize sensitive information from feedback message" do
+    assert_difference("UserFeedback.count") do
+      post user_feedbacks_path, params: {
+        user_feedback: {
+          feedback_type: "bug_report",
+          message: "My email is test@example.com and my phone is 555-123-4567. API key: abcdefghijklmnopqrstuvwxyz123456",
+          page: "/dashboard",
+          theme: "light",
+          browser: "Test Browser"
+        }
+      }
+    end
+    
+    feedback = UserFeedback.last
+    assert_equal "My email is [EMAIL REDACTED] and my phone is [PHONE REDACTED]. API key: [TOKEN REDACTED]", feedback.message
+  end
 end
