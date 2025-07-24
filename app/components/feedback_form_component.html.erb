@@ -1,43 +1,45 @@
-<div data-controller="feedback-collector" class="fixed <%= position_classes %> z-50">
-  <button type="button" data-action="click->feedback-collector#toggleForm" class="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full p-3 shadow-lg flex items-center justify-center">
+<div data-controller="feedback-form" class="fixed <%= position_classes %> z-50">
+  <button type="button" data-action="click->feedback-form#toggleForm" class="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full p-3 shadow-lg flex items-center justify-center">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
     </svg>
     <span class="sr-only">Provide Feedback</span>
   </button>
   
-  <div data-feedback-collector-target="formContainer" class="hidden absolute bottom-14 right-0 w-80 bg-card text-card-foreground shadow-lg rounded-lg p-4 border border-border">
+  <div data-feedback-form-target="panel" class="hidden absolute bottom-14 right-0 w-80 bg-card text-card-foreground shadow-lg rounded-lg p-4 border border-border">
     <h3 class="text-lg font-medium mb-4">Share Your Feedback</h3>
     
-    <form data-feedback-collector-target="form" data-action="submit->feedback-collector#submitFeedback" class="space-y-4">
+    <form data-feedback-form-target="form" data-action="submit->feedback-form#submitFeedback" class="space-y-4">
       <div>
-        <label for="feedback-type" class="block text-sm font-medium mb-1">Feedback Type</label>
-        <select id="feedback-type" name="feedback_type" data-feedback-collector-target="type" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
-          <option value="ui_feedback">UI Feedback</option>
-          <option value="accessibility_issue">Accessibility Issue</option>
-          <option value="performance_issue">Performance Issue</option>
-          <option value="bug_report">Bug Report</option>
-          <option value="feature_request">Feature Request</option>
-          <option value="general_feedback">General Feedback</option>
+        <label for="feedback-type" class="block text-sm font-medium mb-1">Type of Feedback</label>
+        <select id="feedback-type" name="user_feedback[feedback_type]" data-feedback-form-target="type" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
+          <option value="">Select a type</option>
+          <% feedback_types.each do |label, value| %>
+            <option value="<%= value %>"><%= label %></option>
+          <% end %>
         </select>
       </div>
       
       <div>
         <label for="feedback-message" class="block text-sm font-medium mb-1">Your Feedback</label>
-        <textarea id="feedback-message" name="message" data-feedback-collector-target="message" rows="3" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background" placeholder="Please describe your feedback..."></textarea>
+        <textarea id="feedback-message" name="user_feedback[message]" data-feedback-form-target="message" rows="4" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background" placeholder="Please describe your feedback or the issue you're experiencing..."></textarea>
       </div>
       
-      <input type="hidden" name="page" data-feedback-collector-target="page">
-      <input type="hidden" name="theme" data-feedback-collector-target="theme" value="<%= @theme %>">
+      <input type="hidden" name="user_feedback[page]" value="<%= current_page %>" data-feedback-form-target="page">
+      <input type="hidden" name="user_feedback[theme]" value="<%= current_theme %>" data-feedback-form-target="theme">
+      <input type="hidden" name="user_feedback[browser]" value="<%= browser_info %>" data-feedback-form-target="browser">
       
-      <div class="flex justify-end">
-        <button type="submit" data-feedback-collector-target="submitButton" class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium">
+      <div class="flex justify-end space-x-2">
+        <button type="button" class="border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4 py-2 rounded-md text-sm font-medium" data-action="feedback-form#closeForm">
+          Cancel
+        </button>
+        <button type="submit" data-feedback-form-target="submitButton" class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium">
           Submit Feedback
         </button>
       </div>
       
-      <div data-feedback-collector-target="successMessage" class="hidden text-sm text-green-600 mt-2"></div>
-      <div data-feedback-collector-target="errorMessage" class="hidden text-sm text-red-600 mt-2"></div>
+      <div data-feedback-form-target="successMessage" class="hidden text-sm text-green-600 mt-2"></div>
+      <div data-feedback-form-target="errorMessage" class="hidden text-sm text-red-600 mt-2"></div>
     </form>
   </div>
 </div>

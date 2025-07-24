@@ -213,6 +213,9 @@ Rails.application.routes.draw do
     get :accept, on: :member
   end
 
+  # User feedback
+  resources :user_feedbacks, only: [:create]
+  
   # API routes
   namespace :api do
     resources :ui_monitoring_events, only: [:create]

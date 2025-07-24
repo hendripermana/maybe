@@ -1,7 +1,25 @@
 class FeedbackFormComponent < ViewComponent::Base
-  def initialize(position: :bottom_right, theme: nil)
+  attr_reader :feedback_types
+  
+  def initialize(position: :bottom_right, current_page: nil, current_user: nil)
     @position = position
-    @theme = theme
+    @current_page = current_page
+    @current_user = current_user
+    @feedback_types = UserFeedback.feedback_types.keys.map do |type|
+      [type.humanize, type]
+    end
+  end
+  
+  def current_theme
+    helpers.respond_to?(:current_theme) ? helpers.current_theme : 'default'
+  end
+  
+  def browser_info
+    request.user_agent
+  end
+  
+  def current_page
+    @current_page || request.url
   end
   
   private
