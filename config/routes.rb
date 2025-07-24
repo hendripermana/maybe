@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   # Monitoring Dashboard
   get "monitoring", to: "monitoring#index"
   get "monitoring/events", to: "monitoring#events"
+  get "monitoring/events/:id", to: "monitoring#event", as: :monitoring_event
   get "monitoring/feedback", to: "monitoring#feedback"
   get "monitoring/feedback/export", to: "monitoring#export_feedback", as: :export_feedback
   post "monitoring/feedback/:id/resolve", to: "monitoring#resolve_feedback", as: :resolve_feedback

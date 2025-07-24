@@ -168,26 +168,49 @@ class MonitoringController < ApplicationController
       end
     end
   end
+  
+  # Get event details as JSON
+  def event
+    @event = UiMonitoringEvent.find(params[:id])
+    
+    render json: {
+      id: @event.id,
+      event_type: @event.event_type,
+      data: @event.data,
+      created_at: @event.created_at,
+      user_id: @event.user_id,
+      sentry_event_id: @event.sentry_event_id,
+      sentry_url: @event.sentry_url
+    }
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Event not found" }, status: :not_found
+  end
 
   # Handle UI errors from client-side
   def ui_error
-    log_event("ui_error", monitoring_params)
+    event = log_event("ui_error", monitoring_params)
     
     # Send to Sentry for error tracking
+    sentry_event_id = nil
     if defined?(Sentry)
-      Sentry.capture_message(
+      sentry_event = Sentry.capture_message(
         "UI Error: #{monitoring_params[:error_type]}",
         level: 'error',
         extra: {
           message: monitoring_params[:message],
           context: JSON.parse(monitoring_params[:context] || '{}'),
           url: monitoring_params[:url],
-          user_agent: monitoring_params[:user_agent]
+          user_agent: monitoring_params[:user_agent],
+          ui_monitoring_event_id: event&.id
         }
       )
+      sentry_event_id = sentry_event.event_id if sentry_event
+      
+      # Update the UI monitoring event with the Sentry event ID
+      event.update(data: event.data.merge(sentry_event_id: sentry_event_id)) if event && sentry_event_id
     end
     
-    head :ok
+    render json: { status: 'success', event_id: event&.id, sentry_event_id: sentry_event_id }
   end
 
   # Handle performance metrics
@@ -261,7 +284,7 @@ class MonitoringController < ApplicationController
     Rails.logger.info("[UI Monitoring] #{event_type}: #{data.to_json}")
     
     # Store in database for analysis if needed
-    UiMonitoringEvent.create!(
+    event = UiMonitoringEvent.create!(
       event_type: event_type,
       data: data,
       user_id: current_user&.id,
@@ -269,8 +292,11 @@ class MonitoringController < ApplicationController
       user_agent: request.user_agent,
       ip_address: request.remote_ip
     )
+    
+    return event
   rescue => e
     Rails.logger.error("Failed to log UI monitoring event: #{e.message}")
+    return nil
   end
 
   def require_valid_api_key

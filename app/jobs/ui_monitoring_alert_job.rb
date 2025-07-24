@@ -46,7 +46,8 @@ class UiMonitoringAlertJob < ApplicationJob
         "UI Error Alert: #{error_type}",
         alert_message,
         :error,
-        :error
+        :error,
+        event
       )
     end
   end
@@ -62,7 +63,8 @@ class UiMonitoringAlertJob < ApplicationJob
         "Performance Alert: #{metric_name}",
         alert_message,
         :performance,
-        :warning
+        :warning,
+        event
       )
     end
   end
@@ -164,7 +166,7 @@ class UiMonitoringAlertJob < ApplicationJob
     end
   end
 
-  def send_alert(title, message, category, severity)
+  def send_alert(title, message, category, severity, event = nil)
     # Generate a unique key for this alert for throttling
     alert_key = "#{category}:#{title.parameterize}"
     
@@ -179,14 +181,42 @@ class UiMonitoringAlertJob < ApplicationJob
     Rails.logger.send(severity, "[UI Monitoring Alert] #{title}: #{message}")
     
     # Send to Sentry if available
+    sentry_event_id = nil
     if defined?(Sentry)
-      Sentry.capture_message(
+      sentry_event = Sentry.capture_message(
         title,
         level: severity,
-        tags: { category: category },
-        extra: { message: message }
+        tags: { 
+          category: category,
+          ui_monitoring: true,
+          ui_monitoring_event_id: event&.id
+        },
+        extra: { 
+          message: message,
+          ui_monitoring_event_id: event&.id
+        }
       )
+      sentry_event_id = sentry_event.event_id if sentry_event
+      
+      # Update the UI monitoring event with the Sentry event ID if available
+      if event && sentry_event_id
+        event.update(data: event.data.merge(sentry_event_id: sentry_event_id))
+      end
     end
+    
+    # Add monitoring dashboard link to the message
+    dashboard_url = Rails.application.routes.url_helpers.monitoring_events_url(
+      host: ENV['APPLICATION_HOST'] || 'localhost:3000',
+      protocol: ENV['APPLICATION_PROTOCOL'] || 'http'
+    )
+    
+    # Add Sentry link if available
+    if sentry_event_id && ENV['SENTRY_ORGANIZATION'] && ENV['SENTRY_PROJECT']
+      sentry_url = "https://sentry.io/organizations/#{ENV['SENTRY_ORGANIZATION']}/issues/?project=#{ENV['SENTRY_PROJECT']}&query=event.id%3A#{sentry_event_id}"
+      message += "\n\nView in Sentry: #{sentry_url}"
+    end
+    
+    message += "\n\nView in Monitoring Dashboard: #{dashboard_url}"
     
     # Send email notification
     MonitoringMailer.ui_monitoring_alert(title, message, category, severity).deliver_later

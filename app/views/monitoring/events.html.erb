@@ -209,14 +209,32 @@
                 </span>
               </td>
               <td class="px-6 py-4 text-sm">
+                <div class="flex items-center gap-2">
+                  <% if event.event_type == 'ui_error' %>
+                    <div class="font-medium"><%= event.data['error_type'] %></div>
+                    <% if event.has_sentry_event? %>
+                      <%= sentry_badge(event) %>
+                    <% end %>
+                  <% elsif event.event_type == 'performance_metric' %>
+                    <div><%= event.data['metric_name'] %></div>
+                    <% if event.has_sentry_event? %>
+                      <%= sentry_badge(event) %>
+                    <% end %>
+                  <% else %>
+                    <div><%= event.event_type.humanize %></div>
+                    <% if event.has_sentry_event? %>
+                      <%= sentry_badge(event) %>
+                    <% end %>
+                  <% end %>
+                </div>
+                
                 <% if event.event_type == 'ui_error' %>
-                  <div class="font-medium"><%= event.data['error_type'] %></div>
                   <div class="text-gray-500 dark:text-gray-400 truncate max-w-xs"><%= event.data['message'] %></div>
                   <% if event.component_name.present? %>
                     <div class="text-xs mt-1">Component: <%= event.component_name %></div>
                   <% end %>
                 <% elsif event.event_type == 'performance_metric' %>
-                  <div><%= event.data['metric_name'] %>: <%= event.data['value'] %>ms</div>
+                  <div><%= event.data['value'] %>ms</div>
                   <% if event.data['component_name'].present? %>
                     <div class="text-xs mt-1">Component: <%= event.data['component_name'] %></div>
                   <% end %>
@@ -227,6 +245,12 @@
                 <% if event.data['url'].present? %>
                   <div class="text-xs mt-1 text-gray-500 dark:text-gray-400 truncate max-w-xs">
                     URL: <%= event.data['url'] %>
+                  </div>
+                <% end %>
+                
+                <% if event.has_sentry_event? %>
+                  <div class="mt-1">
+                    <%= sentry_link(event) %>
                   </div>
                 <% end %>
               </td>
@@ -317,23 +341,56 @@
       button.addEventListener('click', function() {
         const eventId = this.getAttribute('data-event-id');
         
-        // In a real implementation, this would fetch event details from the server
-        // For now, we'll just show a placeholder
-        detailsContent.innerHTML = `
-          <div class="space-y-4">
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Event ID</h4>
-              <p>${eventId}</p>
-            </div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Details</h4>
-              <p>This would show detailed information about the event, including full stack traces, context data, and related events.</p>
-            </div>
-            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
-              <pre class="text-xs overflow-x-auto">This would contain the full JSON data for the event.</pre>
-            </div>
-          </div>
-        `;
+        // Fetch event details from the server
+        fetch(`/monitoring/events/${eventId}`)
+          .then(response => response.json())
+          .then(data => {
+            let sentrySection = '';
+            if (data.sentry_event_id) {
+              const sentryUrl = data.sentry_url || '#';
+              sentrySection = `
+                <div class="mt-4 p-4 bg-purple-50 dark:bg-purple-900 rounded-lg">
+                  <h4 class="text-sm font-medium text-purple-800 dark:text-purple-200">Sentry Integration</h4>
+                  <p class="text-xs text-purple-700 dark:text-purple-300 mt-1">Sentry Event ID: ${data.sentry_event_id}</p>
+                  <a href="${sentryUrl}" target="_blank" rel="noopener noreferrer" 
+                     class="inline-block mt-2 text-sm text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">
+                    View in Sentry
+                  </a>
+                </div>
+              `;
+            }
+            
+            detailsContent.innerHTML = `
+              <div class="space-y-4">
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Event ID</h4>
+                  <p>${data.id}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Event Type</h4>
+                  <p>${data.event_type}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Timestamp</h4>
+                  <p>${data.created_at}</p>
+                </div>
+                ${sentrySection}
+                <div>
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Event Data</h4>
+                  <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mt-2">
+                    <pre class="text-xs overflow-x-auto">${JSON.stringify(data.data, null, 2)}</pre>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .catch(error => {
+            detailsContent.innerHTML = `
+              <div class="text-red-500">
+                Error loading event details: ${error.message}
+              </div>
+            `;
+          });
         
         modal.classList.remove('hidden');
       });

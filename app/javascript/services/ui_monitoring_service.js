@@ -1,5 +1,6 @@
 // UI Monitoring Service
 // Handles monitoring for theme switching, component errors, and critical UI interactions
+import SentryIntegrationService from './sentry_integration_service';
 
 export default class UiMonitoringService {
   static init() {
@@ -7,6 +8,11 @@ export default class UiMonitoringService {
     this.setupComponentErrorMonitoring();
     this.setupCriticalInteractionLogging();
     this.setupPerformanceMonitoring();
+    
+    // Initialize Sentry integration if available
+    if (window.Sentry) {
+      SentryIntegrationService.init();
+    }
     
     console.log("UI Monitoring Service initialized");
   }
@@ -206,23 +212,36 @@ export default class UiMonitoringService {
   static reportError(errorType, error, context = {}) {
     console.error(`[${errorType}]`, error, context);
     
-    // Send to Sentry if available
-    if (window.Sentry) {
-      window.Sentry.captureException(error, {
-        tags: { errorType },
-        extra: context
-      });
+    // Check for duplicate errors if Sentry integration is available
+    if (window.Sentry && SentryIntegrationService.isDuplicateError(error, context)) {
+      console.log(`Skipping duplicate error report: ${error?.message}`);
+      return;
     }
     
-    // Send to our UI monitoring system
+    // Send to our UI monitoring system first
     this.sendToUiMonitoring('ui_error', {
       error_type: errorType,
       message: error?.message || 'Unknown error',
       stack: error?.stack,
       context: JSON.stringify(context),
       url: window.location.href,
-      user_agent: navigator.userAgent
+      user_agent: navigator.userAgent,
+      sentry_event_id: window.Sentry ? window.Sentry.lastEventId() : null
     });
+    
+    // Send to Sentry if available, with reference to our monitoring event
+    if (window.Sentry) {
+      window.Sentry.captureException(error, {
+        tags: { 
+          errorType,
+          ui_monitoring: true
+        },
+        extra: {
+          ...context,
+          ui_monitoring_event_type: errorType
+        }
+      });
+    }
   }
 
   // Log performance metrics
@@ -283,6 +302,22 @@ export default class UiMonitoringService {
     // Get CSRF token
     const token = document.querySelector('meta[name="csrf-token"]')?.content;
     
+    // Dispatch event for Sentry integration
+    document.dispatchEvent(new CustomEvent('ui-monitoring:event', {
+      detail: { eventType, data }
+    }));
+    
+    // For performance metrics, dispatch a specific event
+    if (eventType === 'performance_metric') {
+      document.dispatchEvent(new CustomEvent('ui-monitoring:performance', {
+        detail: {
+          metricName: data.metric_name,
+          value: parseFloat(data.value),
+          context: data.context ? JSON.parse(data.context) : {}
+        }
+      }));
+    }
+    
     fetch('/api/ui_monitoring_events', {
       method: 'POST',
       headers: {
@@ -297,7 +332,15 @@ export default class UiMonitoringService {
       }),
       // Use keepalive to ensure the request completes even if page is unloading
       keepalive: true
-    }).catch(error => {
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.event_id) {
+        // Store the event ID for Sentry integration
+        window.lastUiMonitoringEventId = result.event_id;
+      }
+    })
+    .catch(error => {
       console.error('Error sending monitoring data:', error);
     });
   }

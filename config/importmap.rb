@@ -8,6 +8,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/components", under: "controllers", to: ""
 pin_all_from "app/javascript/services", under: "services", to: "services"
 pin "services/ui_monitoring_service", to: "services/ui_monitoring_service.js"
+pin "services/sentry_integration_service", to: "services/sentry_integration_service.js"
 pin "@github/hotkey", to: "@github--hotkey.js" # @3.1.1
 pin "@simonwep/pickr", to: "@simonwep--pickr.js" # @1.9.1
 

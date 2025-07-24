@@ -75,4 +75,29 @@ module MonitoringHelper
     
     content_tag :span, text, class: "px-2 inline-flex text-xs leading-5 font-semibold rounded-full #{class_name}"
   end
-end
+end  # Sen
+try integration helpers
+  
+  def sentry_link(event)
+    return nil unless event.has_sentry_event?
+    
+    link_to "View in Sentry", event.sentry_url, 
+      target: "_blank", 
+      rel: "noopener noreferrer", 
+      class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+  end
+  
+  def sentry_badge(event)
+    return nil unless event.has_sentry_event?
+    
+    content_tag :span, "Sentry", 
+      class: "px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100",
+      title: "This event has a corresponding Sentry event"
+  end
+  
+  def sentry_event_id_display(event)
+    return nil unless event.has_sentry_event?
+    
+    content_tag :span, "Sentry ID: #{event.sentry_event_id}", 
+      class: "text-xs text-gray-500 dark:text-gray-400"
+  end

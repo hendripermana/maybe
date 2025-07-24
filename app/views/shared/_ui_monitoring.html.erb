@@ -34,6 +34,17 @@
       beforeSend(event) {
         event.tags = event.tags || {};
         event.tags.theme = document.documentElement.dataset.theme || 'light';
+        
+        // Add UI monitoring context if available
+        if (window.lastUiMonitoringEventId) {
+          event.tags.ui_monitoring_event_id = window.lastUiMonitoringEventId;
+          event.contexts = event.contexts || {};
+          event.contexts.ui_monitoring = {
+            event_id: window.lastUiMonitoringEventId,
+            dashboard_url: `${window.location.origin}/monitoring/events?search=${window.lastUiMonitoringEventId}`
+          };
+        }
+        
         return event;
       }
     });
@@ -44,5 +55,12 @@
         email: "<%= current_user.email %>"
       });
     <% end %>
+    
+    // Initialize Sentry integration with UI monitoring
+    document.addEventListener("turbo:load", () => {
+      if (typeof SentryIntegrationService !== 'undefined') {
+        SentryIntegrationService.init();
+      }
+    });
   </script>
 <% end %>

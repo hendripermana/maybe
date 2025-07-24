@@ -61,4 +61,25 @@ class UiMonitoringEvent < ApplicationRecord
       'Other'
     end
   end
+  
+  # Sentry integration methods
+  def sentry_event_id
+    data['sentry_event_id']
+  end
+  
+  def has_sentry_event?
+    sentry_event_id.present?
+  end
+  
+  def sentry_url
+    return nil unless has_sentry_event?
+    
+    # Construct Sentry URL based on environment configuration
+    sentry_org = ENV['SENTRY_ORGANIZATION']
+    sentry_project = ENV['SENTRY_PROJECT']
+    
+    return nil unless sentry_org.present? && sentry_project.present?
+    
+    "https://sentry.io/organizations/#{sentry_org}/issues/?project=#{sentry_project}&query=event.id%3A#{sentry_event_id}"
+  end
 end
