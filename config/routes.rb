@@ -215,6 +215,8 @@ Rails.application.routes.draw do
 
   # API routes
   namespace :api do
+    resources :ui_monitoring_events, only: [:create]
+    
     namespace :v1 do
       # Authentication endpoints
       post "auth/signup", to: "auth#signup"

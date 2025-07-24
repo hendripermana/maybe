@@ -1,11 +1,70 @@
 class UiMonitoringAlertJob < ApplicationJob
   queue_as :default
 
-  def perform
-    check_theme_switching_performance
-    check_component_errors
-    check_accessibility_issues
-    check_performance_regressions
+  def perform(event_id = nil)
+    if event_id.present?
+      # Process a specific event
+      process_specific_event(event_id)
+    else
+      # Run regular checks
+      check_theme_switching_performance
+      check_component_errors
+      check_accessibility_issues
+      check_performance_regressions
+    end
+  end
+  
+  def process_specific_event(event_id)
+    event = UiMonitoringEvent.find_by(id: event_id)
+    return unless event
+    
+    case event.event_type
+    when 'ui_error'
+      handle_error_alert(event)
+    when 'performance_metric'
+      handle_performance_alert(event)
+    end
+  end
+  
+  def handle_error_alert(event)
+    error_type = event.data['error_type']
+    component_name = event.data['component_name']
+    message = event.data['message']
+    
+    # Count similar errors
+    similar_errors = UiMonitoringEvent
+      .where(event_type: 'ui_error')
+      .where("data->>'error_type' = ?", error_type)
+      .where('created_at > ?', 1.hour.ago)
+      .count
+    
+    if similar_errors >= 3
+      alert_message = "UI Error Alert: #{error_type} in #{component_name || 'unknown component'} (#{similar_errors} occurrences in the last hour)\n"
+      alert_message += "Message: #{message}\n"
+      
+      send_alert(
+        "UI Error Alert: #{error_type}",
+        alert_message,
+        :error,
+        :error
+      )
+    end
+  end
+  
+  def handle_performance_alert(event)
+    metric_name = event.data['metric_name']
+    value = event.data['value']
+    
+    if metric_name == 'theme_switch_duration' && value.to_f > 2000
+      alert_message = "Performance Alert: #{metric_name} - #{value}ms exceeds threshold\n"
+      
+      send_alert(
+        "Performance Alert: #{metric_name}",
+        alert_message,
+        :performance,
+        :warning
+      )
+    end
   end
 
   private
