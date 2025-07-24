@@ -10,6 +10,23 @@
   <%= javascript_include_tag "https://cdn.plaid.com/link/v2/stable/link-initialize.js" %>
   <%= combobox_style_tag %>
 
+  <% if controller_name == 'monitoring' %>
+    <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.min.js", "data-turbo-track": "reload" %>
+    <script>
+      document.addEventListener('turbo:load', function() {
+        // Re-initialize charts after Turbo navigation
+        if (typeof ApexCharts !== 'undefined') {
+          document.querySelectorAll('[id$="-chart"]').forEach(function(chart) {
+            const chartId = chart.id;
+            if (window[chartId + 'Instance']) {
+              window[chartId + 'Instance'].destroy();
+            }
+          });
+        }
+      });
+    </script>
+  <% end %>
+
   <%= javascript_importmap_tags %>
   <%= turbo_refreshes_with method: :morph, scroll: :preserve %>
 

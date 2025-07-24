@@ -4,119 +4,511 @@
   <%= link_to "← Back to Dashboard", monitoring_path, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-  <h2 class="text-lg font-medium mb-4">Filter Feedback</h2>
+<!-- Feedback Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-yellow-100 dark:bg-yellow-800 p-3">
+        <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Open Feedback</h3>
+        <p class="text-lg font-semibold"><%= UserFeedback.unresolved.count %></p>
+      </div>
+    </div>
+  </div>
   
-  <%= form_with url: monitoring_feedback_path, method: :get, class: "space-y-4" do |f| %>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div>
-        <%= f.label :feedback_type, "Feedback Type", class: "block text-sm font-medium mb-1" %>
-        <%= f.select :feedback_type, 
-          options_for_select([["All Types", ""]] + @feedback_types.map { |t| [t.humanize, t] }, params[:feedback_type]),
-          {}, 
-          { class: "form-select w-full" } %>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-green-100 dark:bg-green-800 p-3">
+        <svg class="h-6 w-6 text-green-600 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
       </div>
-      
-      <div>
-        <%= f.label :resolved, "Status", class: "block text-sm font-medium mb-1" %>
-        <%= f.select :resolved, 
-          options_for_select([
-            ["All Status", ""], 
-            ["Resolved", "true"], 
-            ["Unresolved", "false"]
-          ], params[:resolved]),
-          {}, 
-          { class: "form-select w-full" } %>
-      </div>
-      
-      <div>
-        <%= f.label :search, "Search", class: "block text-sm font-medium mb-1" %>
-        <%= f.text_field :search, value: params[:search], placeholder: "Search in feedback...", class: "form-input w-full" %>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Resolved Feedback</h3>
+        <p class="text-lg font-semibold"><%= UserFeedback.where(resolved: true).count %></p>
       </div>
     </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <%= f.label :start_date, "Start Date", class: "block text-sm font-medium mb-1" %>
-        <%= f.date_field :start_date, value: params[:start_date], class: "form-input w-full" %>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-purple-100 dark:bg-purple-800 p-3">
+        <svg class="h-6 w-6 text-purple-600 dark:text-purple-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
       </div>
-      
-      <div>
-        <%= f.label :end_date, "End Date", class: "block text-sm font-medium mb-1" %>
-        <%= f.date_field :end_date, value: params[:end_date], class: "form-input w-full" %>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">UI Feedback</h3>
+        <p class="text-lg font-semibold"><%= UserFeedback.ui_related.count %></p>
       </div>
     </div>
-    
-    <div class="flex space-x-2">
-      <%= f.submit "Apply Filters", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" %>
-      <%= link_to "Clear Filters", monitoring_feedback_path, class: "px-4 py-2 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" %>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-blue-100 dark:bg-blue-800 p-3">
+        <svg class="h-6 w-6 text-blue-600 dark:text-blue-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+        </svg>
+      </div>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Feedback</h3>
+        <p class="text-lg font-semibold"><%= UserFeedback.count %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback Visualization -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+  <!-- Feedback by Type Chart -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+    <h3 class="text-lg font-medium mb-4">Feedback by Type</h3>
+    <div class="h-64" id="feedback-type-chart"></div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const feedbackTypes = <%= raw UserFeedback.group(:feedback_type).count.to_json %>;
+        const labels = Object.keys(feedbackTypes).map(key => key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        const data = Object.values(feedbackTypes);
+        
+        const chart = new ApexCharts(document.querySelector("#feedback-type-chart"), {
+          series: data,
+          labels: labels,
+          chart: {
+            type: 'donut',
+            height: 250,
+            fontFamily: 'inherit',
+          },
+          plotOptions: {
+            pie: {
+              donut: {
+                size: '50%'
+              }
+            }
+          },
+          legend: {
+            position: 'bottom',
+            fontSize: '14px',
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                height: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }],
+          colors: ['#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#6B7280']
+        });
+        
+        chart.render();
+      });
+    </script>
+  </div>
+  
+  <!-- Feedback Resolution Status -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+    <h3 class="text-lg font-medium mb-4">Resolution Status by Type</h3>
+    <div class="h-64" id="resolution-status-chart"></div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // This would typically come from the controller
+        const feedbackData = <%= raw @feedback_types.map { |type| 
+          { 
+            type: type.humanize, 
+            resolved: UserFeedback.where(feedback_type: type, resolved: true).count,
+            unresolved: UserFeedback.where(feedback_type: type, resolved: false).count
+          }
+        }.to_json %>;
+        
+        const chart = new ApexCharts(document.querySelector("#resolution-status-chart"), {
+          series: [{
+            name: 'Resolved',
+            data: feedbackData.map(item => item.resolved)
+          }, {
+            name: 'Unresolved',
+            data: feedbackData.map(item => item.unresolved)
+          }],
+          chart: {
+            type: 'bar',
+            height: 250,
+            stacked: true,
+            fontFamily: 'inherit',
+            toolbar: {
+              show: false
+            }
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: '55%',
+              endingShape: 'rounded'
+            },
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            width: 1,
+            colors: ['#fff']
+          },
+          xaxis: {
+            categories: feedbackData.map(item => item.type),
+            labels: {
+              style: {
+                fontSize: '12px'
+              }
+            }
+          },
+          yaxis: {
+            labels: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              }
+            }
+          },
+          fill: {
+            opacity: 1
+          },
+          legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetX: 40
+          },
+          colors: ['#10B981', '#F59E0B']
+        });
+        
+        chart.render();
+      });
+    </script>
+  </div>
+</div>
+
+<!-- Filter Panel -->
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-medium">Filter Feedback</h2>
+    <button type="button" id="toggle-filters" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+      <span id="filter-text-show">Show Filters</span>
+      <span id="filter-text-hide" class="hidden">Hide Filters</span>
+    </button>
+  </div>
+  
+  <div id="filter-panel" class="hidden">
+    <%= form_with url: monitoring_feedback_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <%= f.label :feedback_type, "Feedback Type", class: "block text-sm font-medium mb-1" %>
+          <%= f.select :feedback_type, 
+            options_for_select([["All Types", ""]] + @feedback_types.map { |t| [t.humanize, t] }, params[:feedback_type]),
+            {}, 
+            { class: "form-select w-full" } %>
+        </div>
+        
+        <div>
+          <%= f.label :resolved, "Status", class: "block text-sm font-medium mb-1" %>
+          <%= f.select :resolved, 
+            options_for_select([
+              ["All Status", ""], 
+              ["Resolved", "true"], 
+              ["Unresolved", "false"]
+            ], params[:resolved]),
+            {}, 
+            { class: "form-select w-full" } %>
+        </div>
+        
+        <div>
+          <%= f.label :search, "Search", class: "block text-sm font-medium mb-1" %>
+          <%= f.text_field :search, value: params[:search], placeholder: "Search in feedback...", class: "form-input w-full" %>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :start_date, "Start Date", class: "block text-sm font-medium mb-1" %>
+          <%= f.date_field :start_date, value: params[:start_date], class: "form-input w-full" %>
+        </div>
+        
+        <div>
+          <%= f.label :end_date, "End Date", class: "block text-sm font-medium mb-1" %>
+          <%= f.date_field :end_date, value: params[:end_date], class: "form-input w-full" %>
+        </div>
+      </div>
+      
+      <div class="flex space-x-2">
+        <%= f.submit "Apply Filters", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" %>
+        <%= link_to "Clear Filters", monitoring_feedback_path, class: "px-4 py-2 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Active Filters Display -->
+  <% if params[:feedback_type].present? || params[:resolved].present? || params[:start_date].present? || params[:end_date].present? || params[:search].present? %>
+    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-sm font-medium mb-2">Active Filters:</h3>
+      <div class="flex flex-wrap gap-2">
+        <% if params[:feedback_type].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Type: <%= params[:feedback_type].humanize %>
+            <%= link_to "×", monitoring_feedback_path(params.permit(:resolved, :start_date, :end_date, :search)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+        
+        <% if params[:resolved].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Status: <%= params[:resolved] == 'true' ? 'Resolved' : 'Unresolved' %>
+            <%= link_to "×", monitoring_feedback_path(params.permit(:feedback_type, :start_date, :end_date, :search)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+        
+        <% if params[:start_date].present? && params[:end_date].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Date Range: <%= params[:start_date] %> to <%= params[:end_date] %>
+            <%= link_to "×", monitoring_feedback_path(params.permit(:feedback_type, :resolved, :search)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+        
+        <% if params[:search].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Search: <%= params[:search] %>
+            <%= link_to "×", monitoring_feedback_path(params.permit(:feedback_type, :resolved, :start_date, :end_date)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>
 
+<!-- Feedback Management Table -->
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-    <thead class="bg-gray-50 dark:bg-gray-700">
-      <tr>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Message</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Page</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
-      </tr>
-    </thead>
-    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-      <% if @feedback.any? %>
-        <% @feedback.each do |feedback| %>
+  <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+    <h3 class="text-lg font-medium">Feedback List</h3>
+    <span class="text-sm text-gray-500 dark:text-gray-400">
+      <%= @pagy.count %> items found
+      <% if @pagy.count > 0 %>
+        (showing <%= @pagy.from %>-<%= @pagy.to %>)
+      <% end %>
+    </span>
+  </div>
+  
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Message</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Page</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <% if @feedback.any? %>
+          <% @feedback.each do |feedback| %>
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <% feedback_badge_class = case feedback.feedback_type 
+                   when 'bug_report' then 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
+                   when 'feature_request' then 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
+                   when 'ui_feedback' then 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100'
+                   when 'accessibility_issue' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
+                   when 'performance_issue' then 'bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100'
+                   else 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
+                   end %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= feedback_badge_class %>">
+                  <%= feedback.feedback_type.humanize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <div class="truncate max-w-xs">
+                  <a href="#" class="view-feedback" data-feedback-id="<%= feedback.id %>">
+                    <%= feedback.message %>
+                  </a>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <div class="truncate max-w-xs"><%= feedback.page %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= feedback.user ? feedback.user.email : 'Anonymous' %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= status_badge(feedback.resolved, feedback.resolved ? "Resolved" : "Open") %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <div><%= feedback.created_at.strftime("%Y-%m-%d") %></div>
+                <div><%= feedback.created_at.strftime("%H:%M:%S") %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <% unless feedback.resolved %>
+                  <%= button_to "Resolve", resolve_feedback_path(feedback), method: :post, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
+                <% else %>
+                  <span class="text-gray-400 text-xs">
+                    <% if feedback.resolved_by %>
+                      <% resolver = User.find_by(id: feedback.resolved_by) %>
+                      Resolved by <%= resolver&.email || 'Unknown' %>
+                    <% else %>
+                      System resolved
+                    <% end %>
+                  </span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
           <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <%= feedback.feedback_type.humanize %>
-            </td>
-            <td class="px-6 py-4 text-sm">
-              <div class="truncate max-w-xs"><%= feedback.message %></div>
-            </td>
-            <td class="px-6 py-4 text-sm">
-              <div class="truncate max-w-xs"><%= feedback.page %></div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <%= feedback.user ? feedback.user.email : 'Anonymous' %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <% if feedback.resolved %>
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                  Resolved
-                </span>
-              <% else %>
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                  Open
-                </span>
-              <% end %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-              <%= feedback.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <% unless feedback.resolved %>
-                <%= button_to "Resolve", resolve_feedback_path(feedback), method: :post, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
-              <% else %>
-                <span class="text-gray-400">Resolved by <%= feedback.resolved_by ? User.find_by(id: feedback.resolved_by)&.email || 'Unknown' : 'System' %></span>
-              <% end %>
+            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+              No feedback found matching your criteria
             </td>
           </tr>
         <% end %>
-      <% else %>
-        <tr>
-          <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-            No feedback found matching your criteria
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
   
   <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700">
     <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
   </div>
 </div>
+
+<!-- Feedback Details Modal -->
+<div id="feedback-details-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+      <h3 class="text-lg font-medium">Feedback Details</h3>
+      <button type="button" id="close-modal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="p-6" id="feedback-details-content">
+      <!-- Content will be loaded dynamically -->
+      <div class="animate-pulse">
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-4"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 mb-4"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3 mb-4"></div>
+      </div>
+    </div>
+    <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+      <button type="button" id="close-modal-btn" class="px-4 py-2 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle filter panel
+    const toggleFilters = document.getElementById('toggle-filters');
+    const filterPanel = document.getElementById('filter-panel');
+    const filterTextShow = document.getElementById('filter-text-show');
+    const filterTextHide = document.getElementById('filter-text-hide');
+    
+    // Show filters by default if any are active
+    <% if params[:feedback_type].present? || params[:resolved].present? || params[:start_date].present? || params[:end_date].present? || params[:search].present? %>
+      filterPanel.classList.remove('hidden');
+      filterTextShow.classList.add('hidden');
+      filterTextHide.classList.remove('hidden');
+    <% end %>
+    
+    toggleFilters.addEventListener('click', function() {
+      filterPanel.classList.toggle('hidden');
+      filterTextShow.classList.toggle('hidden');
+      filterTextHide.classList.toggle('hidden');
+    });
+    
+    // Feedback details modal
+    const modal = document.getElementById('feedback-details-modal');
+    const closeModal = document.getElementById('close-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const detailsContent = document.getElementById('feedback-details-content');
+    const viewFeedbackLinks = document.querySelectorAll('.view-feedback');
+    
+    viewFeedbackLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const feedbackId = this.getAttribute('data-feedback-id');
+        
+        // In a real implementation, this would fetch feedback details from the server
+        // For now, we'll just show a placeholder with the feedback that's already in the table
+        const row = this.closest('tr');
+        const type = row.cells[0].textContent.trim();
+        const message = row.cells[1].textContent.trim();
+        const page = row.cells[2].textContent.trim();
+        const user = row.cells[3].textContent.trim();
+        const status = row.cells[4].textContent.trim();
+        const time = row.cells[5].textContent.trim();
+        
+        detailsContent.innerHTML = `
+          <div class="space-y-4">
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Feedback ID</h4>
+              <p>${feedbackId}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</h4>
+              <p>${type}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Message</h4>
+              <p class="whitespace-pre-wrap">${message}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Page</h4>
+              <p>${page}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">User</h4>
+              <p>${user}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h4>
+              <p>${status}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Submitted</h4>
+              <p>${time}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Browser Information</h4>
+              <p>This would show browser and system information.</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Theme</h4>
+              <p>This would show the theme that was active when the feedback was submitted.</p>
+            </div>
+          </div>
+        `;
+        
+        modal.classList.remove('hidden');
+      });
+    });
+    
+    closeModal.addEventListener('click', function() {
+      modal.classList.add('hidden');
+    });
+    
+    closeModalBtn.addEventListener('click', function() {
+      modal.classList.add('hidden');
+    });
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+      }
+    });
+  });
+</script>

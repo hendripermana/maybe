@@ -4,122 +4,350 @@
   <%= link_to "← Back to Dashboard", monitoring_path, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-  <h2 class="text-lg font-medium mb-4">Filter Events</h2>
+<!-- Event Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-red-100 dark:bg-red-800 p-3">
+        <svg class="h-6 w-6 text-red-600 dark:text-red-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">UI Errors</h3>
+        <p class="text-lg font-semibold"><%= UiMonitoringEvent.errors.count %></p>
+      </div>
+    </div>
+  </div>
   
-  <%= form_with url: monitoring_events_path, method: :get, class: "space-y-4" do |f| %>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div>
-        <%= f.label :event_type, "Event Type", class: "block text-sm font-medium mb-1" %>
-        <%= f.select :event_type, 
-          options_for_select([["All Types", ""]] + @event_types.map { |t| [t.humanize, t] }, params[:event_type]),
-          {}, 
-          { class: "form-select w-full" } %>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-blue-100 dark:bg-blue-800 p-3">
+        <svg class="h-6 w-6 text-blue-600 dark:text-blue-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      </div>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Performance Metrics</h3>
+        <p class="text-lg font-semibold"><%= UiMonitoringEvent.where(event_type: 'performance_metric').count %></p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-purple-100 dark:bg-purple-800 p-3">
+        <svg class="h-6 w-6 text-purple-600 dark:text-purple-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+        </svg>
+      </div>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Theme Events</h3>
+        <p class="text-lg font-semibold"><%= UiMonitoringEvent.theme_related.count %></p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 rounded-md bg-green-100 dark:bg-green-800 p-3">
+        <svg class="h-6 w-6 text-green-600 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="ml-4">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Events</h3>
+        <p class="text-lg font-semibold"><%= UiMonitoringEvent.count %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Panel -->
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-medium">Filter Events</h2>
+    <button type="button" id="toggle-filters" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+      <span id="filter-text-show">Show Filters</span>
+      <span id="filter-text-hide" class="hidden">Hide Filters</span>
+    </button>
+  </div>
+  
+  <div id="filter-panel" class="hidden">
+    <%= form_with url: monitoring_events_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <%= f.label :event_type, "Event Type", class: "block text-sm font-medium mb-1" %>
+          <%= f.select :event_type, 
+            options_for_select([["All Types", ""]] + @event_types.map { |t| [t.humanize, t] }, params[:event_type]),
+            {}, 
+            { class: "form-select w-full" } %>
+        </div>
+        
+        <div>
+          <%= f.label :component, "Component", class: "block text-sm font-medium mb-1" %>
+          <%= f.select :component, 
+            options_for_select([["All Components", ""]] + @components.map { |c| [c, c] }, params[:component]),
+            {}, 
+            { class: "form-select w-full" } %>
+        </div>
+        
+        <div>
+          <%= f.label :error_type, "Error Type", class: "block text-sm font-medium mb-1" %>
+          <%= f.select :error_type, 
+            options_for_select([["All Errors", ""]] + @error_types.map { |e| [e, e] }, params[:error_type]),
+            {}, 
+            { class: "form-select w-full" } %>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :start_date, "Start Date", class: "block text-sm font-medium mb-1" %>
+          <%= f.date_field :start_date, value: params[:start_date], class: "form-input w-full" %>
+        </div>
+        
+        <div>
+          <%= f.label :end_date, "End Date", class: "block text-sm font-medium mb-1" %>
+          <%= f.date_field :end_date, value: params[:end_date], class: "form-input w-full" %>
+        </div>
       </div>
       
       <div>
-        <%= f.label :component, "Component", class: "block text-sm font-medium mb-1" %>
-        <%= f.select :component, 
-          options_for_select([["All Components", ""]] + @components.map { |c| [c, c] }, params[:component]),
-          {}, 
-          { class: "form-select w-full" } %>
+        <%= f.label :search, "Search", class: "block text-sm font-medium mb-1" %>
+        <%= f.text_field :search, value: params[:search], placeholder: "Search in event data...", class: "form-input w-full" %>
       </div>
       
-      <div>
-        <%= f.label :error_type, "Error Type", class: "block text-sm font-medium mb-1" %>
-        <%= f.select :error_type, 
-          options_for_select([["All Errors", ""]] + @error_types.map { |e| [e, e] }, params[:error_type]),
-          {}, 
-          { class: "form-select w-full" } %>
+      <div class="flex space-x-2">
+        <%= f.submit "Apply Filters", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" %>
+        <%= link_to "Clear Filters", monitoring_events_path, class: "px-4 py-2 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" %>
       </div>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <%= f.label :start_date, "Start Date", class: "block text-sm font-medium mb-1" %>
-        <%= f.date_field :start_date, value: params[:start_date], class: "form-input w-full" %>
+    <% end %>
+  </div>
+  
+  <!-- Active Filters Display -->
+  <% if params[:event_type].present? || params[:component].present? || params[:error_type].present? || params[:start_date].present? || params[:end_date].present? || params[:search].present? %>
+    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-sm font-medium mb-2">Active Filters:</h3>
+      <div class="flex flex-wrap gap-2">
+        <% if params[:event_type].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Event Type: <%= params[:event_type].humanize %>
+            <%= link_to "×", monitoring_events_path(params.permit(:component, :error_type, :start_date, :end_date, :search)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+        
+        <% if params[:component].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Component: <%= params[:component] %>
+            <%= link_to "×", monitoring_events_path(params.permit(:event_type, :error_type, :start_date, :end_date, :search)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+        
+        <% if params[:error_type].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Error Type: <%= params[:error_type] %>
+            <%= link_to "×", monitoring_events_path(params.permit(:event_type, :component, :start_date, :end_date, :search)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+        
+        <% if params[:start_date].present? && params[:end_date].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Date Range: <%= params[:start_date] %> to <%= params[:end_date] %>
+            <%= link_to "×", monitoring_events_path(params.permit(:event_type, :component, :error_type, :search)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
+        
+        <% if params[:search].present? %>
+          <div class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 text-xs px-2 py-1 rounded-full flex items-center">
+            Search: <%= params[:search] %>
+            <%= link_to "×", monitoring_events_path(params.permit(:event_type, :component, :error_type, :start_date, :end_date)), class: "ml-1 font-bold" %>
+          </div>
+        <% end %>
       </div>
-      
-      <div>
-        <%= f.label :end_date, "End Date", class: "block text-sm font-medium mb-1" %>
-        <%= f.date_field :end_date, value: params[:end_date], class: "form-input w-full" %>
-      </div>
-    </div>
-    
-    <div>
-      <%= f.label :search, "Search", class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :search, value: params[:search], placeholder: "Search in event data...", class: "form-input w-full" %>
-    </div>
-    
-    <div class="flex space-x-2">
-      <%= f.submit "Apply Filters", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" %>
-      <%= link_to "Clear Filters", monitoring_events_path, class: "px-4 py-2 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" %>
     </div>
   <% end %>
 </div>
 
+<!-- Events Table -->
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-    <thead class="bg-gray-50 dark:bg-gray-700">
-      <tr>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Details</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Browser</th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
-      </tr>
-    </thead>
-    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-      <% if @events.any? %>
-        <% @events.each do |event| %>
+  <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+    <h3 class="text-lg font-medium">Event List</h3>
+    <span class="text-sm text-gray-500 dark:text-gray-400">
+      <%= @pagy.count %> events found
+      <% if @pagy.count > 0 %>
+        (showing <%= @pagy.from %>-<%= @pagy.to %>)
+      <% end %>
+    </span>
+  </div>
+  
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Details</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Browser</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <% if @events.any? %>
+          <% @events.each do |event| %>
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <% event_badge_class = case event.event_type 
+                   when 'ui_error' then 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
+                   when 'performance_metric' then 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
+                   when 'performance_issue' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
+                   else 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
+                   end %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= event_badge_class %>">
+                  <%= event.event_type.humanize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <% if event.event_type == 'ui_error' %>
+                  <div class="font-medium"><%= event.data['error_type'] %></div>
+                  <div class="text-gray-500 dark:text-gray-400 truncate max-w-xs"><%= event.data['message'] %></div>
+                  <% if event.component_name.present? %>
+                    <div class="text-xs mt-1">Component: <%= event.component_name %></div>
+                  <% end %>
+                <% elsif event.event_type == 'performance_metric' %>
+                  <div><%= event.data['metric_name'] %>: <%= event.data['value'] %>ms</div>
+                  <% if event.data['component_name'].present? %>
+                    <div class="text-xs mt-1">Component: <%= event.data['component_name'] %></div>
+                  <% end %>
+                <% else %>
+                  <div class="truncate max-w-xs"><%= event.data.to_json %></div>
+                <% end %>
+                
+                <% if event.data['url'].present? %>
+                  <div class="text-xs mt-1 text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                    URL: <%= event.data['url'] %>
+                  </div>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= event.user ? event.user.email : 'Anonymous' %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= event.browser_info %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <div><%= event.created_at.strftime("%Y-%m-%d") %></div>
+                <div><%= event.created_at.strftime("%H:%M:%S") %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button type="button" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 view-details" data-event-id="<%= event.id %>">
+                  View Details
+                </button>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
           <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <%= event.event_type %>
-            </td>
-            <td class="px-6 py-4 text-sm">
-              <% if event.event_type == 'ui_error' %>
-                <div class="font-medium"><%= event.data['error_type'] %></div>
-                <div class="text-gray-500 dark:text-gray-400 truncate max-w-xs"><%= event.data['message'] %></div>
-                <% if event.component_name.present? %>
-                  <div class="text-xs mt-1">Component: <%= event.component_name %></div>
-                <% end %>
-              <% elsif event.event_type == 'performance_metric' %>
-                <div><%= event.data['metric_name'] %>: <%= event.data['value'] %>ms</div>
-                <% if event.data['component_name'].present? %>
-                  <div class="text-xs mt-1">Component: <%= event.data['component_name'] %></div>
-                <% end %>
-              <% else %>
-                <div class="truncate max-w-xs"><%= event.data.to_json %></div>
-              <% end %>
-              
-              <% if event.data['url'].present? %>
-                <div class="text-xs mt-1 text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                  URL: <%= event.data['url'] %>
-                </div>
-              <% end %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <%= event.user ? event.user.email : 'Anonymous' %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <%= event.browser_info %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-              <%= event.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
+            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+              No events found matching your criteria
             </td>
           </tr>
         <% end %>
-      <% else %>
-        <tr>
-          <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-            No events found matching your criteria
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
   
   <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700">
     <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
   </div>
 </div>
+
+<!-- Event Details Modal (placeholder) -->
+<div id="event-details-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+      <h3 class="text-lg font-medium">Event Details</h3>
+      <button type="button" id="close-modal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="p-6" id="event-details-content">
+      <!-- Content will be loaded dynamically -->
+      <div class="animate-pulse">
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-4"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 mb-4"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3 mb-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle filter panel
+    const toggleFilters = document.getElementById('toggle-filters');
+    const filterPanel = document.getElementById('filter-panel');
+    const filterTextShow = document.getElementById('filter-text-show');
+    const filterTextHide = document.getElementById('filter-text-hide');
+    
+    // Show filters by default if any are active
+    <% if params[:event_type].present? || params[:component].present? || params[:error_type].present? || params[:start_date].present? || params[:end_date].present? || params[:search].present? %>
+      filterPanel.classList.remove('hidden');
+      filterTextShow.classList.add('hidden');
+      filterTextHide.classList.remove('hidden');
+    <% end %>
+    
+    toggleFilters.addEventListener('click', function() {
+      filterPanel.classList.toggle('hidden');
+      filterTextShow.classList.toggle('hidden');
+      filterTextHide.classList.toggle('hidden');
+    });
+    
+    // Event details modal
+    const modal = document.getElementById('event-details-modal');
+    const closeModal = document.getElementById('close-modal');
+    const detailsContent = document.getElementById('event-details-content');
+    const viewDetailsButtons = document.querySelectorAll('.view-details');
+    
+    viewDetailsButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const eventId = this.getAttribute('data-event-id');
+        
+        // In a real implementation, this would fetch event details from the server
+        // For now, we'll just show a placeholder
+        detailsContent.innerHTML = `
+          <div class="space-y-4">
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Event ID</h4>
+              <p>${eventId}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Details</h4>
+              <p>This would show detailed information about the event, including full stack traces, context data, and related events.</p>
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+              <pre class="text-xs overflow-x-auto">This would contain the full JSON data for the event.</pre>
+            </div>
+          </div>
+        `;
+        
+        modal.classList.remove('hidden');
+      });
+    });
+    
+    closeModal.addEventListener('click', function() {
+      modal.classList.add('hidden');
+    });
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+      }
+    });
+  });
+</script>

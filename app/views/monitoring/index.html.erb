@@ -20,11 +20,108 @@
     </div>
   </div>
   
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Summary Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 rounded-md bg-blue-100 dark:bg-blue-800 p-3">
+          <svg class="h-6 w-6 text-blue-600 dark:text-blue-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Errors</h3>
+          <p class="text-lg font-semibold"><%= UiMonitoringEvent.errors.where('created_at > ?', @period.ago).count %></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 rounded-md bg-green-100 dark:bg-green-800 p-3">
+          <svg class="h-6 w-6 text-green-600 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Performance Events</h3>
+          <p class="text-lg font-semibold"><%= UiMonitoringEvent.where(event_type: 'performance_metric').where('created_at > ?', @period.ago).count %></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 rounded-md bg-purple-100 dark:bg-purple-800 p-3">
+          <svg class="h-6 w-6 text-purple-600 dark:text-purple-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Theme Switches</h3>
+          <p class="text-lg font-semibold"><%= UiMonitoringEvent.theme_related.where('created_at > ?', @period.ago).count %></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 rounded-md bg-yellow-100 dark:bg-yellow-800 p-3">
+          <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">User Feedback</h3>
+          <p class="text-lg font-semibold"><%= UserFeedback.where('created_at > ?', @period.ago).count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Visualization Row 1 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- Error Summary Chart -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
       <h3 class="text-lg font-medium mb-4">Error Summary</h3>
       <% if @error_summary.any? %>
-        <div class="space-y-2">
+        <div class="h-64" id="error-chart"></div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const data = <%= raw error_chart_data(@error_summary) %>;
+            
+            if (data.length > 0) {
+              const chart = new ApexCharts(document.querySelector("#error-chart"), {
+                series: data.map(item => item.value),
+                labels: data.map(item => item.name),
+                chart: {
+                  type: 'pie',
+                  height: 250,
+                  fontFamily: 'inherit',
+                },
+                legend: {
+                  position: 'bottom',
+                  fontSize: '14px',
+                },
+                responsive: [{
+                  breakpoint: 480,
+                  options: {
+                    chart: {
+                      height: 200
+                    },
+                    legend: {
+                      position: 'bottom'
+                    }
+                  }
+                }],
+                colors: ['#4F46E5', '#7C3AED', '#EC4899', '#F59E0B', '#10B981', '#3B82F6']
+              });
+              
+              chart.render();
+            }
+          });
+        </script>
+        <div class="mt-4 space-y-2">
           <% @error_summary.each do |error| %>
             <div class="flex justify-between items-center">
               <span class="text-sm"><%= error.error_type %></span>
@@ -33,14 +130,133 @@
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500 dark:text-gray-400">No errors recorded in this period</p>
+        <div class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+          No errors recorded in this period
+        </div>
       <% end %>
     </div>
     
+    <!-- Error Trend Chart -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium mb-4">Error Trend (Last 7 Days)</h3>
+      <div class="h-64" id="error-trend-chart"></div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const data = <%= raw error_trend_data %>;
+          
+          const chart = new ApexCharts(document.querySelector("#error-trend-chart"), {
+            series: [{
+              name: 'Errors',
+              data: data.map(item => item.value)
+            }],
+            chart: {
+              height: 250,
+              type: 'line',
+              fontFamily: 'inherit',
+              toolbar: {
+                show: false
+              }
+            },
+            stroke: {
+              curve: 'smooth',
+              width: 3
+            },
+            colors: ['#EF4444'],
+            xaxis: {
+              categories: data.map(item => item.date),
+              labels: {
+                style: {
+                  fontSize: '12px'
+                }
+              }
+            },
+            yaxis: {
+              labels: {
+                formatter: function(val) {
+                  return val.toFixed(0);
+                }
+              }
+            },
+            markers: {
+              size: 4,
+              strokeWidth: 0,
+              hover: {
+                size: 6
+              }
+            },
+            grid: {
+              borderColor: '#e2e8f0',
+              strokeDashArray: 4
+            }
+          });
+          
+          chart.render();
+        });
+      </script>
+    </div>
+  </div>
+  
+  <!-- Visualization Row 2 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Performance Metrics Chart -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
       <h3 class="text-lg font-medium mb-4">Performance Metrics</h3>
       <% if @performance_metrics.any? %>
-        <div class="space-y-2">
+        <div class="h-64" id="performance-chart"></div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const data = <%= raw performance_chart_data(@performance_metrics) %>;
+            
+            if (data.length > 0) {
+              const chart = new ApexCharts(document.querySelector("#performance-chart"), {
+                series: [{
+                  name: 'Average Duration (ms)',
+                  data: data.map(item => item.value)
+                }],
+                chart: {
+                  type: 'bar',
+                  height: 250,
+                  fontFamily: 'inherit',
+                  toolbar: {
+                    show: false
+                  }
+                },
+                plotOptions: {
+                  bar: {
+                    horizontal: true,
+                    borderRadius: 4,
+                    dataLabels: {
+                      position: 'top',
+                    },
+                  }
+                },
+                colors: ['#3B82F6'],
+                dataLabels: {
+                  enabled: true,
+                  formatter: function (val) {
+                    return val.toFixed(2) + 'ms';
+                  },
+                  offsetX: 30,
+                  style: {
+                    fontSize: '12px',
+                    colors: ['#304758']
+                  }
+                },
+                xaxis: {
+                  categories: data.map(item => item.name),
+                  labels: {
+                    style: {
+                      fontSize: '12px'
+                    }
+                  }
+                }
+              });
+              
+              chart.render();
+            }
+          });
+        </script>
+        <div class="mt-4 space-y-2">
           <% @performance_metrics.each do |metric| %>
             <div class="flex justify-between items-center">
               <span class="text-sm"><%= metric.metric_name %></span>
@@ -49,20 +265,108 @@
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500 dark:text-gray-400">No performance metrics recorded in this period</p>
+        <div class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+          No performance metrics recorded in this period
+        </div>
       <% end %>
     </div>
     
+    <!-- Theme Switching Performance -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-      <h3 class="text-lg font-medium mb-4">Theme Switching</h3>
-      <% if @theme_switch_performance %>
-        <div class="text-center">
-          <div class="text-3xl font-bold"><%= number_with_precision(@theme_switch_performance, precision: 2) %>ms</div>
-          <div class="text-sm text-gray-500 dark:text-gray-400">Average theme switch duration</div>
+      <h3 class="text-lg font-medium mb-4">Theme Switching Performance</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex flex-col items-center justify-center">
+          <% if @theme_switch_performance %>
+            <div class="text-3xl font-bold"><%= number_with_precision(@theme_switch_performance, precision: 2) %>ms</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">Average theme switch duration</div>
+            
+            <% performance_class = @theme_switch_performance < 1000 ? "text-green-500" : (@theme_switch_performance < 2000 ? "text-yellow-500" : "text-red-500") %>
+            <div class="mt-2 <%= performance_class %>">
+              <% if @theme_switch_performance < 1000 %>
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Good
+                </div>
+              <% elsif @theme_switch_performance < 2000 %>
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  Moderate
+                </div>
+              <% else %>
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Slow
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-gray-500 dark:text-gray-400">No data available</div>
+          <% end %>
         </div>
-      <% else %>
-        <p class="text-gray-500 dark:text-gray-400">No theme switching data recorded in this period</p>
-      <% end %>
+        
+        <div class="h-40" id="theme-performance-chart"></div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const data = <%= raw theme_performance_trend_data %>;
+            
+            const chart = new ApexCharts(document.querySelector("#theme-performance-chart"), {
+              series: [{
+                name: 'Duration (ms)',
+                data: data.map(item => item.value)
+              }],
+              chart: {
+                height: 160,
+                type: 'area',
+                fontFamily: 'inherit',
+                sparkline: {
+                  enabled: true
+                },
+                toolbar: {
+                  show: false
+                }
+              },
+              stroke: {
+                curve: 'smooth',
+                width: 2
+              },
+              fill: {
+                type: 'gradient',
+                gradient: {
+                  shadeIntensity: 1,
+                  opacityFrom: 0.7,
+                  opacityTo: 0.3
+                }
+              },
+              colors: ['#8B5CF6'],
+              tooltip: {
+                fixed: {
+                  enabled: false
+                },
+                x: {
+                  show: true,
+                  title: 'Date'
+                },
+                y: {
+                  formatter: function(val) {
+                    return val.toFixed(2) + 'ms';
+                  }
+                },
+                marker: {
+                  show: false
+                }
+              }
+            });
+            
+            chart.render();
+          });
+        </script>
+      </div>
     </div>
   </div>
 </div>
@@ -130,38 +434,152 @@
     <%= link_to "View All Feedback", monitoring_feedback_path, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
   </div>
   
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+  <!-- Feedback Visualization Row -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <!-- Feedback Summary Chart -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 col-span-2">
       <h3 class="text-lg font-medium mb-4">Feedback Summary</h3>
       <% if @feedback_summary.any? %>
-        <div class="space-y-2">
+        <div class="h-64" id="feedback-chart"></div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const data = <%= raw feedback_chart_data(@feedback_summary) %>;
+            
+            if (data.length > 0) {
+              const chart = new ApexCharts(document.querySelector("#feedback-chart"), {
+                series: [{
+                  name: 'Resolved',
+                  data: data.map(item => item.resolved)
+                }, {
+                  name: 'Unresolved',
+                  data: data.map(item => item.unresolved)
+                }],
+                chart: {
+                  type: 'bar',
+                  height: 250,
+                  stacked: true,
+                  fontFamily: 'inherit',
+                  toolbar: {
+                    show: false
+                  }
+                },
+                plotOptions: {
+                  bar: {
+                    horizontal: true,
+                    dataLabels: {
+                      total: {
+                        enabled: true,
+                        offsetX: 0,
+                        style: {
+                          fontSize: '13px',
+                          fontWeight: 900
+                        }
+                      }
+                    }
+                  },
+                },
+                colors: ['#10B981', '#F59E0B'],
+                stroke: {
+                  width: 1,
+                  colors: ['#fff']
+                },
+                xaxis: {
+                  categories: data.map(item => item.name),
+                  labels: {
+                    formatter: function (val) {
+                      return val
+                    }
+                  }
+                },
+                yaxis: {
+                  title: {
+                    text: undefined
+                  },
+                },
+                tooltip: {
+                  y: {
+                    formatter: function (val) {
+                      return val
+                    }
+                  }
+                },
+                fill: {
+                  opacity: 1
+                },
+                legend: {
+                  position: 'top',
+                  horizontalAlign: 'left',
+                  offsetX: 40
+                }
+              });
+              
+              chart.render();
+            }
+          });
+        </script>
+        <div class="mt-4 space-y-2">
           <% @feedback_summary.each do |feedback| %>
             <div class="flex justify-between items-center">
               <span class="text-sm"><%= feedback.feedback_type.humanize %></span>
-              <span class="font-medium"><%= feedback.resolved_count %>/<%= feedback.count %></span>
+              <span class="font-medium"><%= feedback.resolved_count %>/<%= feedback.count %> resolved</span>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500 dark:text-gray-400">No feedback recorded</p>
+        <div class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+          No feedback recorded
+        </div>
       <% end %>
     </div>
     
+    <!-- Feedback Status Summary -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-      <h3 class="text-lg font-medium mb-4">Unresolved Feedback</h3>
+      <h3 class="text-lg font-medium mb-4">Feedback Status</h3>
       <% unresolved_count = @feedback_summary.sum { |f| f.count - f.resolved_count } %>
-      <% if unresolved_count > 0 %>
-        <div class="text-center">
-          <div class="text-3xl font-bold"><%= unresolved_count %></div>
-          <div class="text-sm text-gray-500 dark:text-gray-400">Unresolved feedback items</div>
+      <% resolved_count = @feedback_summary.sum { |f| f.resolved_count } %>
+      <% total_count = unresolved_count + resolved_count %>
+      
+      <% if total_count > 0 %>
+        <div class="mb-6">
+          <div class="flex justify-between mb-1">
+            <span class="text-sm font-medium">Resolution Rate</span>
+            <span class="text-sm font-medium"><%= number_to_percentage(resolved_count.to_f / total_count * 100, precision: 1) %></span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-green-600 h-2.5 rounded-full" style="width: <%= resolved_count.to_f / total_count * 100 %>%"></div>
+          </div>
+        </div>
+        
+        <div class="space-y-6">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-yellow-500"><%= unresolved_count %></div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">Unresolved feedback</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="text-3xl font-bold text-green-500"><%= resolved_count %></div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">Resolved feedback</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="text-3xl font-bold"><%= total_count %></div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">Total feedback</div>
+          </div>
         </div>
       <% else %>
-        <p class="text-gray-500 dark:text-gray-400">All feedback has been resolved</p>
+        <div class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+          No feedback recorded
+        </div>
       <% end %>
     </div>
   </div>
   
+  <!-- Recent Feedback Table -->
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium">Recent Feedback</h3>
+    </div>
+    
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
       <thead class="bg-gray-50 dark:bg-gray-700">
         <tr>
@@ -170,6 +588,7 @@
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
         </tr>
       </thead>
       <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -187,24 +606,30 @@
                 <%= feedback.user ? feedback.user.email : 'Anonymous' %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <% if feedback.resolved %>
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                    Resolved
-                  </span>
-                <% else %>
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                    Open
-                  </span>
-                <% end %>
+                <%= status_badge(feedback.resolved, feedback.resolved ? "Resolved" : "Open") %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                 <%= time_ago_in_words(feedback.created_at) %> ago
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <% unless feedback.resolved %>
+                  <%= button_to "Resolve", resolve_feedback_path(feedback), method: :post, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
+                <% else %>
+                  <span class="text-gray-400 text-xs">
+                    <% if feedback.resolved_by %>
+                      <% resolver = User.find_by(id: feedback.resolved_by) %>
+                      Resolved by <%= resolver&.email || 'Unknown' %>
+                    <% else %>
+                      System resolved
+                    <% end %>
+                  </span>
+                <% end %>
               </td>
             </tr>
           <% end %>
         <% else %>
           <tr>
-            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
               No feedback recorded
             </td>
           </tr>
