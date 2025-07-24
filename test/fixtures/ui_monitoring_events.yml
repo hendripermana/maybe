@@ -1,0 +1,73 @@
+ui_error_event:
+  event_type: ui_error
+  data:
+    error_type: TypeError
+    message: "Cannot read property 'value' of undefined"
+    stack: "TypeError: Cannot read property 'value' of undefined\n    at Object.getValue (app.js:123:45)"
+    component_name: "TransactionForm"
+    url: "http://localhost:3000/transactions/new"
+    user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+  user: regular_user
+  session_id: "session123"
+  ip_address: "192.168.1.0"
+  user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+  data_anonymized: false
+
+performance_metric_event:
+  event_type: performance_metric
+  data:
+    metric_name: "theme_switch_duration"
+    value: 1500.5
+    event_name: "theme_switched"
+    duration: 1500.5
+  user: regular_user
+  session_id: "session456"
+  ip_address: "192.168.1.0"
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  data_anonymized: false
+
+theme_switch_event:
+  event_type: performance_metric
+  data:
+    event_name: "theme_switch_started"
+    timestamp: 1640995200000
+  session_id: "session789"
+  ip_address: "10.0.0.0"
+  user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)"
+  data_anonymized: false
+
+component_error_event:
+  event_type: ui_error
+  data:
+    error_type: "component_render_error"
+    message: "Component failed to render"
+    component_name: "DashboardCard"
+    context: '{"componentName": "DashboardCard", "props": {"title": "Test"}}'
+  user: admin_user
+  session_id: "session101"
+  ip_address: "172.16.0.0"
+  user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+  data_anonymized: false
+
+anonymized_event:
+  event_type: ui_error
+  data:
+    error_type: "TypeError"
+    message: "[ANONYMIZED]"
+    user_agent: "anonymized"
+  session_id: "[ANONYMIZED]"
+  ip_address: "0.0.0.0"
+  user_agent: "anonymized"
+  data_anonymized: true
+  anonymized_at: <%= 1.hour.ago %>
+
+old_event:
+  event_type: ui_error
+  data:
+    error_type: "OldError"
+    message: "This is an old error"
+  session_id: "old_session"
+  ip_address: "192.168.1.0"
+  user_agent: "Old Browser"
+  data_anonymized: false
+  created_at: <%= 100.days.ago %>

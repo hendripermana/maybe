@@ -16,7 +16,7 @@ feature_request:
   theme: "light"
   resolved: true
   resolved_at: <%= 1.day.ago %>
-  resolved_by: <%= ActiveRecord::FixtureSet.identify(:admin) %>
+  resolved_by: <%= ActiveRecord::FixtureSet.identify(:admin_user) %>
   resolution_notes: "Dark mode has been implemented"
 
 ui_feedback:

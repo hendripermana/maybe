@@ -1,11 +1,33 @@
 # User fixtures for testing
 
-default:
+regular_user:
   email: user@example.com
-  encrypted_password: <%= BCrypt::Password.create('password') %>
-  confirmed_at: <%= Time.current %>
+  password_digest: <%= BCrypt::Password.create('password') %>
   first_name: Test
   last_name: User
-  time_zone: UTC
-  locale: en
-  currency: USD
+  family: empty
+  role: member
+
+admin_user:
+  email: admin@example.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Admin
+  last_name: User
+  family: empty
+  role: admin
+
+family_admin:
+  email: family_admin@example.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Family
+  last_name: Admin
+  family: empty
+  role: admin
+
+family_member:
+  email: family_member@example.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Family
+  last_name: Member
+  family: empty
+  role: member
