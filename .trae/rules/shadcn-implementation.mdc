@@ -1,0 +1,278 @@
+---
+description: Implementation guide for Shadcn-UI patterns using ViewComponents and HTML-over-JavaScript architecture
+globs: app/components/DS/**, app/assets/tailwind/maybe-design-system/**
+alwaysApply: true
+---
+
+# Shadcn-UI Implementation with ViewComponents
+
+## **Overview**
+
+We implement Shadcn-UI patterns using our existing **ViewComponent + TailwindCSS** architecture, maintaining our HTML-over-JavaScript approach while providing the same developer experience and visual consistency as Shadcn-UI.
+
+## **✅ Current Shadcn-UI Equivalent Components**
+
+We already have most Shadcn-UI components implemented:
+
+- **Button** → `DS::Button` (with variants: primary, secondary, destructive, outline, ghost, icon)
+- **Dialog** → `DS::Dialog` (modal/drawer variants with auto-open, slots)
+- **Disclosure/Collapsible** → `DS::Disclosure` (native `<details>` element)
+- **Tabs** → `DS::Tabs` (with URL params and session persistence)
+- **Menu/Dropdown** → `DS::Menu` (with variants: icon, button, avatar)
+- **Toggle/Switch** → `DS::Toggle` (native checkbox with custom styling)
+- **Tooltip** → `DS::Tooltip` (using @floating-ui/dom)
+- **Alert** → `DS::Alert`
+- **Link** → `DS::Link` (extends DS::Button variants)
+
+## **🎯 Implementation Strategy**
+
+### **1. Design System Architecture**
+
+```ruby
+# Base component structure (already implemented)
+class DS::ComponentName < DesignSystemComponent
+  VARIANTS = {
+    default: { container_classes: "...", icon_classes: "..." },
+    secondary: { container_classes: "...", icon_classes: "..." }
+  }.freeze
+  
+  SIZES = {
+    sm: { container_classes: "...", text_classes: "..." },
+    md: { container_classes: "...", text_classes: "..." }
+  }.freeze
+end
+```
+
+### **2. Design Token System**
+
+Our design tokens in `app/assets/tailwind/maybe-design-system.css` provide Shadcn-UI equivalent functionality:
+
+```css
+/* Functional tokens (Shadcn-UI equivalent) */
+@utility text-primary { /* --foreground */ }
+@utility text-secondary { /* --muted-foreground */ }
+@utility bg-container { /* --background */ }
+@utility bg-surface { /* --card */ }
+@utility border-primary { /* --border */ }
+```
+
+### **3. Component Patterns**
+
+**✅ DO: Use our ViewComponent patterns**
+```erb
+<!-- Shadcn-UI style usage -->
+<%= render DS::Button.new(variant: "outline", size: "sm") do %>
+  Click me
+<% end %>
+
+<!-- With slots (like Shadcn-UI compound components) -->
+<%= render DS::Dialog.new(variant: "modal") do |dialog| %>
+  <% dialog.with_header(title: "Settings") %>
+  <% dialog.with_body do %>
+    <!-- Content -->
+  <% end %>
+  <% dialog.with_actions do %>
+    <%= render DS::Button.new(variant: "primary", text: "Save") %>
+  <% end %>
+<% end %>
+```
+
+**❌ DON'T: Try to install React Shadcn-UI**
+```bash
+# This conflicts with our HTML-over-JavaScript approach
+npx shadcn-ui@latest init
+```
+
+## **🚀 Missing Components to Implement**
+
+### **High Priority (Shadcn-UI equivalents)**
+
+1. **Card** → `DS::Card`
+2. **Input** → `DS::Input` (with variants: default, error, disabled)
+3. **Select** → `DS::Select` (native `<select>` with custom styling)
+4. **Checkbox** → `DS::Checkbox`
+5. **Radio Group** → `DS::RadioGroup`
+6. **Badge** → `DS::Badge`
+7. **Avatar** → `DS::Avatar`
+8. **Separator** → `DS::Separator`
+
+### **Medium Priority**
+
+9. **Sheet** → `DS::Sheet` (slide-over variant of Dialog)
+10. **Popover** → `DS::Popover`
+11. **Command** → `DS::Command` (search/filter component)
+12. **Calendar** → `DS::Calendar`
+13. **Date Picker** → `DS::DatePicker`
+
+## **📋 Implementation Guidelines**
+
+### **Component Structure**
+
+```ruby
+class DS::NewComponent < DesignSystemComponent
+  # 1. Define variants (like Shadcn-UI)
+  VARIANTS = {
+    default: { container_classes: "bg-container border border-primary" },
+    destructive: { container_classes: "bg-red-50 border border-red-200" }
+  }.freeze
+  
+  # 2. Define sizes
+  SIZES = {
+    sm: { container_classes: "p-2 text-sm" },
+    md: { container_classes: "p-4 text-base" }
+  }.freeze
+  
+  # 3. Use slots for compound components
+  renders_one :header
+  renders_one :body
+  renders_many :actions
+  
+  # 4. Initialize with Shadcn-UI style API
+  def initialize(variant: :default, size: :md, **opts)
+    @variant = variant.to_sym
+    @size = size.to_sym
+    @opts = opts
+  end
+end
+```
+
+### **Template Structure**
+
+```erb
+<!-- Use semantic HTML with design tokens -->
+<div class="<%= container_classes %>" <%= html_attributes %>>
+  <% if header? %>
+    <header class="border-b border-primary pb-2">
+      <%= header %>
+    </header>
+  <% end %>
+  
+  <% if body? %>
+    <div class="py-2">
+      <%= body %>
+    </div>
+  <% end %>
+  
+  <%= content %>
+end
+```
+
+### **Progressive Enhancement**
+
+```javascript
+// Minimal Stimulus controller for interactivity
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["content"]
+  
+  toggle() {
+    this.contentTarget.classList.toggle("hidden")
+  }
+}
+```
+
+## **🎨 Design Token Extensions**
+
+Add Shadcn-UI equivalent tokens to `maybe-design-system.css`:
+
+```css
+/* Card/Surface tokens */
+@utility bg-card {
+  @apply bg-white;
+  @variant theme-dark {
+    @apply bg-gray-800;
+  }
+}
+
+/* Muted backgrounds */
+@utility bg-muted {
+  @apply bg-gray-50;
+  @variant theme-dark {
+    @apply bg-gray-900;
+  }
+}
+
+/* Accent colors */
+@utility bg-accent {
+  @apply bg-gray-100;
+  @variant theme-dark {
+    @apply bg-gray-700;
+  }
+}
+```
+
+## **📦 Component Generator**
+
+Create a Rails generator for new DS components:
+
+```bash
+# Generate new component with Shadcn-UI patterns
+rails generate ds_component Card variant:default,outline size:sm,md,lg
+```
+
+## **🧪 Testing Strategy**
+
+```ruby
+# Component preview (like Storybook)
+class CardComponentPreview < ViewComponent::Preview
+  def default
+    render DS::Card.new(variant: "default") do |card|
+      card.with_header { "Card Title" }
+      card.with_body { "Card content goes here" }
+    end
+  end
+end
+
+# Unit tests
+class DS::CardTest < ViewComponent::TestCase
+  def test_renders_with_variants
+    render_inline DS::Card.new(variant: "outline")
+    assert_selector "div.border-primary"
+  nend
+end
+```
+
+## **🔄 Migration from Hardcoded Styles**
+
+### **Before (Hardcoded)**
+```erb
+<div class="bg-white border border-gray-200 rounded-lg p-4">
+  <h3 class="text-lg font-medium text-gray-900">Title</h3>
+  <p class="text-gray-600">Content</p>
+</div>
+```
+
+### **After (Component + Design Tokens)**
+```erb
+<%= render DS::Card.new do |card| %>
+  <% card.with_header { "Title" } %>
+  <% card.with_body { "Content" } %>
+<% end %>
+```
+
+## **📚 Documentation**
+
+- **Component previews** at `/rails/view_components`
+- **Design tokens** documented in `maybe-design-system.css`
+- **Usage examples** in component preview files
+- **Migration guides** for converting hardcoded styles
+
+## **🎯 Benefits Over React Shadcn-UI**
+
+1. **Better Performance** - No JavaScript bundle bloat
+2. **Better SEO** - Server-rendered HTML
+3. **Better Accessibility** - Native HTML semantics
+4. **Better Rails Integration** - Works with forms, helpers, etc.
+5. **Better Maintainability** - Single language (Ruby + HTML + CSS)
+6. **Better Caching** - Server-side component caching
+
+## **🚀 Next Steps**
+
+1. **Audit existing hardcoded styles** and convert to components
+2. **Implement missing high-priority components**
+3. **Create component generator** for consistent patterns
+4. **Add comprehensive previews** for all components
+5. **Document migration patterns** for the team
+
+This approach gives us all the benefits of Shadcn-UI while maintaining our HTML-over-JavaScript architecture and Rails conventions.

@@ -1,0 +1,291 @@
+---
+description: Migration guide for converting hardcoded styles to Shadcn-UI style ViewComponents
+globs: app/views/**, app/components/**
+alwaysApply: true
+---
+
+# Shadcn-UI Migration Guide
+
+## **Overview**
+
+This guide shows how to migrate from hardcoded TailwindCSS classes to our Shadcn-UI style ViewComponents, making the codebase more maintainable and consistent.
+
+## **🔄 Component Migration Patterns**
+
+### **1. Card Components**
+
+**❌ Before (Hardcoded)**
+```erb
+<div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">Account Summary</h3>
+  <p class="text-gray-600">Your account balance and recent activity.</p>
+  <div class="mt-4 pt-4 border-t border-gray-200">
+    <button class="bg-blue-600 text-white px-4 py-2 rounded-md">View Details</button>
+  </div>
+</div>
+```
+
+**✅ After (Component)**
+```erb
+<%= render DS::Card.new do |card| %>
+  <% card.with_header(title: "Account Summary") %>
+  <% card.with_body do %>
+    Your account balance and recent activity.
+  <% end %>
+  <% card.with_footer do %>
+    <%= render DS::Button.new(variant: "primary", text: "View Details") %>
+  <% end %>
+<% end %>
+```
+
+### **2. Status Badges**
+
+**❌ Before (Hardcoded)**
+```erb
+<span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md">
+  Active
+</span>
+<span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-md">
+  Error
+</span>
+```
+
+**✅ After (Component)**
+```erb
+<%= render DS::Badge.new(variant: "success", text: "Active", icon: "check") %>
+<%= render DS::Badge.new(variant: "destructive", text: "Error", icon: "x") %>
+```
+
+### **3. Button Groups**
+
+**❌ Before (Hardcoded)**
+```erb
+<div class="flex gap-2">
+  <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+    Save
+  </button>
+  <button class="border border-gray-300 bg-white text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50">
+    Cancel
+  </button>
+</div>
+```
+
+**✅ After (Component)**
+```erb
+<div class="flex gap-2">
+  <%= render DS::Button.new(variant: "primary", text: "Save") %>
+  <%= render DS::Button.new(variant: "outline", text: "Cancel") %>
+</div>
+```
+
+### **4. Form Inputs (Future Implementation)**
+
+**❌ Before (Hardcoded)**
+```erb
+<div class="space-y-2">
+  <label class="block text-sm font-medium text-gray-700">Email</label>
+  <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+  <p class="text-sm text-red-600">Please enter a valid email</p>
+</div>
+```
+
+**✅ After (Component - To Be Implemented)**
+```erb
+<%= render DS::Input.new(
+  type: "email",
+  label: "Email",
+  error: "Please enter a valid email",
+  variant: "error"
+) %>
+```
+
+## **🎯 Migration Strategy**
+
+### **Phase 1: High-Impact Components**
+
+1. **Identify repetitive patterns** in views
+2. **Convert to DS components** starting with most used patterns
+3. **Update design tokens** to use functional classes
+
+### **Phase 2: Form Components**
+
+1. **Implement DS::Input, DS::Select, DS::Checkbox**
+2. **Create form builder integration**
+3. **Migrate form views**
+
+### **Phase 3: Layout Components**
+
+1. **Implement DS::Sheet, DS::Popover**
+2. **Create layout helpers**
+3. **Migrate complex layouts**
+
+## **🔍 Finding Migration Candidates**
+
+### **Search Patterns**
+
+```bash
+# Find hardcoded card patterns
+grep -r "bg-white.*border.*rounded" app/views/
+
+# Find hardcoded button patterns
+grep -r "bg-blue-.*text-white.*px-.*py-" app/views/
+
+# Find hardcoded badge patterns
+grep -r "inline-flex.*px-.*py-.*text-xs" app/views/
+```
+
+### **Common Anti-Patterns**
+
+```erb
+<!-- ❌ Hardcoded colors -->
+<div class="bg-blue-600 text-white">
+
+<!-- ✅ Design tokens -->
+<div class="bg-primary text-inverse">
+
+<!-- ❌ Hardcoded spacing -->
+<div class="px-4 py-2 mt-3">
+
+<!-- ✅ Component variants -->
+<%= render DS::Card.new(size: "md") %>
+```
+
+## **🧪 Testing Migration**
+
+### **Visual Regression Testing**
+
+```ruby
+# Before migration - capture screenshots
+rails test:system
+
+# After migration - compare
+rails test:system
+```
+
+### **Component Testing**
+
+```ruby
+class DS::CardTest < ViewComponent::TestCase
+  def test_renders_with_all_slots
+    render_inline DS::Card.new do |card|
+      card.with_header(title: "Test")
+      card.with_body { "Content" }
+      card.with_footer { "Footer" }
+    end
+    
+    assert_selector "header", text: "Test"
+    assert_selector "div", text: "Content"
+    assert_selector "footer", text: "Footer"
+  end
+end
+```
+
+## **📋 Migration Checklist**
+
+### **Before Starting**
+
+- [ ] **Audit current hardcoded patterns**
+- [ ] **Identify most frequently used styles**
+- [ ] **Plan component implementation order**
+- [ ] **Set up component previews**
+
+### **During Migration**
+
+- [ ] **Convert one pattern at a time**
+- [ ] **Test each conversion thoroughly**
+- [ ] **Update related documentation**
+- [ ] **Remove unused CSS classes**
+
+### **After Migration**
+
+- [ ] **Run full test suite**
+- [ ] **Check visual consistency**
+- [ ] **Update style guide**
+- [ ] **Train team on new patterns**
+
+## **🎨 Design Token Migration**
+
+### **Color Tokens**
+
+```css
+/* ❌ Before */
+.custom-button {
+  @apply bg-blue-600 text-white;
+}
+
+/* ✅ After */
+.custom-button {
+  @apply bg-primary text-inverse;
+}
+```
+
+### **Spacing Tokens**
+
+```css
+/* ❌ Before */
+.card-padding {
+  @apply px-4 py-3;
+}
+
+/* ✅ After - Use component variants */
+<%= render DS::Card.new(size: "md") %>
+```
+
+## **🚀 Automation Tools**
+
+### **Component Generator**
+
+```bash
+# Generate new DS component
+rails generate ds_component Input variant:default,error size:sm,md,lg
+```
+
+### **Migration Scripts**
+
+```ruby
+# Script to find and suggest component replacements
+class ComponentMigrationAnalyzer
+  def analyze_view(file_path)
+    content = File.read(file_path)
+    suggestions = []
+    
+    # Find card patterns
+    if content.match?(/bg-white.*border.*rounded/)
+      suggestions << "Consider using DS::Card component"
+    end
+    
+    # Find button patterns
+    if content.match?(/bg-blue-.*text-white.*px-.*py-/)
+      suggestions << "Consider using DS::Button component"
+    end
+    
+    suggestions
+  end
+end
+```
+
+## **📚 Resources**
+
+- **Component Previews**: `/rails/view_components`
+- **Design Tokens**: `app/assets/tailwind/maybe-design-system.css`
+- **Migration Examples**: This guide
+- **Testing Patterns**: `test/components/`
+
+## **🎯 Benefits After Migration**
+
+1. **Consistency** - All components follow same patterns
+2. **Maintainability** - Changes in one place affect all instances
+3. **Accessibility** - Built-in ARIA attributes and semantic HTML
+4. **Performance** - Smaller CSS bundle, better caching
+5. **Developer Experience** - IntelliSense, type safety, previews
+6. **Design System** - Clear component hierarchy and variants
+
+## **⚠️ Common Pitfalls**
+
+1. **Don't migrate everything at once** - Do it incrementally
+2. **Don't break existing functionality** - Test thoroughly
+3. **Don't ignore edge cases** - Handle custom styling needs
+4. **Don't forget documentation** - Update as you go
+5. **Don't skip testing** - Both unit and visual tests
+
+This migration approach ensures we get all the benefits of Shadcn-UI patterns while maintaining our HTML-over-JavaScript architecture and Rails conventions.

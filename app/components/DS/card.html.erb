@@ -1,0 +1,16 @@
+<div class="<%= container_classes %>" <%= html_attributes.map { |k, v| "#{k}=\"#{v}\"" }.join(" ").html_safe %>>
+  <% if header? %>
+    <%= header %>
+  <% end %>
+
+  <% if body? %>
+    <%= body %>
+  <% end %>
+
+  <%# Default content slot %>
+  <%= content %>
+
+  <% if footer? %>
+    <%= footer %>
+  <% end %>
+</div>

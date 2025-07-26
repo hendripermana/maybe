@@ -1,0 +1,11 @@
+<span class="<%= container_classes %>" <%= html_attributes.map { |k, v| "#{k}=\"#{v}\"" }.join(" ").html_safe %>>
+  <% if icon %>
+    <%= helpers.icon(icon, size: icon_size, color: icon_color) %>
+  <% end %>
+  
+  <% if text %>
+    <%= text %>
+  <% end %>
+  
+  <%= content %>
+</span>
