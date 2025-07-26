@@ -1,9 +1,9 @@
 ---
-description: 
-globs: 
+description: Independent project conventions for our modernized Maybe fork emphasizing HTML-over-JavaScript architecture
+globs: app/**/*.rb,app/**/*.erb,app/**/*.js
 alwaysApply: true
 ---
-This rule serves as high-level documentation for how you should write code for the Maybe codebase. 
+This rule serves as high-level documentation for our **independent Maybe fork** - a modernized financial management application that has evolved beyond the original Maybe Finance project (now discontinued). 
 
 ## Project Tech Stack
 
@@ -42,20 +42,48 @@ This codebase adopts a "skinny controller, fat models" convention.  Furthermore,
 - When concerns are used for code organization, they should be organized around the "traits" of a model; not for simply moving code to another spot in the codebase.
 - When possible, models should answer questions about themselves—for example, we might have a method, `account.balance_series` that returns a time-series of the account's most recent balances.  We prefer this over something more service-like such as `AccountSeries.new(account).call`.
 
-### Convention 3: Leverage Hotwire, write semantic HTML, CSS, and JS, prefer server-side solutions
+### Convention 3: HTML-Over-JavaScript Architecture (Our Modernized Approach)
 
-- Native HTML is always preferred over JS-based components
-  - Example 1: Use `<dialog>` element for modals instead of creating a custom component
-  - Example 2: Use `<details><summary>...</summary></details>` for disclosures rather than custom components
-- Leverage Turbo frames to break up the page over JS-driven client-side solutions
-  - Example 1: A good example of turbo frame usage is in [application.html.erb](mdc:app/views/layouts/application.html.erb) where we load [chats_controller.rb](mdc:app/controllers/chats_controller.rb) actions in a turbo frame in the global layout
-- Leverage query params in the URL for state over local storage and sessions.  If absolutely necessary, utilize the DB for persistent state.
-- Use Turbo streams to enhance functionality, but do not solely depend on it
-- Format currencies, numbers, dates, and other values server-side, then pass to Stimulus controllers for display only
-- Keep client-side code for where it truly shines.  For example, @bulk_select_controller.js is a case where server-side solutions would degrade the user experience significantly.  When bulk-selecting entries, client-side solutions are the way to go and Stimulus provides the right toolset to achieve this.
-- Always use the `icon` helper in [application_helper.rb](mdc:app/helpers/application_helper.rb) for icons.  NEVER use `lucide_icon` helper directly.
+**Our project successfully implements a modern HTML-over-JavaScript architecture that prioritizes semantic HTML, server-side rendering, and progressive enhancement.**
 
-The Hotwire suite (Turbo/Stimulus) works very well with these native elements and we optimize for this.
+#### Core Principles:
+- **Native HTML elements are the foundation** - Use semantic HTML5 elements before JavaScript solutions
+  - ✅ `<dialog>` for modals (see `DS::Dialog` component)
+  - ✅ `<details><summary>` for disclosures (see `DS::Disclosure` component)
+  - ✅ `<form>` with proper validation and submission
+  - ✅ Native `<select>`, `<input>`, `<button>` elements
+
+#### Hotwire-First Frontend Strategy:
+- **Turbo Frames** for partial page updates without full page reloads
+  - Example: Chat interface uses `turbo_frame_tag chat_frame` for seamless updates
+  - Example: Category dropdowns load lazily with `turbo_frame_tag "category_dropdown"`
+- **Turbo Streams** for real-time updates and dynamic content
+  - Example: `turbo_stream_from @chat` for live chat updates
+- **Query parameters for state management** over localStorage/sessions
+  - Example: `onboarding_controller.js` uses URL params for locale, currency, theme
+
+#### Progressive Enhancement with Stimulus:
+- **Minimal JavaScript** - Only where HTML cannot provide the functionality
+  - ✅ `bulk_select_controller.js` - Complex multi-selection UI
+  - ✅ `theme_controller.js` - System theme detection and switching
+  - ✅ `preserve_scroll_controller.js` - Scroll position maintenance
+  - ✅ `hotkey_controller.js` - Keyboard shortcuts
+- **Server-side data formatting** - Format currencies, dates, numbers on server
+- **Stimulus controllers enhance, don't replace** HTML functionality
+
+#### Component Architecture:
+- **DS (Design System) Components** use native HTML with minimal JavaScript
+  - `DS::Dialog` wraps `<dialog>` element with Stimulus for enhanced UX
+  - `DS::Disclosure` uses `<details>` with CSS-only animations
+  - `DS::Button` renders semantic `<button>` or `<a>` elements
+- **ViewComponents over JavaScript frameworks** - Server-rendered, reusable UI
+
+#### Icon System:
+- Always use the `icon` helper in [application_helper.rb](mdc:app/helpers/application_helper.rb)
+- NEVER use `lucide_icon` helper directly
+- Icons are SVG-based and server-rendered
+
+**This approach provides modern UX with excellent performance, accessibility, and maintainability while avoiding heavy JavaScript frameworks.**
 
 ### Convention 4: Optimize for simplicitly and clarity
 

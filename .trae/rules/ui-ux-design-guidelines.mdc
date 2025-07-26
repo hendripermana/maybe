@@ -1,13 +1,17 @@
 ---
-description: This file describes Maybe's design system and how views should be styled
-globs: app/views/**,app/helpers/**,app/javascript/controllers/**
+description: Independent HTML-over-JavaScript design system for our modernized Maybe fork
+globs: app/views/**,app/helpers/**,app/javascript/controllers/**,app/components/**
 alwaysApply: true
 ---
+
+**Our project implements a modern HTML-over-JavaScript architecture that has evolved beyond the original Maybe Finance project (now discontinued).**
+
 Use the rules below when:
 
-- You are writing HTML
-- You are writing CSS
-- You are writing styles in a JavaScript Stimulus controller
+- You are writing HTML templates
+- You are creating ViewComponents
+- You are writing CSS or TailwindCSS classes
+- You are writing Stimulus controllers for progressive enhancement
 
 ## Rules for AI (mandatory)
 
@@ -44,3 +48,54 @@ The codebase uses TailwindCSS v4.x (the newest version) with a custom design sys
 - Follow established patterns in `app/components/`
 - Maintain consistent naming conventions
 - Implement proper accessibility (WCAG 2.1 AA compliance)
+
+## HTML-Over-JavaScript Architecture (For AI Assistance)
+
+**IMPORTANT: Our project uses HTML-first architecture, NOT JavaScript-heavy frameworks. When building features, always prioritize this approach:**
+
+### ✅ DO: HTML-First Solutions
+- **Use native HTML elements**: `<dialog>`, `<details>`, `<form>`, `<select>`, `<button>`
+- **Server-side rendering**: Generate HTML on the server with ERB templates
+- **ViewComponents**: Create reusable UI with Ruby classes, not JavaScript components
+- **Turbo Frames**: Use for partial page updates instead of AJAX
+- **Turbo Streams**: Use for real-time updates instead of WebSocket JavaScript
+- **CSS animations**: Use TailwindCSS and CSS for transitions, not JavaScript
+- **Form validation**: Use HTML5 validation attributes and server-side validation
+
+### ❌ DON'T: JavaScript-Heavy Solutions
+- **Avoid React/Vue/Angular**: We don't use JavaScript frameworks
+- **Avoid custom JavaScript components**: Use ViewComponents instead
+- **Avoid complex JavaScript state management**: Use server state and URL params
+- **Avoid JavaScript-only interactions**: Enhance HTML with minimal Stimulus
+- **Avoid client-side routing**: Use Rails routes and Turbo navigation
+
+### Progressive Enhancement Pattern
+1. **Start with working HTML** - Forms submit, links navigate, buttons work
+2. **Add CSS styling** - Use TailwindCSS design tokens
+3. **Enhance with Stimulus** - Add keyboard shortcuts, scroll preservation, etc.
+4. **Use Turbo for SPA feel** - Frames for partial updates, streams for real-time
+
+### Examples of Our Approach
+```erb
+<%# ✅ Good: Native dialog with Stimulus enhancement %>
+<%= render DS::Dialog.new do |dialog| %>
+  <% dialog.with_header(title: "Settings") %>
+  <% dialog.with_body do %>
+    <%= form_with model: @user, local: true do |f| %>
+      <%= f.text_field :name, class: "input" %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%# ✅ Good: Native details element %>
+<%= render DS::Disclosure.new(title: "Advanced Options") do %>
+  <p>Content here</p>
+<% end %>
+
+<%# ✅ Good: Turbo Frame for partial updates %>
+<%= turbo_frame_tag "user_profile" do %>
+  <%= render "users/profile", user: @user %>
+<% end %>
+```
+
+**This architecture provides modern UX while maintaining simplicity, performance, and accessibility.**
