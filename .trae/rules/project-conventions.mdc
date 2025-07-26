@@ -71,3 +71,36 @@ All code should maximize readability and simplicity.
 - Enforce `null` checks, unique indexes, and other simple validations in the DB
 - ActiveRecord validations _may_ mirror the DB level ones, but not 100% necessary.  These are for convenience when error handling in forms.  Always prefer client-side form validation when possible.
 - Complex validations and business logic should remain in ActiveRecord
+
+### Convention 6: Background Jobs and Data Processing
+
+- Use Sidekiq for background processing
+- Keep jobs simple and focused on a single responsibility
+- Use `perform_async` for non-critical jobs
+- Use `perform_in` for delayed execution
+- Always handle job failures gracefully
+
+#### Data Export Jobs
+- `FamilyDataExportJob` - processes family data exports asynchronously
+- Generates ZIP files containing CSV and NDJSON exports
+- Scoped to family data only for security
+- Includes automatic cleanup of old export files
+
+## Data Export System
+
+### Export Architecture
+- **Controller**: `FamilyExportsController` - handles UI and download endpoints
+- **Model**: `Family::DataExporter` - core export logic and file generation
+- **Job**: `FamilyDataExportJob` - background processing
+- **Views**: `app/views/family_exports/` - export management UI
+
+### Export Security
+- Only family admins can initiate exports
+- All exports are scoped to the current family
+- Background processing prevents UI blocking
+- Secure file storage and cleanup
+
+### Export Formats
+- **CSV Files**: accounts, transactions, trades, categories
+- **NDJSON File**: complete family data backup
+- **ZIP Archive**: contains all export files

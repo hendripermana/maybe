@@ -26,31 +26,42 @@ Use this rule to learn how to write ERB views, partials, and Stimulus controller
   - If there is no component, look for a partial
   - If there is no partial, decide between component or partial based on the criteria above
 
+- **Design System (DS) Components**
+  - **Always prefer DS components** when available in `app/components/DS/`
+  - DS components follow consistent API patterns and design tokens
+  - Examples: `DS::Button`, `DS::Dialog`, `DS::Link`, `DS::FilledIcon`, `DS::Menu`, `DS::Tabs`
+
 - **Examples of Component vs. Partial Usage**
   ```erb
-  <%# Component: Complex, reusable with variants and interactivity %>
-  <%= render DialogComponent.new(variant: :drawer) do |dialog| %>
+  <%# DS Component: Standardized dialog with slots %>
+  <%= render DS::Dialog.new do |dialog| %>
     <% dialog.with_header(title: "Account Settings") %>
-    <% dialog.with_body { "Dialog content here" } %>
+    <% dialog.with_body do %>
+      Dialog content here
+    <% end %>
+    <% dialog.with_action(text: "Save", variant: "primary") %>
   <% end %>
   
-  <%# Component: Interactive with complex styling options %>
-  <%= render ButtonComponent.new(text: "Save Changes", variant: "primary", confirm: "Are you sure?") %>
+  <%# DS Component: Consistent button styling %>
+  <%= render DS::Button.new(text: "Save Changes", variant: "primary", icon: "check") %>
   
-  <%# Component: Reusable with variants %>
-  <%= render FilledIconComponent.new(icon: "credit-card", variant: :surface) %>
+  <%# DS Component: Standardized filled icons %>
+  <%= render DS::FilledIcon.new(icon: "credit-card", variant: :surface) %>
+  
+  <%# DS Component: Consistent link styling %>
+  <%= render DS::Link.new(text: "View Details", href: account_path(@account), variant: "primary") %>
+  
+  <%# UI Component: Domain-specific complex logic %>
+  <%= render UI::Account::Chart.new(account: @account, period: @period) %>
   
   <%# Partial: Static template content %>
   <%= render "shared/logo" %>
   
-  <%# Partial: Simple, context-specific content with basic styling %>
+  <%# Partial: Simple, context-specific content %>
   <%= render "shared/trend_change", trend: @account.trend, comparison_label: "vs last month" %>
   
   <%# Partial: Simple divider/utility %>
   <%= render "shared/ruler", classes: "my-4" %>
-  
-  <%# Partial: Simple form utility %>
-  <%= render "shared/form_errors", model: @account %>
   ```
 
 - **Keep domain logic out of the views**
@@ -74,7 +85,7 @@ Use this rule to learn how to write ERB views, partials, and Stimulus controller
 - **Stimulus Integration in Views**
   - Always use the **declarative approach** when integrating Stimulus controllers
   - The ERB template should declare what happens, the Stimulus controller should respond
-  - Refer to [stimulus_conventions.mdc](mdc:.cursor/rules/stimulus_conventions.mdc) to learn how to incorporate them into 
+  - Refer to [stimulus_conventions.mdc](mdc:.trae/rules/stimulus_conventions.mdc) to learn how to incorporate them into your views
 
   GOOD Stimulus controller integration into views:
 

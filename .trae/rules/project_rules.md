@@ -1,6 +1,6 @@
 ---
-description: Guidelines for creating and maintaining Cursor rules to ensure consistency and effectiveness.
-globs: .cursor/rules/*.mdc
+description: Guidelines for creating and maintaining Trae rules to ensure consistency and effectiveness.
+globs: .trae/rules/*.mdc
 alwaysApply: true
 ---
 
@@ -19,7 +19,7 @@ alwaysApply: true
 
 - **File References:**
   - Use `[filename](mdc:path/to/file)` ([filename](mdc:filename)) to reference files
-  - Example: [prisma.mdc](mdc:.cursor/rules/prisma.mdc) for rule references
+  - Example: [prisma.mdc](mdc:.trae/rules/prisma.mdc) for rule references
   - Example: [schema.prisma](mdc:prisma/schema.prisma) for code references
 
 - **Code Examples:**

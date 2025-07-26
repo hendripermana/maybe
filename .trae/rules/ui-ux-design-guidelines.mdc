@@ -11,8 +11,12 @@ Use the rules below when:
 
 ## Rules for AI (mandatory)
 
+### Design System Architecture
+
 The codebase uses TailwindCSS v4.x (the newest version) with a custom design system defined in [maybe-design-system.css](mdc:app/assets/tailwind/maybe-design-system.css)
 
+- **DS Component Library** - Standardized components in `app/components/DS/`
+- **UI Component Library** - Domain-specific components in `app/components/UI/`
 - Always start by referencing [maybe-design-system.css](mdc:app/assets/tailwind/maybe-design-system.css) to see the base primitives, functional tokens, and component tokens we use in the codebase
 - Always prefer using the functional "tokens" defined in @maybe-design-system.css when possible.
   - Example 1: use `text-primary` rather than `text-white`
@@ -20,3 +24,23 @@ The codebase uses TailwindCSS v4.x (the newest version) with a custom design sys
   - Example 3: use `border border-primary` rather than `border border-gray-200` 
 - Never create new styles in [maybe-design-system.css](mdc:app/assets/tailwind/maybe-design-system.css) or [application.css](mdc:app/assets/tailwind/application.css) without explicitly receiving permission to do so
 - Always generate semantic HTML
+
+### Component Hierarchy
+
+#### DS (Design System) Components
+- **Always prefer DS components** when available
+- Standardized, reusable components with consistent APIs
+- Examples: `DS::Button`, `DS::Dialog`, `DS::Link`, `DS::FilledIcon`, `DS::Menu`, `DS::Tabs`, `DS::Tooltip`
+- Include Stimulus controllers for interactivity (e.g., `DS/tooltip_controller.js`)
+- Follow slot-based architecture for complex components
+
+#### UI (User Interface) Components
+- Domain-specific components for business logic
+- Examples: `UI::Account::Chart`, account-related widgets
+- Should compose DS components when possible
+
+#### Component Guidelines
+- Use ViewComponents over partials for reusable UI elements
+- Follow established patterns in `app/components/`
+- Maintain consistent naming conventions
+- Implement proper accessibility (WCAG 2.1 AA compliance)

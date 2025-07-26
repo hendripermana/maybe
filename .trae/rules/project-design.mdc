@@ -173,6 +173,37 @@ class SomeModel < Application
 end
 ```
 
+## Data Export System
+
+The Maybe app includes a comprehensive data export system that allows families to export all their financial data in multiple formats:
+
+### Family Data Exports
+
+- [family_exports_controller.rb](mdc:app/controllers/family_exports_controller.rb) - handles export creation and download
+- [data_exporter.rb](mdc:app/models/family/data_exporter.rb) - generates ZIP files containing CSV and NDJSON exports
+- [family_data_export_job.rb](mdc:app/jobs/family_data_export_job.rb) - background job for processing exports
+
+### Export Formats
+
+The export system generates a ZIP file containing:
+
+1. **CSV Files** (for easy import/analysis):
+   - `accounts.csv` - all family accounts with balances
+   - `transactions.csv` - transaction history with categories and tags
+   - `trades.csv` - investment trades with security details
+   - `categories.csv` - custom categories with hierarchy
+
+2. **NDJSON File** (for complete data backup):
+   - `all.ndjson` - complete family data in newline-delimited JSON format
+   - Includes all models: accounts, transactions, trades, categories, tags, merchants, valuations, budgets
+
+### Export Security
+
+- Only family admins can initiate exports
+- Exports are scoped to family data only
+- Background processing prevents UI blocking
+- Automatic cleanup of old export files
+
 ## "Provided" Concerns
 
 In general, domain models should not be calling [registry.rb](mdc:app/models/provider/registry.rb) directly.  When 3rd party data is required for a domain model, we use the `Provided` concern within that model's namespace.  This concern is primarily responsible for:

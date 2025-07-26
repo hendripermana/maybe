@@ -81,7 +81,15 @@ Due to the open-source nature of this project, we have chosen Minitest + Fixture
 
 - **Stubs and mocks**
   - Use `mocha` gem 
+  - **Known Issue**: Mocha 2.7.1 has compatibility issues with Rails causing `NoMethodError: undefined method 'pop' for nil` during test teardown
+  - **Recommended fix**: Downgrade to Mocha 2.6.0 for stability
   - Always prefer `OpenStruct` when creating mock instances, or in complex cases, a mock class
   - Only mock what's necessary. If you're not testing return values, don't mock a return value.
+
+- **Component Testing**
+  - ViewComponents should be tested with proper API usage
+  - DS components follow standardized patterns (slots, variants)
+  - Test component rendering, not internal implementation details
+  - Example: `DS::Button` tests should verify output HTML, not internal methods
 
 
