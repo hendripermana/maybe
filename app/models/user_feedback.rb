@@ -8,7 +8,7 @@ class UserFeedback < ApplicationRecord
   validates :page, presence: true
 
   # Enums
-  enum feedback_type: {
+  enum :feedback_type, {
     bug_report: 'bug_report',
     feature_request: 'feature_request',
     ui_feedback: 'ui_feedback',

@@ -29,10 +29,10 @@ class UiMonitoringEvent < ApplicationRecord
   end
 
   def self.theme_switch_performance(period = 24.hours)
-    where("data->>'event_name' = 'theme_switched'")
+    result = where("data->>'event_name' = 'theme_switched'")
       .where('created_at > ?', period.ago)
-      .select("AVG((data->>'duration')::float) as avg_duration")
-      .first&.avg_duration
+      .average("(data->>'duration')::float")
+    result&.to_f
   end
 
   # Instance methods

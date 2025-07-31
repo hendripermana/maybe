@@ -888,8 +888,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_24_063953) do
   add_foreign_key "transactions", "merchants"
   add_foreign_key "transfers", "transactions", column: "inflow_transaction_id", on_delete: :cascade
   add_foreign_key "transfers", "transactions", column: "outflow_transaction_id", on_delete: :cascade
-  add_foreign_key "ui_monitoring_events", "users"
-  add_foreign_key "user_feedbacks", "users"
   add_foreign_key "users", "chats", column: "last_viewed_chat_id"
   add_foreign_key "users", "families"
 end
