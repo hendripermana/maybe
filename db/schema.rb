@@ -40,22 +40,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_24_115507) do
     t.text "access_token_encrypted"
     t.index ["accountable_id", "accountable_type"], name: "index_accounts_on_accountable_id_and_accountable_type"
     t.index ["accountable_type"], name: "index_accounts_on_accountable_type"
-<<<<<<< HEAD
-    t.index ["external_id"], name: "index_accounts_on_external_id"
-=======
     t.index ["currency"], name: "index_accounts_on_currency"
->>>>>>> upstream/main
+    t.index ["external_id"], name: "index_accounts_on_external_id"
     t.index ["family_id", "accountable_type"], name: "index_accounts_on_family_id_and_accountable_type"
     t.index ["family_id", "id"], name: "index_accounts_on_family_id_and_id"
     t.index ["family_id", "status"], name: "index_accounts_on_family_id_and_status"
     t.index ["family_id"], name: "index_accounts_on_family_id"
     t.index ["import_id"], name: "index_accounts_on_import_id"
     t.index ["plaid_account_id"], name: "index_accounts_on_plaid_account_id"
-<<<<<<< HEAD
     t.index ["provider"], name: "index_accounts_on_provider"
-=======
     t.index ["status"], name: "index_accounts_on_status"
->>>>>>> upstream/main
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
