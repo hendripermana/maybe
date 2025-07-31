@@ -2,82 +2,126 @@
 
 <div class="space-y-4" id="balance-sheet">
   <% balance_sheet.classification_groups.each do |classification_group| %>
-    <%= render Ui::CardComponent.new(variant: :elevated, size: :lg, class: "flex flex-col") do %>
-      <div class="flex items-center gap-4 mb-6 flex-shrink-0">
-        <div class="w-12 h-12 icon-bg-primary rounded-xl flex items-center justify-center shadow-floating flex-shrink-0">
-          <%= icon(classification_group.icon, class: "w-6 h-6") %>
-        </div>
-        <div class="flex-1 min-w-0">
-          <h2 class="text-lg font-semibold text-primary flex items-center gap-2">
-            <span class="<%= "loading-shimmer" if classification_group.syncing? %>">
-              <%= classification_group.name %>
-            </span>
-          </h2>
+    <div class="bg-container shadow-border-xs rounded-xl space-y-4 p-4">
+      <div class="flex items-center gap-2">
+        <h2 class="text-lg font-medium inline-flex items-center gap-1.5">
+          <span class="<%= "animate-pulse" if classification_group.syncing? %>">
+            <%= classification_group.name %>
+          </span>
+
           <% if classification_group.account_groups.any? %>
-            <p class="text-2xl font-bold text-primary mt-1"><%= classification_group.total_money.format(precision: 0) %></p>
+            <span class="text-secondary">&middot;</span>
+            <span class="text-secondary font-medium text-lg"><%= classification_group.total_money.format(precision: 0) %></span>
           <% end %>
-        </div>
+        </h2>
       </div>
 
       <% if classification_group.account_groups.any? %>
-        <div class="flex-1 flex flex-col space-y-4">
-          <!-- Colorful indicators in one line with proper colors -->
-          <div class="flex flex-wrap gap-4 font-medium">
+        <div class="space-y-4">
+          <div class="flex gap-1">
             <% classification_group.account_groups.each do |account_group| %>
-              <span class="flex items-center gap-2">
-                <div class="h-3 w-3 rounded-full flex-shrink-0" style="background-color: <%= account_group.color %>;"></div>
-                <span style="color: <%= account_group.color %>; font-weight: 600;"><%= account_group.name %></span>
-                <span class="text-secondary"><%= number_to_percentage(account_group.weight, precision: 0) %></span>
-              </span>
+              <div class="h-1.5 rounded-sm" style="width: <%= account_group.weight %>%; background-color: <%= account_group.color %>;"></div>
             <% end %>
           </div>
 
-          <!-- Progress bar with proper colors -->
-          <div class="flex gap-1 h-2 rounded-full overflow-hidden bg-surface-inset shadow-inner flex-shrink-0">
+          <div class="flex flex-wrap gap-4">
             <% classification_group.account_groups.each do |account_group| %>
-              <div class="h-full transition-all duration-300 hover:opacity-80" style="width: <%= account_group.weight %>%; background-color: <%= account_group.color %>;"></div>
+              <div class="flex items-center gap-2 text-sm">
+                <div class="h-2.5 w-2.5 rounded-full" style="background-color: <%= account_group.color %>;"></div>
+                <p class="text-secondary"><%= account_group.name %></p>
+                <p class="text-primary font-mono"><%= number_to_percentage(account_group.weight, precision: 0) %></p>
+              </div>
             <% end %>
           </div>
         </div>
 
-        <div class="space-y-2 mt-6">
-          <% classification_group.account_groups.each do |account_group| %>
-            <%= render_accordion do %>
-              <% accordion_title do %>
-                <div class="flex items-baseline justify-between w-full">
-                  <h3 class="text-md font-semibold text-primary"><%= account_group.name %></h3>
-                  <p class="text-md font-semibold text-primary"><%= account_group.total_money.format %></p>
-                </div>
-              <% end %>
+        <div class="bg-surface rounded-xl p-1 space-y-1 overflow-x-auto">
+          <div class="px-4 py-2 flex items-center uppercase text-xs font-medium text-secondary">
+            <div class="w-40">Name</div>
+            <div class="ml-auto text-right flex items-center gap-6">
+              <div class="w-24">
+                <p>Weight</p>
+              </div>
+              <div class="w-40">
+                <p>Value</p>
+              </div>
+            </div>
+          </div>
 
-              <% accordion_description do %>
-                <div class="-mt-4">
-                  <%= render(Ui::DataTableComponent.new(
-                    headers: {
-                    "Account" => "w-2/3",
-                    "Weight"  => "text-right",
-                    "Value"   => "text-right"
-                  },
-                    rows: account_table_rows(account_group.accounts, total: account_group.total_money, group_color: account_group.color)
-                  )) %>
+          <div class="shadow-border-xs rounded-lg bg-container font-medium text-sm min-w-fit">
+            <% classification_group.account_groups.each_with_index do |account_group, idx| %>
+              <details class="group open:bg-surface
+                <%= idx == 0 ? "rounded-t-lg" : "" %>
+                <%= idx == classification_group.account_groups.size - 1 ? "rounded-b-lg" : "" %>
+              ">
+                <summary class="cursor-pointer p-4 group-open:bg-surface rounded-lg flex items-center justify-between">
+                  <div class="w-40 shrink-0 flex items-center gap-4">
+                    <%= icon("chevron-right", class: "group-open:rotate-90") %>
+
+                    <p><%= account_group.name %></p>
+                  </div>
+
+                  <div class="flex items-center justify-between text-right gap-6">
+                    <div class="w-28 shrink-0 flex items-center justify-end gap-2">
+                      <%= render "pages/dashboard/group_weight", weight: account_group.weight, color: account_group.color %>
+                    </div>
+
+                    <div class="w-40 shrink-0">
+                      <p><%= format_money(account_group.total_money) %></p>
+                    </div>
+                  </div>
+                </summary>
+
+                <div>
+                  <% account_group.accounts.each_with_index do |account, idx| %>
+                    <div class="pl-12 pr-4 py-3 flex items-center justify-between text-sm font-medium">
+                      <div class="flex items-center gap-3">
+                        <%= render "accounts/logo", account: account, size: "sm", color: account_group.color %>
+
+                        <%= link_to account.name, account_path(account) %>
+                      </div>
+
+                      <div class="ml-auto flex items-center text-right gap-6">
+                        <div class="w-28 shrink-0 flex items-center justify-end gap-2">
+                          <%
+                              # Calculate weight as percentage of classification total
+                              classification_total = classification_group.total_money.amount
+                              account_weight = classification_total.zero? ? 0 : account.converted_balance / classification_total * 100
+                          %>
+                          <%= render "pages/dashboard/group_weight", weight: account_weight, color: account_group.color %>
+                        </div>
+
+                        <div class="w-40 shrink-0">
+                          <p><%= format_money(account.balance_money) %></p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <% if idx < account_group.accounts.size - 1 %>
+                      <%= render "shared/ruler", classes: "ml-21 mr-4" %>
+                    <% end %>
+                  <% end %>
                 </div>
+              </details>
+              <% unless idx == classification_group.account_groups.size - 1 %>
+                <%= render "shared/ruler", classes: "mx-4 group-ruler" %>
               <% end %>
             <% end %>
-          <% end %>
+          </div>
         </div>
+
       <% else %>
-        <div class="py-12 flex flex-col items-center">
-          <div class="w-16 h-16 bg-gradient-to-br from-surface-inset to-surface-inset-hover rounded-2xl flex items-center justify-center mb-4">
-            <%= render FilledIconComponent.new(
-              variant: :container,
-              icon: classification_group.icon,
-            ) %>
-          </div>
-          <h3 class="text-lg font-semibold text-primary mb-2">No <%= classification_group.name %> yet</h3>
-          <p class="text-secondary text-center max-w-sm"><%= "Add your #{classification_group.name} accounts to see a full breakdown" %></p>
+        <div class="py-10 flex flex-col items-center">
+          <%= render DS::FilledIcon.new(
+            variant: :container,
+            icon: classification_group.icon,
+          ) %>
+
+          <p class="text-primary text-sm font-medium mb-1 mt-4">No <%= classification_group.name %> yet</p>
+          <p class="text-secondary text-sm text-center"><%= "Add your #{classification_group.name} accounts to see a full breakdown" %></p>
         </div>
       <% end %>
-    <% end %>
+    </div>
   <% end %>
 </div>
 

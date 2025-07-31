@@ -1,93 +1,65 @@
-<div id="<%= dom_id import %>" class="flex items-center justify-between p-4 hover:bg-muted/10 transition-colors">
-  <div class="flex items-center gap-3">
-    <div class="flex-shrink-0">
-      <%= render Ui::IconComponent.new(
-        icon: import.type.downcase == "transaction" ? "receipt" : "file-text",
-        size: :md,
-        class: "text-primary"
-      ) %>
-    </div>
-    
-    <div>
-      <%= link_to import_path(import), class: "text-sm font-medium text-primary hover:underline" do %>
-        <% if import.account.present? %>
-          <%= import.account.name + " " %>
-        <% end %>
+<div id="<%= dom_id import %>" class="flex items-center justify-between mx-4 py-4">
 
-        <%= t(".label", type: import.type.titleize, datetime: import.updated_at.strftime("%b %-d, %Y at %l:%M %p")) %>
+  <div class="flex items-center gap-2 mb-1">
+    <%= link_to import_path(import), class: "text-sm text-primary hover:underline" do %>
+      <% if import.account.present? %>
+        <%= import.account.name + " " %>
       <% end %>
 
-      <div class="flex items-center gap-2 mt-1">
-        <% if import.pending? %>
-          <%= render Ui::BadgeComponent.new(
-            text: t(".in_progress"),
-            variant: :secondary
-          ) %>
-        <% elsif import.importing? %>
-          <%= render Ui::BadgeComponent.new(
-            text: t(".uploading"),
-            variant: :warning,
-            class: "animate-pulse"
-          ) %>
-        <% elsif import.failed? %>
-          <%= render Ui::BadgeComponent.new(
-            text: t(".failed"),
-            variant: :destructive
-          ) %>
-        <% elsif import.reverting? %>
-          <%= render Ui::BadgeComponent.new(
-            text: t(".reverting"),
-            variant: :warning
-          ) %>
-        <% elsif import.revert_failed? %>
-          <%= render Ui::BadgeComponent.new(
-            text: t(".revert_failed"),
-            variant: :destructive
-          ) %>
-        <% elsif import.complete? %>
-          <%= render Ui::BadgeComponent.new(
-            text: t(".complete"),
-            variant: :success
-          ) %>
-        <% end %>
-        
-        <span class="text-xs text-secondary">
-          <%= time_ago_in_words(import.updated_at) %> ago
-        </span>
-      </div>
-    </div>
-  </div>
+      <%= t(".label", type: import.type.titleize, datetime: import.updated_at.strftime("%b %-d, %Y at %l:%M %p")) %>
+    <% end %>
 
-  <div class="flex items-center gap-2">
-    <%= render Ui::ButtonComponent.new(
-      icon: "eye",
-      variant: :ghost,
-      size: :sm,
-      href: import_path(import),
-      text: t(".view")
-    ) %>
-    
-    <%= render Ui::MenuComponent.new do |menu| %>
-      <% if import.complete? || import.revert_failed? %>
-        <% menu.with_item(
-          text: t(".revert"),
-          icon: "rotate-ccw",
-          href: revert_import_path(import),
-          method: :put,
-          confirm: CustomConfirm.new(
-            title: "Revert import?",
-            body: "This will delete transactions that were imported, but you will still be able to review and re-import your data at any time.",
-            btn_text: "Revert"
-          )) %>
-      <% else %>
-        <% menu.with_item(
-          text: t(".delete"),
-          icon: "trash-2",
-          variant: :destructive,
-          href: import_path(import),
-          method: :delete,
-          confirm: CustomConfirm.for_resource_deletion("import")) %>
-      <% end %>
+    <% if import.pending? %>
+      <span class="px-1 py text-xs rounded-full bg-gray-500/5 text-secondary border border-alpha-black-50">
+        <%= t(".in_progress") %>
+      </span>
+    <% elsif import.importing? %>
+      <span class="px-1 py text-xs animate-pulse rounded-full bg-orange-500/5 text-orange-500 border border-alpha-black-50">
+        <%= t(".uploading") %>
+      </span>
+    <% elsif import.failed? %>
+      <span class="px-1 py text-xs rounded-full bg-red-500/5 text-red-500 border border-alpha-black-50">
+        <%= t(".failed") %>
+      </span>
+    <% elsif import.reverting? %>
+      <span class="px-1 py text-xs rounded-full bg-orange-500/5 text-orange-500 border border-alpha-black-50">
+        <%= t(".reverting") %>
+      </span>
+    <% elsif import.revert_failed? %>
+      <span class="px-1 py text-xs rounded-full bg-red-500/5 text-red-500 border border-alpha-black-50">
+        <%= t(".revert_failed") %>
+      </span>
+    <% elsif import.complete? %>
+      <span class="px-1 py text-xs rounded-full bg-green-500/5 text-green-500 border border-alpha-black-50">
+        <%= t(".complete") %>
+      </span>
     <% end %>
   </div>
+
+  <%= render DS::Menu.new do |menu| %>
+    <% menu.with_item(variant: "link", text: t(".view"), href: import_path(import), icon: "eye") %>
+
+    <% if import.complete? || import.revert_failed? %>
+      <% menu.with_item(
+        variant: "button",
+        text: t(".revert"),
+        href: revert_import_path(import),
+        icon: "rotate-ccw",
+        method: :put,
+        confirm: CustomConfirm.new(
+          title: "Revert import?",
+          body: "This will delete transactions that were imported, but you will still be able to review and re-import your data at any time.",
+          btn_text: "Revert"
+        )) %>
+
+    <% else %>
+      <% menu.with_item(
+        variant: "button",
+        text: t(".delete"),
+        href: import_path(import),
+        icon: "trash-2",
+        method: :delete,
+        confirm: CustomConfirm.for_resource_deletion("import")) %>
+    <% end %>
+  <% end %>
 </div>

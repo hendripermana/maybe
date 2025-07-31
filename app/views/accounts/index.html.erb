@@ -1,36 +1,36 @@
-<%= render Ui::HeaderWithThemeToggleComponent.new(
-  title: t(".accounts")
-) do %>
-  <%= render Ui::ButtonComponent.new(
-    text: "New account",
-    href: new_account_path(return_to: accounts_path),
-    variant: :primary,
-    icon: "plus",
-    size: :md,
-    options: { data: { turbo_frame: "modal" } }
-  ) %>
-<% end %>
+<header class="flex justify-between items-center text-primary font-medium">
+  <h1 class="text-xl"><%= t(".accounts") %></h1>
+  <div class="flex items-center gap-5">
+    <div class="flex items-center gap-2">
+      <%= icon(
+            "refresh-cw",
+            as_button: true,
+            size: "sm",
+            href: sync_all_accounts_path,
+            disabled: Current.family.syncing?,
+            frame: :_top
+          ) %>
+      <%= render DS::Link.new(
+        text: "New account",
+        href: new_account_path(return_to: accounts_path),
+        variant: "primary",
+        icon: "plus",
+        frame: :modal
+      ) %>
+    </div>
+  </div>
+</header>
 
 <% if @manual_accounts.empty? && @plaid_items.empty? %>
   <%= render "empty" %>
 <% else %>
-  <div class="space-y-4">
+  <div class="space-y-2">
     <% if @plaid_items.any? %>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <% @plaid_items.sort_by(&:created_at).each do |plaid_item| %>
-          <%= render plaid_item %>
-        <% end %>
-      </div>
+      <%= render @plaid_items.sort_by(&:created_at) %>
     <% end %>
 
     <% if @manual_accounts.any? %>
-      <%= render Ui::CardComponent.new(
-        title: "Manual Accounts",
-        variant: :default,
-        size: :md
-      ) do %>
-        <%= render "accounts/index/manual_accounts", accounts: @manual_accounts %>
-      <% end %>
+      <%= render "accounts/index/manual_accounts", accounts: @manual_accounts %>
     <% end %>
   </div>
 <% end %>

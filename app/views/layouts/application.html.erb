@@ -54,7 +54,7 @@
                   <p class="text-sm text-secondary"><%= Current.family.days_left_in_trial %> days remaining</p>
                 </div>
 
-                <%= render LinkComponent.new(
+                <%= render DS::Link.new(
                   text: "Upgrade",
                   href: upgrade_subscription_path,
                 ) %>
