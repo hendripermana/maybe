@@ -583,4 +583,48 @@ html.fullscreen-active {
 /* Animation improvements */
 .chart-transition {
   transition: all 0.3s ease-in-out;
+}/* Load
+ing shimmer effect */
+.loading-shimmer {
+  background: linear-gradient(90deg, 
+    var(--color-muted) 25%, 
+    var(--color-muted-foreground) 50%, 
+    var(--color-muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  color: transparent;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Net worth chart improvements */
+.net-worth-chart-container {
+  background: linear-gradient(135deg, 
+    var(--color-background) 0%, 
+    var(--color-muted) 100%
+  );
+}
+
+/* Period selector improvements */
+.period-selector {
+  backdrop-filter: blur(8px);
+  background: rgba(var(--color-muted-rgb), 0.5);
+}
+
+/* Chart area styling */
+.chart-area {
+  background: linear-gradient(135deg, 
+    var(--color-card) 0%, 
+    var(--color-muted) 100%
+  );
+  border: 1px solid var(--color-border);
 }

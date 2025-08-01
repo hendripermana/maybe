@@ -1,6 +1,6 @@
 <%= turbo_frame_tag dom_id(entry) do %>
   <%= turbo_frame_tag dom_id(transaction) do %>
-    <div class="<%= container_classes %>" data-transaction-item-target="container">
+    <div class="<%= container_classes %>" data-transaction-item-target="container" data-testid="transaction-item">
       <div class="pr-4 lg:pr-10 flex items-center gap-3 lg:gap-4 col-span-8 <%= name_column_classes %>">
         <%= check_box_tag dom_id(entry, "selection"),
             disabled: transfer?,

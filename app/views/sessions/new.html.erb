@@ -1,40 +1,42 @@
+<%
+  header_title t(".title")
+%>
+
 <%= render Ui::CardComponent.new(
-  title: t(".title"),
   variant: :elevated,
   size: :lg,
   class: "max-w-md mx-auto mt-8"
 ) do %>
-  <%= render Ui::FormComponent.new(url: sessions_path, method: :post, html_options: { data: { turbo: false } }) do |form| %>
-    <%= render Ui::FormFieldComponent.new(form: form, field: :email, label: t(".email"), required: true) do %>
-      <%= render Ui::InputComponent.new(
-        form: form,
-        field: :email,
-        type: :email,
-        placeholder: t(".email_placeholder"),
-        autocomplete: "email",
-        required: true
-      ) %>
-    <% end %>
+  <%= form_with url: sessions_path, method: :post, class: "space-y-4", data: { turbo: false } do |form| %>
+    <div class="form-field">
+      <div class="form-field__body">
+        <%= form.label :email, t(".email"), class: "form-field__label" %>
+        <%= form.email_field :email, 
+            class: "form-field__input", 
+            placeholder: t(".email_placeholder"),
+            autocomplete: "email",
+            required: true,
+            autofocus: true %>
+      </div>
+    </div>
 
-    <%= render Ui::FormFieldComponent.new(form: form, field: :password, label: t(".password"), required: true) do %>
-      <%= render Ui::InputComponent.new(
-        form: form,
-        field: :password,
-        type: :password,
-        placeholder: t(".password_placeholder"),
-        autocomplete: "current-password",
-        required: true
-      ) %>
-    <% end %>
+    <div class="form-field">
+      <div class="form-field__body">
+        <%= form.label :password, t(".password"), class: "form-field__label" %>
+        <%= form.password_field :password, 
+            class: "form-field__input", 
+            placeholder: t(".password_placeholder"),
+            autocomplete: "current-password",
+            required: true %>
+      </div>
+    </div>
 
-    <% form.with_actions do %>
-      <%= render Ui::ButtonComponent.new(
-        text: t(".submit"),
-        variant: :primary,
-        type: "submit",
-        full_width: true
-      ) %>
-    <% end %>
+    <%= render Ui::ButtonComponent.new(
+      text: t(".submit"),
+      variant: :primary,
+      type: "submit",
+      full_width: true
+    ) %>
   <% end %>
 
   <div class="mt-6 text-center">

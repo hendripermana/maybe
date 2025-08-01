@@ -4,7 +4,7 @@ class AddAnonymizationTrackingToUiMonitoringAndFeedback < ActiveRecord::Migratio
     add_column :ui_monitoring_events, :data_anonymized, :boolean, default: false, null: false
     add_column :ui_monitoring_events, :anonymized_at, :datetime
     add_index :ui_monitoring_events, :data_anonymized
-    
+
     # Add anonymization tracking to user feedback
     add_column :user_feedbacks, :data_anonymized, :boolean, default: false, null: false
     add_column :user_feedbacks, :anonymized_at, :datetime

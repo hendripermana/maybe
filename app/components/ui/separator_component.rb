@@ -25,18 +25,18 @@ module Ui
 
     private
 
-    attr_reader :orientation, :decorative
+      attr_reader :orientation, :decorative
 
-    def container_classes
-      build_classes(
-        "shrink-0",
-        ORIENTATIONS[orientation],
-        VARIANTS[variant]
-      )
-    end
+      def container_classes
+        build_classes(
+          "shrink-0",
+          ORIENTATIONS[orientation],
+          VARIANTS[variant]
+        )
+      end
 
-    def aria_attributes
-      decorative ? { "aria-hidden": "true" } : {}
-    end
+      def aria_attributes
+        decorative ? { "aria-hidden": "true" } : {}
+      end
   end
 end

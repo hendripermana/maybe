@@ -1,49 +1,51 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="disclosure"
 export default class extends Controller {
-  static targets = ["content", "chevron"]
+  static targets = ["content", "chevron"];
 
   connect() {
     // Check if the content should be open by default
-    const shouldBeOpen = this.element.hasAttribute('data-disclosure-open')
-    
+    const shouldBeOpen = this.element.hasAttribute("data-disclosure-open");
+
     if (shouldBeOpen) {
-      this.show()
+      this.show();
     } else {
-      this.hide()
+      this.hide();
     }
   }
 
   toggle() {
     if (this.isHidden()) {
-      this.show()
+      this.show();
     } else {
-      this.hide()
+      this.hide();
     }
   }
 
   show() {
     if (this.hasContentTarget) {
-      this.contentTarget.classList.remove('hidden')
+      this.contentTarget.classList.remove("hidden");
     }
-    
+
     if (this.hasChevronTarget) {
-      this.chevronTarget.classList.add('rotate-180')
+      this.chevronTarget.classList.add("rotate-180");
     }
   }
 
   hide() {
     if (this.hasContentTarget) {
-      this.contentTarget.classList.add('hidden')
+      this.contentTarget.classList.add("hidden");
     }
-    
+
     if (this.hasChevronTarget) {
-      this.chevronTarget.classList.remove('rotate-180')
+      this.chevronTarget.classList.remove("rotate-180");
     }
   }
 
   isHidden() {
-    return this.hasContentTarget && this.contentTarget.classList.contains('hidden')
+    return (
+      this.hasContentTarget && this.contentTarget.classList.contains("hidden")
+    );
   }
 }

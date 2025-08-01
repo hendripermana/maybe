@@ -1,15 +1,15 @@
-require 'net/http'
-require 'uri'
-require 'json'
+require "net/http"
+require "uri"
+require "json"
 
 class SlackNotifier
   # Send a notification to Slack
   def self.notify(title, message, category, severity)
     return unless webhook_url.present?
-    
+
     # Don't send notifications in test environment
     return if Rails.env.test?
-    
+
     # Prepare the payload
     payload = {
       blocks: [
@@ -65,20 +65,20 @@ class SlackNotifier
         }
       ]
     }
-    
+
     # Send the notification asynchronously
     Thread.new do
       begin
         uri = URI.parse(webhook_url)
         http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = (uri.scheme == 'https')
-        
+        http.use_ssl = (uri.scheme == "https")
+
         request = Net::HTTP::Post.new(uri.request_uri)
-        request.content_type = 'application/json'
+        request.content_type = "application/json"
         request.body = payload.to_json
-        
+
         response = http.request(request)
-        
+
         unless response.code.to_i == 200
           Rails.logger.error "Failed to send Slack notification: #{response.code} - #{response.body}"
         end
@@ -89,14 +89,14 @@ class SlackNotifier
       end
     end
   end
-  
+
   private
-  
-  def self.webhook_url
-    ENV['SLACK_WEBHOOK_URL']
-  end
-  
-  def self.monitoring_url
-    Rails.application.routes.url_helpers.monitoring_url(host: ENV.fetch('APPLICATION_HOST', 'localhost:3000'))
-  end
+
+    def self.webhook_url
+      ENV["SLACK_WEBHOOK_URL"]
+    end
+
+    def self.monitoring_url
+      Rails.application.routes.url_helpers.monitoring_url(host: ENV.fetch("APPLICATION_HOST", "localhost:3000"))
+    end
 end

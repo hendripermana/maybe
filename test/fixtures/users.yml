@@ -31,3 +31,11 @@ family_member:
   last_name: Member
   family: empty
   role: member
+
+maybe_support_staff:
+  email: support@maybe.co
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Support
+  last_name: Staff
+  family: empty
+  role: super_admin

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class MonitoringMailerTest < ActionMailer::TestCase
   test "ui_monitoring_alert" do
@@ -9,16 +9,16 @@ class MonitoringMailerTest < ActionMailer::TestCase
       :error,
       :error
     )
-    
+
     # Test the email content
     assert_emails 1 do
       email.deliver_now
     end
-    
+
     # Test the email headers
-    assert_equal ["admin@maybe.local"], email.to
+    assert_equal [ "admin@maybe.local" ], email.to
     assert_equal "[UI Monitoring Alert] Test Alert", email.subject
-    
+
     # Test the email body
     assert_includes email.html_part.body.to_s, "Test Alert"
     assert_includes email.html_part.body.to_s, "This is a test alert message"

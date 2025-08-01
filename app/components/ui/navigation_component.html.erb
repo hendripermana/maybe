@@ -11,7 +11,7 @@
       <% desktop_items.each do |item| %>
         <li role="none">
           <div data-ui--navigation-target="item">
-            <%= render "ui/navigation_item_component", **item, color_classes: color_classes(item) %>
+            <%= render Ui::NavigationItemComponent.new(**item, color_classes: color_classes(item)) %>
           </div>
         </li>
       <% end %>
@@ -25,18 +25,18 @@
       <%= image_tag "logomark-color.svg", class: "w-9 h-9 mx-auto", alt: "Maybe Finance" %>
     <% end %>
 
-    <%= render "users/user_menu", user: helpers.current_user, placement: "bottom-end", offset: 12 %>
+    <%= render "users/user_menu", user: Current.user, placement: "bottom-end", offset: 12 %>
   </nav>
 
   <%= tag.nav class: "lg:hidden bg-surface shrink-0 z-10 pb-[env(safe-area-inset-bottom)] border-t border-tertiary flex justify-around", aria: { label: "Mobile Bottom Navigation" } do %>
     <% mobile_items.each do |item| %>
-      <%= render "ui/navigation_item_component", **item, color_classes: color_classes(item) %>
+      <%= render Ui::NavigationItemComponent.new(**item, color_classes: color_classes(item)) %>
     <% end %>
   <% end %>
 <% elsif variant == "sidebar" %>
   <nav class="space-y-2" aria-label="Sidebar Navigation">
     <% sidebar_items.each do |item| %>
-      <%= render "ui/navigation_item_component", **item, color_classes: color_classes(item), variant: "sidebar" %>
+      <%= render Ui::NavigationItemComponent.new(**item, color_classes: color_classes(item), variant: "sidebar") %>
     <% end %>
   </nav>
 <% end %>

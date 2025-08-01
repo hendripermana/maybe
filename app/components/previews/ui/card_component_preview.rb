@@ -2,29 +2,29 @@
 
 module Ui
   # Preview for the Card component
-  # 
+  #
   # ## Usage Guidelines
-  # 
+  #
   # - Use cards to group related content and actions
   # - Use the appropriate variant based on the card's purpose and prominence
   # - Use consistent card sizing within the same section or grid
   # - Leverage header and footer slots for actions and metadata
   # - Ensure proper spacing within cards (padding and content spacing)
-  # 
+  #
   # ## Accessibility Considerations
-  # 
+  #
   # - Heading hierarchy: Use proper heading levels within cards
   # - Interactive cards: Ensure proper focus management for clickable cards
   # - Color contrast: All text meets WCAG AA contrast requirements
   # - Keyboard navigation: Interactive elements within cards are keyboard accessible
-  # 
+  #
   # ## Theme Support
-  # 
+  #
   # This component uses CSS variables for theming and works in both light and dark modes.
   # All colors are derived from the theme tokens to ensure consistency.
   class CardComponentPreview < ViewComponent::Preview
     # @!group Variants
-    
+
     # @label Default
     def default
       render(Ui::CardComponent.new(title: "Card Title")) do
@@ -144,7 +144,7 @@ module Ui
     # @!endgroup
 
     # @!group Theme Examples
-    
+
     # @label Light and Dark Theme
     def theme_examples
       render_with_template(locals: {
@@ -154,7 +154,7 @@ module Ui
     # @!endgroup
 
     # @!group Accessibility Examples
-    
+
     # @label Keyboard Navigation
     def keyboard_navigation
       render_with_template(locals: {

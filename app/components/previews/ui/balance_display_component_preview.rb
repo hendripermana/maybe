@@ -4,7 +4,7 @@ module Ui
   # Preview for the BalanceDisplay component
   class BalanceDisplayComponentPreview < ViewComponent::Preview
     # @!group Amounts
-    
+
     # @label Positive Amount
     def positive_amount
       render(Ui::BalanceDisplayComponent.new(amount: 1250.75))

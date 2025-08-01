@@ -5,11 +5,11 @@ module Ui
   # Provides consistent styling and accessibility for groups of radio buttons
   class RadioGroupComponent < BaseComponent
     renders_many :radio_buttons, "RadioButtonSlot"
-    
+
     attr_reader :form, :field, :legend, :required, :orientation
 
     def initialize(
-      form:, 
+      form:,
       field:,
       legend: nil,
       required: false,

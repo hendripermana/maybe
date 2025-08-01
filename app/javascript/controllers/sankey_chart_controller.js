@@ -8,42 +8,42 @@ export default class extends Controller {
     data: Object,
     nodeWidth: { type: Number, default: 15 },
     nodePadding: { type: Number, default: 25 },
-    currencySymbol: { type: String, default: "$" }
+    currencySymbol: { type: String, default: "$" },
   };
 
   connect() {
     console.log("🔥 Sankey chart controller connected!");
     console.log("📊 Data value:", this.dataValue);
     console.log("💱 Currency:", this.currencySymbolValue);
-    
+
     // Prevent multiple instances rendering at the same time
     if (this.isDrawing) {
       console.log("⏳ Chart already drawing, skipping...");
       return;
     }
-    
+
     this.resizeObserver = new ResizeObserver(() => {
       // Debounce resize events
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => this.#draw(), 100);
     });
     this.resizeObserver.observe(this.element);
-    
+
     // Small delay to ensure element is properly sized
     setTimeout(() => this.#draw(), 50);
   }
 
   showLoading() {
-    const loadingElement = document.getElementById('sankey-loading');
+    const loadingElement = document.getElementById("sankey-loading");
     if (loadingElement) {
-      loadingElement.style.display = 'flex';
+      loadingElement.style.display = "flex";
     }
   }
 
   hideLoading() {
-    const loadingElement = document.getElementById('sankey-loading');
+    const loadingElement = document.getElementById("sankey-loading");
     if (loadingElement) {
-      loadingElement.style.display = 'none';
+      loadingElement.style.display = "none";
     }
   }
 
@@ -70,10 +70,10 @@ export default class extends Controller {
       console.log("⏳ Already drawing, skipping duplicate call");
       return;
     }
-    
+
     this.isDrawing = true;
     console.log("🎨 Drawing sankey chart...");
-    
+
     const { nodes = [], links = [] } = this.dataValue || {};
     console.log("📈 Nodes:", nodes.length, "Links:", links.length);
 
@@ -89,32 +89,44 @@ export default class extends Controller {
 
     // Get actual dimensions, ensuring it fills the container properly like a magical creature
     const containerRect = this.element.getBoundingClientRect();
-    
+
     // Use the FULL available space from the container - be the shape of the container
-    const availableWidth = this.element.offsetWidth || containerRect.width || 600;
-    const availableHeight = this.element.offsetHeight || containerRect.height || 540;
-    
+    const availableWidth =
+      this.element.offsetWidth || containerRect.width || 600;
+    const availableHeight =
+      this.element.offsetHeight || containerRect.height || 540;
+
     // Chart should be exactly the size of its container (like the magical creature)
     const width = availableWidth;
     const height = availableHeight;
-    
+
     console.log("📏 Chart dimensions (creature size):", width, "x", height);
-    console.log("📦 Container dimensions (room size):", availableWidth, "x", availableHeight);
+    console.log(
+      "📦 Container dimensions (room size):",
+      availableWidth,
+      "x",
+      availableHeight,
+    );
 
     // Minimal margins to maximize chart area - creature fills almost the entire space
-    const margin = { 
+    const margin = {
       top: 20,
-      right: 60, 
-      bottom: 20, 
-      left: 60 
+      right: 60,
+      bottom: 20,
+      left: 60,
     };
-    
+
     // Calculate the actual drawing area
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-    
+
     console.log("📐 Margins (minimal):", margin);
-    console.log("📏 Inner dimensions (creature body):", innerWidth, "x", innerHeight);
+    console.log(
+      "📏 Inner dimensions (creature body):",
+      innerWidth,
+      "x",
+      innerHeight,
+    );
 
     const svg = d3
       .select(this.element)
@@ -159,28 +171,34 @@ export default class extends Controller {
         }
         // Add other CSS var to hex mappings here if needed
 
-        if (colorStr.startsWith("var(--")) { // Unmapped CSS var, use as is (likely solid)
+        if (colorStr.startsWith("var(--")) {
+          // Unmapped CSS var, use as is (likely solid)
           return colorStr;
         }
 
         const d3Color = d3.color(colorStr);
-        return d3Color ? d3Color.copy({ opacity: opacity }) : "var(--color-gray-400)";
+        return d3Color
+          ? d3Color.copy({ opacity: opacity })
+          : "var(--color-gray-400)";
       };
 
       const sourceStopColor = getStopColorWithOpacity(link.source.color);
       const targetStopColor = getStopColorWithOpacity(link.target.color);
 
-      const gradient = defs.append("linearGradient")
+      const gradient = defs
+        .append("linearGradient")
         .attr("id", gradientId)
         .attr("gradientUnits", "userSpaceOnUse")
         .attr("x1", link.source.x1)
         .attr("x2", link.target.x0);
 
-      gradient.append("stop")
+      gradient
+        .append("stop")
         .attr("offset", "0%")
         .attr("stop-color", sourceStopColor);
 
-      gradient.append("stop")
+      gradient
+        .append("stop")
         .attr("offset", "100%")
         .attr("stop-color", targetStopColor);
     });
@@ -193,25 +211,30 @@ export default class extends Controller {
       .data(sankeyData.links)
       .join("path")
       .attr("d", sankeyLinkHorizontal())
-      .attr("stroke", (d, i) => `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`)
+      .attr(
+        "stroke",
+        (d, i) =>
+          `url(#link-gradient-${d.source.index}-${d.target.index}-${i})`,
+      )
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .style("cursor", "pointer")
       .style("opacity", 0.7) // Start visible instead of 0
-      .on("mouseenter", function(event, d) {
+      .on("mouseenter", function (event, d) {
         // Highlight this link
         d3.select(this)
           .transition()
           .duration(150) // Faster animation
           .style("opacity", 1)
           .attr("stroke-width", (d) => Math.max(2, d.width * 1.1));
-        
+
         // Dim other links
-        linkElements.filter(link => link !== d)
+        linkElements
+          .filter((link) => link !== d)
           .transition()
           .duration(150)
           .style("opacity", 0.3);
       })
-      .on("mouseleave", function(event, d) {
+      .on("mouseleave", function (event, d) {
         // Reset all links
         linkElements
           .transition()
@@ -220,7 +243,10 @@ export default class extends Controller {
           .attr("stroke-width", (d) => Math.max(1, d.width));
       })
       .append("title")
-      .text((d) => `${nodes[d.source.index].name} → ${nodes[d.target.index].name}: ${this.currencySymbolValue}${Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${d.percentage}%)`);
+      .text(
+        (d) =>
+          `${nodes[d.source.index].name} → ${nodes[d.target.index].name}: ${this.currencySymbolValue}${Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${d.percentage}%)`,
+      );
 
     // Animate links appearing - faster animation
     linkElements
@@ -238,7 +264,8 @@ export default class extends Controller {
 
     const cornerRadius = 8;
 
-    const nodeRects = node.append("path")
+    const nodeRects = node
+      .append("path")
       .attr("d", (d) => {
         const x0 = d.x0;
         const y0 = d.y0;
@@ -248,12 +275,22 @@ export default class extends Controller {
         // const w = x1 - x0; // Not directly used in path string, but good for context
 
         // Dynamic corner radius based on node height, maxed at 8
-        const effectiveCornerRadius = Math.max(0, Math.min(cornerRadius, h / 2));
+        const effectiveCornerRadius = Math.max(
+          0,
+          Math.min(cornerRadius, h / 2),
+        );
 
-        const isSourceNode = d.sourceLinks && d.sourceLinks.length > 0 && (!d.targetLinks || d.targetLinks.length === 0);
-        const isTargetNode = d.targetLinks && d.targetLinks.length > 0 && (!d.sourceLinks || d.sourceLinks.length === 0);
+        const isSourceNode =
+          d.sourceLinks &&
+          d.sourceLinks.length > 0 &&
+          (!d.targetLinks || d.targetLinks.length === 0);
+        const isTargetNode =
+          d.targetLinks &&
+          d.targetLinks.length > 0 &&
+          (!d.sourceLinks || d.sourceLinks.length === 0);
 
-        if (isSourceNode) { // Round left corners, flat right for "Total Income"
+        if (isSourceNode) {
+          // Round left corners, flat right for "Total Income"
           if (h < effectiveCornerRadius * 2) {
             return `M ${x0},${y0} L ${x1},${y0} L ${x1},${y1} L ${x0},${y1} Z`;
           }
@@ -266,7 +303,8 @@ export default class extends Controller {
                   Q ${x0},${y0} ${x0 + effectiveCornerRadius},${y0} Z`;
         }
 
-        if (isTargetNode) { // Flat left corners, round right for Categories/Surplus
+        if (isTargetNode) {
+          // Flat left corners, round right for Categories/Surplus
           if (h < effectiveCornerRadius * 2) {
             return `M ${x0},${y0} L ${x1},${y0} L ${x1},${y1} L ${x0},${y1} Z`;
           }
@@ -286,7 +324,7 @@ export default class extends Controller {
       .style("cursor", "pointer")
       .style("opacity", 0)
       .style("transform", "scale(0.8)")
-      .on("mouseenter", function(event, d) {
+      .on("mouseenter", function (event, d) {
         d3.select(this)
           .transition()
           .duration(200)
@@ -294,7 +332,7 @@ export default class extends Controller {
           .style("transform", "scale(1.05)")
           .attr("filter", "drop-shadow(0 4px 8px rgba(0,0,0,0.1))");
       })
-      .on("mouseleave", function(event, d) {
+      .on("mouseleave", function (event, d) {
         d3.select(this)
           .transition()
           .duration(200)
@@ -327,19 +365,25 @@ export default class extends Controller {
         textElement.selectAll("tspan").remove();
 
         // Node Name on the first line
-        textElement.append("tspan")
-          .text(d.name)
-          .attr("font-size", "12px");
+        textElement.append("tspan").text(d.name).attr("font-size", "12px");
 
         // Financial details on the second line
-        const financialDetailsTspan = textElement.append("tspan")
+        const financialDetailsTspan = textElement
+          .append("tspan")
           .attr("x", textElement.attr("x"))
           .attr("dy", "1.4em")
           .attr("class", "font-mono text-secondary")
           .attr("font-size", "10px");
 
-        financialDetailsTspan.append("tspan")
-          .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        financialDetailsTspan
+          .append("tspan")
+          .text(
+            stimulusControllerInstance.currencySymbolValue +
+              Number.parseFloat(d.value).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }),
+          );
       });
 
     // Animate labels appearing - faster animation
@@ -352,4 +396,4 @@ export default class extends Controller {
     console.log("🎉 Sankey chart rendered successfully!");
     this.isDrawing = false; // Reset flag when done
   }
-} 
+}

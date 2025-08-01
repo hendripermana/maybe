@@ -7,8 +7,8 @@ module Ui
     attr_reader :form, :field, :label_text, :checked, :disabled, :required, :description
 
     def initialize(
-      form:, 
-      field:, 
+      form:,
+      field:,
       label_text: nil,
       checked: false,
       disabled: false,
@@ -37,7 +37,7 @@ module Ui
         disabled: @disabled,
         required: @required,
         checked: @checked,
-        aria: { 
+        aria: {
           describedby: description ? "#{field_id}_description" : nil
         },
         **@options.except(:class)
@@ -59,7 +59,7 @@ module Ui
         "disabled:cursor-not-allowed disabled:opacity-50" => @disabled
       )
     end
-    
+
     def container_classes
       build_classes(
         "flex items-start",

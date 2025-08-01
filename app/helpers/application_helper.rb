@@ -7,6 +7,12 @@ module ApplicationHelper
     form_with(**options, &block)
   end
 
+  def ui_form_with(**options, &block)
+    render Ui::FormComponent.new(**options) do
+      capture(&block) if block_given?
+    end
+  end
+
   def icon(key, size: "md", color: "default", custom: false, as_button: false, **opts)
     extra_classes = opts.delete(:class)
     sizes = { xs: "w-3 h-3", sm: "w-4 h-4", md: "w-5 h-5", lg: "w-6 h-6", xl: "w-7 h-7", "2xl": "w-8 h-8" }
@@ -54,7 +60,7 @@ module ApplicationHelper
   def page_active?(path, exact = false)
     return true if current_page?(path)
     return false if exact || path == "/"
-    
+
     # Check if the current path starts with the given path
     # This handles nested routes (e.g. /settings/profile should activate /settings)
     request.path.start_with?(path)

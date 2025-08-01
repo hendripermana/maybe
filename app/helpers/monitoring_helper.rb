@@ -1,7 +1,7 @@
 module MonitoringHelper
   def error_chart_data(error_summary)
     return [] if error_summary.blank?
-    
+
     error_summary.map do |error|
       {
         name: error.error_type,
@@ -9,10 +9,10 @@ module MonitoringHelper
       }
     end.to_json
   end
-  
+
   def performance_chart_data(performance_metrics)
     return [] if performance_metrics.blank?
-    
+
     performance_metrics.map do |metric|
       {
         name: metric.metric_name,
@@ -20,10 +20,10 @@ module MonitoringHelper
       }
     end.to_json
   end
-  
+
   def feedback_chart_data(feedback_summary)
     return [] if feedback_summary.blank?
-    
+
     feedback_summary.map do |feedback|
       {
         name: feedback.feedback_type.humanize,
@@ -32,7 +32,7 @@ module MonitoringHelper
       }
     end.to_json
   end
-  
+
   def theme_performance_trend_data
     # Get theme switch performance data for the last 7 days
     data = []
@@ -42,62 +42,62 @@ module MonitoringHelper
                             .where(created_at: date.beginning_of_day..date.end_of_day)
                             .select("AVG((data->>'duration')::float) as avg_duration")
                             .first&.avg_duration || 0
-      
+
       data << {
         date: date.strftime("%m/%d"),
         value: avg.to_f.round(2)
       }
     end
-    
+
     data.to_json
   end
-  
+
   def error_trend_data
     # Get error count data for the last 7 days
     data = []
     7.downto(0) do |days_ago|
       date = Date.today - days_ago.days
-      count = UiMonitoringEvent.where(event_type: 'ui_error')
+      count = UiMonitoringEvent.where(event_type: "ui_error")
                               .where(created_at: date.beginning_of_day..date.end_of_day)
                               .count
-      
+
       data << {
         date: date.strftime("%m/%d"),
         value: count
       }
     end
-    
+
     data.to_json
   end
-  
+
   def status_badge(status, text)
     class_name = status ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100"
-    
+
     content_tag :span, text, class: "px-2 inline-flex text-xs leading-5 font-semibold rounded-full #{class_name}"
   end
-  
+
   # Sentry integration helpers
   def sentry_link(event)
     return nil unless event.has_sentry_event?
-    
-    link_to "View in Sentry", event.sentry_url, 
-      target: "_blank", 
-      rel: "noopener noreferrer", 
+
+    link_to "View in Sentry", event.sentry_url,
+      target: "_blank",
+      rel: "noopener noreferrer",
       class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
   end
-  
+
   def sentry_badge(event)
     return nil unless event.has_sentry_event?
-    
-    content_tag :span, "Sentry", 
+
+    content_tag :span, "Sentry",
       class: "px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100",
       title: "This event has a corresponding Sentry event"
   end
-  
+
   def sentry_event_id_display(event)
     return nil unless event.has_sentry_event?
-    
-    content_tag :span, "Sentry ID: #{event.sentry_event_id}", 
+
+    content_tag :span, "Sentry ID: #{event.sentry_event_id}",
       class: "text-xs text-gray-500 dark:text-gray-400"
   end
 end

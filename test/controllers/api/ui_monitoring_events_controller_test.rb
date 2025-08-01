@@ -39,7 +39,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
     json_response = JSON.parse(response.body)
     assert_equal "success", json_response["status"]
     assert json_response["event_id"].present?
-    
+
     # Check that the event was saved correctly
     event = UiMonitoringEvent.last
     assert_equal "ui_error", event.event_type
@@ -53,13 +53,13 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create event when logged in" do
     sign_in @user
-    
+
     assert_difference("UiMonitoringEvent.count") do
       post api_ui_monitoring_events_url, params: @event_data, as: :json
     end
 
     assert_response :success
-    
+
     # Check that the event was associated with the user
     event = UiMonitoringEvent.last
     assert_equal @user, event.user
@@ -71,7 +71,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    
+
     event = UiMonitoringEvent.last
     assert_equal "performance_metric", event.event_type
     assert_equal "theme_switch_duration", event.data["metric_name"]
@@ -81,7 +81,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
   # Validation tests
   test "should reject invalid event data" do
     post api_ui_monitoring_events_url, params: { ui_monitoring_event: { data: {} } }, as: :json
-    
+
     assert_response :unprocessable_entity
     json_response = JSON.parse(response.body)
     assert_equal "error", json_response["status"]
@@ -91,64 +91,64 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
   test "should require event_type" do
     invalid_data = @event_data.deep_dup
     invalid_data[:ui_monitoring_event].delete(:event_type)
-    
+
     post api_ui_monitoring_events_url, params: invalid_data, as: :json
-    
+
     assert_response :unprocessable_entity
     json_response = JSON.parse(response.body)
     assert_includes json_response["errors"], "Event type can't be blank"
   end
 
   test "should handle malformed JSON data" do
-    post api_ui_monitoring_events_url, 
-         params: '{"invalid": json}', 
-         headers: { 'Content-Type' => 'application/json' }
-    
+    post api_ui_monitoring_events_url,
+         params: '{"invalid": json}',
+         headers: { "Content-Type" => "application/json" }
+
     assert_response :bad_request
   end
 
   # Security tests
   test "should anonymize IPv4 address" do
     post api_ui_monitoring_events_url, params: @event_data, as: :json
-    
+
     event = UiMonitoringEvent.last
     assert_match(/\d+\.\d+\.0\.0/, event.ip_address)
   end
 
   test "should anonymize IPv6 address" do
     # Mock the request to have an IPv6 address
-    @request.env['REMOTE_ADDR'] = '2001:0db8:85a3:0000:0000:8a2e:0370:7334'
-    
+    @request.env["REMOTE_ADDR"] = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
+
     post api_ui_monitoring_events_url, params: @event_data, as: :json
-    
+
     event = UiMonitoringEvent.last
-    assert_includes event.ip_address, ':0:0'
+    assert_includes event.ip_address, ":0:0"
   end
 
   test "should validate request origin" do
     # Test with invalid origin
-    post api_ui_monitoring_events_url, 
-         params: @event_data, 
-         headers: { 'Origin' => 'https://malicious-site.com' },
+    post api_ui_monitoring_events_url,
+         params: @event_data,
+         headers: { "Origin" => "https://malicious-site.com" },
          as: :json
-    
+
     assert_response :forbidden
     json_response = JSON.parse(response.body)
     assert_equal "Unauthorized origin", json_response["error"]
   end
 
   test "should allow requests from same origin" do
-    post api_ui_monitoring_events_url, 
-         params: @event_data, 
-         headers: { 'Origin' => 'http://www.example.com' },
+    post api_ui_monitoring_events_url,
+         params: @event_data,
+         headers: { "Origin" => "http://www.example.com" },
          as: :json
-    
+
     assert_response :success
   end
 
   test "should allow requests without origin header" do
     post api_ui_monitoring_events_url, params: @event_data, as: :json
-    
+
     assert_response :success
   end
 
@@ -158,7 +158,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
     # Make 101 requests to exceed the 100 per hour limit
     101.times do |i|
       post api_ui_monitoring_events_url, params: @event_data, as: :json
-      
+
       if i < 100
         assert_response :success
       else
@@ -179,7 +179,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
         created_at: 30.minutes.ago
       )
     end
-    
+
     assert_enqueued_with(job: UiMonitoringAlertJob) do
       post api_ui_monitoring_events_url, params: @event_data, as: :json
     end
@@ -201,7 +201,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     }
-    
+
     assert_enqueued_with(job: UiMonitoringAlertJob) do
       post api_ui_monitoring_events_url, params: slow_theme_data, as: :json
     end
@@ -217,7 +217,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     }
-    
+
     assert_no_enqueued_jobs(only: UiMonitoringAlertJob) do
       post api_ui_monitoring_events_url, params: fast_theme_data, as: :json
     end
@@ -233,7 +233,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     }
-    
+
     assert_no_enqueued_jobs(only: UiMonitoringAlertJob) do
       post api_ui_monitoring_events_url, params: other_metric_data, as: :json
     end
@@ -243,17 +243,17 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
   test "should preserve complex data structures" do
     complex_data = @event_data.deep_dup
     complex_data[:ui_monitoring_event][:data][:nested] = {
-      array: [1, 2, 3],
+      array: [ 1, 2, 3 ],
       hash: { key: "value" },
       boolean: true,
       null_value: nil
     }
-    
+
     post api_ui_monitoring_events_url, params: complex_data, as: :json
-    
+
     assert_response :success
     event = UiMonitoringEvent.last
-    assert_equal [1, 2, 3], event.data["nested"]["array"]
+    assert_equal [ 1, 2, 3 ], event.data["nested"]["array"]
     assert_equal({ "key" => "value" }, event.data["nested"]["hash"])
     assert_equal true, event.data["nested"]["boolean"]
     assert_nil event.data["nested"]["null_value"]
@@ -266,9 +266,9 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
         data: {}
       }
     }
-    
+
     post api_ui_monitoring_events_url, params: empty_data, as: :json
-    
+
     assert_response :success
     event = UiMonitoringEvent.last
     assert_equal({}, event.data)
@@ -277,7 +277,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
   # Session and context tests
   test "should capture session information" do
     post api_ui_monitoring_events_url, params: @event_data, as: :json
-    
+
     event = UiMonitoringEvent.last
     assert_not_nil event.session_id
     assert_not_nil event.user_agent
@@ -285,10 +285,10 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should handle missing user agent gracefully" do
-    @request.env.delete('HTTP_USER_AGENT')
-    
+    @request.env.delete("HTTP_USER_AGENT")
+
     post api_ui_monitoring_events_url, params: @event_data, as: :json
-    
+
     assert_response :success
     event = UiMonitoringEvent.last
     assert_nil event.user_agent
@@ -303,9 +303,9 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
         errors.add(:base, "Database connection failed")
       end
     )
-    
+
     post api_ui_monitoring_events_url, params: @event_data, as: :json
-    
+
     assert_response :unprocessable_entity
     json_response = JSON.parse(response.body)
     assert_equal "error", json_response["status"]
@@ -314,16 +314,16 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
 
   # Content type tests
   test "should accept JSON content type" do
-    post api_ui_monitoring_events_url, 
+    post api_ui_monitoring_events_url,
          params: @event_data.to_json,
-         headers: { 'Content-Type' => 'application/json' }
-    
+         headers: { "Content-Type" => "application/json" }
+
     assert_response :success
   end
 
   test "should accept form data" do
     post api_ui_monitoring_events_url, params: @event_data
-    
+
     assert_response :success
   end
 
@@ -332,7 +332,7 @@ class Api::UiMonitoringEventsControllerTest < ActionDispatch::IntegrationTest
     # This test ensures that API endpoints work without CSRF tokens
     # which is necessary for client-side JavaScript calls
     post api_ui_monitoring_events_url, params: @event_data, as: :json
-    
+
     assert_response :success
     # If CSRF protection wasn't skipped, this would return 422
   end

@@ -30,7 +30,8 @@ VCR.configure do |config|
   config.hook_into :webmock
   config.ignore_localhost = true
   config.default_cassette_options = { erb: true }
-  config.filter_sensitive_data("<SYNTH_API_KEY>") { ENV["SYNTH_API_KEY"] }
+  config.filter_sensitive_data("<EXCHANGE_RATES_API_KEY>") { ENV["EXCHANGE_RATES_API_KEY"] }
+  config.filter_sensitive_data("<ALPHA_VANTAGE_API_KEY>") { ENV["ALPHA_VANTAGE_API_KEY"] }
   config.filter_sensitive_data("<OPENAI_ACCESS_TOKEN>") { ENV["OPENAI_ACCESS_TOKEN"] }
   config.filter_sensitive_data("<OPENAI_ORGANIZATION_ID>") { ENV["OPENAI_ORGANIZATION_ID"] }
   config.filter_sensitive_data("<STRIPE_SECRET_KEY>") { ENV["STRIPE_SECRET_KEY"] }
@@ -82,7 +83,7 @@ Dir[Rails.root.join("test", "interfaces", "**", "*.rb")].each { |f| require f }
 
 # Load support files in specific order to handle dependencies
 require_relative "support/theme_test_helper"
-require_relative "support/accessibility_test_helper" 
+require_relative "support/accessibility_test_helper"
 require_relative "support/visual_regression_helper"
 require_relative "support/ui_testing_config"
 require_relative "support/component_test_case"

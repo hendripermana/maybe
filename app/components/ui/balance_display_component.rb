@@ -32,49 +32,49 @@ module Ui
 
     private
 
-    attr_reader :amount, :currency, :show_sign, :show_indicator
+      attr_reader :amount, :currency, :show_sign, :show_indicator
 
-    def container_classes
-      build_classes(
-        "font-medium",
-        SIZES[size],
-        amount_color_class,
-        options[:class]
-      )
-    end
-
-    def amount_color_class
-      return VARIANTS[variant] unless variant == :default && amount.to_f != 0
-
-      if amount.to_f.negative?
-        "text-red-600 [data-theme=dark]:text-red-400"
-      else
-        "text-green-600 [data-theme=dark]:text-green-400"
+      def container_classes
+        build_classes(
+          "font-medium",
+          SIZES[size],
+          amount_color_class,
+          options[:class]
+        )
       end
-    end
 
-    def formatted_amount
-      helpers.format_currency(amount, currency, show_sign: show_sign)
-    end
+      def amount_color_class
+        return VARIANTS[variant] unless variant == :default && amount.to_f != 0
 
-    def indicator_icon
-      if amount.to_f.negative?
-        "arrow-down"
-      elsif amount.to_f.positive?
-        "arrow-up"
-      else
-        "minus"
+        if amount.to_f.negative?
+          "text-red-600 [data-theme=dark]:text-red-400"
+        else
+          "text-green-600 [data-theme=dark]:text-green-400"
+        end
       end
-    end
 
-    def indicator_color
-      if amount.to_f.negative?
-        "destructive"
-      elsif amount.to_f.positive?
-        "success"
-      else
-        "gray-400"
+      def formatted_amount
+        helpers.format_currency(amount, currency, show_sign: show_sign)
       end
-    end
+
+      def indicator_icon
+        if amount.to_f.negative?
+          "arrow-down"
+        elsif amount.to_f.positive?
+          "arrow-up"
+        else
+          "minus"
+        end
+      end
+
+      def indicator_color
+        if amount.to_f.negative?
+          "destructive"
+        elsif amount.to_f.positive?
+          "success"
+        else
+          "gray-400"
+        end
+      end
   end
 end

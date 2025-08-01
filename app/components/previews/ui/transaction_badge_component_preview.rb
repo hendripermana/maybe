@@ -4,7 +4,7 @@ module Ui
   # Preview for the TransactionBadge component
   class TransactionBadgeComponentPreview < ViewComponent::Preview
     # @!group Transaction Types
-    
+
     # @label Income
     def income_type
       render(Ui::TransactionBadgeComponent.new(transaction_type: :income))

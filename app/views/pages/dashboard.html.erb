@@ -40,12 +40,18 @@
 
 <div class="w-full space-y-6 pb-24">
   <% if Current.family.accounts.any? %>
-    <section class="bg-container py-4 rounded-xl shadow-border-xs">
-      <%= render partial: "pages/dashboard/net_worth_chart", locals: {
-        balance_sheet: @balance_sheet,
-        period: @period
-      } %>
-    </section>
+    <%= turbo_frame_tag "net-worth-chart" do %>
+      <%= render Ui::CardComponent.new(
+        variant: :elevated,
+        title: "Net Worth",
+        subtitle: "Your total assets minus liabilities"
+      ) do %>
+        <%= render Dashboard::NetWorthComponent.new(
+          balance_sheet: @balance_sheet,
+          period: @period
+        ) %>
+      <% end %>
+    <% end %>
     <section>
       <%= render "pages/dashboard/balance_sheet", balance_sheet: @balance_sheet %>
     </section>

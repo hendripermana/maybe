@@ -1,7 +1,7 @@
 <%# Modern form component template %>
-<%= form_with(**form_options) do |form| %>
+<%= form_with(**form_options) do |form_builder| %>
   <div class="form-fields space-y-4">
-    <%= content_for(form) %>
+    <%= content %>
   </div>
 
   <% if actions? %>

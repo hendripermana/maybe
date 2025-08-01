@@ -20,34 +20,34 @@ module Ui
 
     private
 
-    def adjacent_setting(offset)
-      visible_settings = settings_order.select { |setting| setting[:condition].nil? || helpers.send(setting[:condition]) }
-      current_index = visible_settings.index { |setting| helpers.send(setting[:path]) == current_path }
-      return nil unless current_index
+      def adjacent_setting(offset)
+        visible_settings = settings_order.select { |setting| setting[:condition].nil? || helpers.send(setting[:condition]) }
+        current_index = visible_settings.index { |setting| helpers.send(setting[:path]) == current_path }
+        return nil unless current_index
 
-      adjacent_index = current_index + offset
-      return nil if adjacent_index < 0 || adjacent_index >= visible_settings.size
+        adjacent_index = current_index + offset
+        return nil if adjacent_index < 0 || adjacent_index >= visible_settings.size
 
-      visible_settings[adjacent_index]
-    end
+        visible_settings[adjacent_index]
+      end
 
-    def settings_order
-      [
-        { name: "Account", path: :settings_profile_path },
-        { name: "Preferences", path: :settings_preferences_path },
-        { name: "Security", path: :settings_security_path },
-        { name: "Self hosting", path: :settings_hosting_path, condition: :self_hosted? },
-        { name: "API Key", path: :settings_api_key_path },
-        { name: "Billing", path: :settings_billing_path, condition: :not_self_hosted? },
-        { name: "Accounts", path: :accounts_path },
-        { name: "Imports", path: :imports_path },
-        { name: "Tags", path: :tags_path },
-        { name: "Categories", path: :categories_path },
-        { name: "Rules", path: :rules_path },
-        { name: "Merchants", path: :family_merchants_path },
-        { name: "What's new", path: :changelog_path },
-        { name: "Feedback", path: :feedback_path }
-      ]
-    end
+      def settings_order
+        [
+          { name: "Account", path: :settings_profile_path },
+          { name: "Preferences", path: :settings_preferences_path },
+          { name: "Security", path: :settings_security_path },
+          { name: "Self hosting", path: :settings_hosting_path, condition: :self_hosted? },
+          { name: "API Key", path: :settings_api_key_path },
+          { name: "Billing", path: :settings_billing_path, condition: :not_self_hosted? },
+          { name: "Accounts", path: :accounts_path },
+          { name: "Imports", path: :imports_path },
+          { name: "Tags", path: :tags_path },
+          { name: "Categories", path: :categories_path },
+          { name: "Rules", path: :rules_path },
+          { name: "Merchants", path: :family_merchants_path },
+          { name: "What's new", path: :changelog_path },
+          { name: "Feedback", path: :feedback_path }
+        ]
+      end
   end
 end

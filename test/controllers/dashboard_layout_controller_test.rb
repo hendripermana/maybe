@@ -8,7 +8,7 @@ class DashboardLayoutControllerTest < ActionDispatch::IntegrationTest
   test "dashboard page renders with correct layout class" do
     get root_path
     assert_response :success
-    
+
     # Verify the dashboard page uses the correct CSS class
     assert_select ".dashboard-main-content"
     assert_select ".dashboard-page"
@@ -17,7 +17,7 @@ class DashboardLayoutControllerTest < ActionDispatch::IntegrationTest
   test "dashboard controller sets correct action and controller names" do
     get root_path
     assert_response :success
-    
+
     # Verify we're on the pages controller dashboard action
     assert_equal "pages", @controller.controller_name
     assert_equal "dashboard", @controller.action_name

@@ -9,13 +9,13 @@ module Ui
         "Role" => "text-center",
         "Status" => "text-center"
       }
-      
+
       rows = [
-        ["John Doe", "john@example.com", "Admin", "Active"],
-        ["Jane Smith", "jane@example.com", "User", "Active"],
-        ["Bob Johnson", "bob@example.com", "User", "Inactive"]
+        [ "John Doe", "john@example.com", "Admin", "Active" ],
+        [ "Jane Smith", "jane@example.com", "User", "Active" ],
+        [ "Bob Johnson", "bob@example.com", "User", "Inactive" ]
       ]
-      
+
       render Ui::DataTableComponent.new(
         headers: headers,
         rows: rows
@@ -28,7 +28,7 @@ module Ui
         "Email" => "",
         "Role" => ""
       }
-      
+
       render Ui::DataTableComponent.new(
         headers: headers,
         rows: [],
@@ -43,7 +43,7 @@ module Ui
         "Status" => "text-center",
         "Actions" => "text-center"
       }
-      
+
       rows = [
         {
           cells: [
@@ -56,14 +56,14 @@ module Ui
         },
         {
           cells: [
-            "Savings Account", 
+            "Savings Account",
             "$15,750.00",
             content_tag(:span, "Active", class: "px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full"),
             content_tag(:button, "Edit", class: "text-blue-600 hover:text-blue-800")
           ]
         }
       ]
-      
+
       render Ui::DataTableComponent.new(
         headers: headers,
         rows: rows

@@ -6,9 +6,9 @@ import { Controller } from "@hotwired/stimulus";
  */
 export default class extends Controller {
   static targets = ["option", "preview", "form"];
-  static values = { 
+  static values = {
     currentTheme: String,
-    previewDelay: { type: Number, default: 500 }
+    previewDelay: { type: Number, default: 500 },
   };
 
   connect() {
@@ -18,13 +18,22 @@ export default class extends Controller {
 
   setupEventListeners() {
     // Listen for theme changes from the main theme controller
-    document.addEventListener("theme:changed", this.handleThemeChange.bind(this));
-    
+    document.addEventListener(
+      "theme:changed",
+      this.handleThemeChange.bind(this),
+    );
+
     // Setup preview hover behavior if preview targets exist
     if (this.hasPreviewTarget) {
-      this.optionTargets.forEach(option => {
-        option.addEventListener("mouseenter", this.handleOptionHover.bind(this));
-        option.addEventListener("mouseleave", this.handleOptionLeave.bind(this));
+      this.optionTargets.forEach((option) => {
+        option.addEventListener(
+          "mouseenter",
+          this.handleOptionHover.bind(this),
+        );
+        option.addEventListener(
+          "mouseleave",
+          this.handleOptionLeave.bind(this),
+        );
       });
     }
   }
@@ -34,9 +43,12 @@ export default class extends Controller {
     const selectedValue = event.currentTarget.querySelector("input").value;
     this.currentThemeValue = selectedValue;
     this.highlightSelectedOption();
-    
+
     // If form auto-submit is not enabled, we need to dispatch an event
-    if (!this.hasFormTarget || !this.formTarget.hasAttribute("data-controller")) {
+    if (
+      !this.hasFormTarget ||
+      !this.formTarget.hasAttribute("data-controller")
+    ) {
       this.dispatchThemeChangeEvent(selectedValue);
     }
   }
@@ -46,9 +58,9 @@ export default class extends Controller {
     if (this.previewTimeout) {
       clearTimeout(this.previewTimeout);
     }
-    
+
     const hoverValue = event.currentTarget.querySelector("input").value;
-    
+
     // Add a small delay before showing preview to prevent flickering
     this.previewTimeout = setTimeout(() => {
       this.showThemePreview(hoverValue);
@@ -60,7 +72,7 @@ export default class extends Controller {
     if (this.previewTimeout) {
       clearTimeout(this.previewTimeout);
     }
-    
+
     // Add a small delay before restoring to prevent flickering
     this.previewTimeout = setTimeout(() => {
       this.showThemePreview(this.currentThemeValue);
@@ -70,12 +82,15 @@ export default class extends Controller {
   // Show theme preview for a specific theme
   showThemePreview(theme) {
     if (!this.hasPreviewTarget) return;
-    
+
     this.previewTarget.setAttribute("data-theme", theme);
-    
+
     // If theme is "system", use the system preference
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light";
       this.previewTarget.setAttribute("data-system-theme", systemTheme);
     } else {
       this.previewTarget.removeAttribute("data-system-theme");
@@ -85,12 +100,12 @@ export default class extends Controller {
   // Handle theme change event from the main theme controller
   handleThemeChange(event) {
     const { theme, preference } = event.detail;
-    
+
     if (preference && preference !== this.currentThemeValue) {
       this.currentThemeValue = preference;
       this.highlightSelectedOption();
     }
-    
+
     // Update preview if it exists
     if (this.hasPreviewTarget) {
       this.showThemePreview(preference || "system");
@@ -100,11 +115,11 @@ export default class extends Controller {
   // Highlight the currently selected option
   highlightSelectedOption() {
     if (!this.hasOptionTarget) return;
-    
-    this.optionTargets.forEach(option => {
+
+    this.optionTargets.forEach((option) => {
       const input = option.querySelector("input");
       const isSelected = input && input.value === this.currentThemeValue;
-      
+
       option.classList.toggle("selected", isSelected);
       if (input) {
         input.checked = isSelected;
@@ -116,7 +131,7 @@ export default class extends Controller {
   dispatchThemeChangeEvent(preference) {
     const event = new CustomEvent("theme:preferenceChanged", {
       detail: { preference },
-      bubbles: true
+      bubbles: true,
     });
     this.element.dispatchEvent(event);
   }

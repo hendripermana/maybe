@@ -4,7 +4,7 @@ module Ui
   # Preview for the Alert component
   class AlertComponentPreview < ViewComponent::Preview
     # @!group Variants
-    
+
     # @label Default
     def default
       render(Ui::AlertComponent.new) do

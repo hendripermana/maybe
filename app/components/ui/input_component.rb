@@ -5,18 +5,18 @@ module Ui
   # Provides consistent styling and accessibility for input fields
   class InputComponent < BaseComponent
     TYPES = %i[text email password number tel url search date time datetime-local month week].freeze
-    
-    attr_reader :form, :field, :type, :placeholder, :value, :disabled, :readonly, :required, 
+
+    attr_reader :form, :field, :type, :placeholder, :value, :disabled, :readonly, :required,
                 :autocomplete, :min, :max, :step, :prefix, :suffix, :description
 
     def initialize(
-      form:, 
-      field:, 
-      type: :text, 
-      placeholder: nil, 
-      value: nil, 
-      disabled: false, 
-      readonly: false, 
+      form:,
+      field:,
+      type: :text,
+      placeholder: nil,
+      value: nil,
+      disabled: false,
+      readonly: false,
       required: false,
       autocomplete: nil,
       min: nil,
@@ -43,7 +43,7 @@ module Ui
       @prefix = prefix
       @suffix = suffix
       @description = description
-      
+
       raise ArgumentError, "Invalid input type: #{type}" unless TYPES.include?(@type)
     end
 
@@ -59,7 +59,7 @@ module Ui
         max: @max,
         step: @step,
         value: @value,
-        aria: { 
+        aria: {
           invalid: has_error? ? "true" : "false",
           describedby: description ? "#{field_id}_description" : nil
         },
@@ -83,11 +83,11 @@ module Ui
     def has_error?
       form.object&.errors&.include?(field)
     end
-    
+
     def field_id
       "#{form.object_name}_#{field}"
     end
-    
+
     def has_addon?
       prefix.present? || suffix.present?
     end

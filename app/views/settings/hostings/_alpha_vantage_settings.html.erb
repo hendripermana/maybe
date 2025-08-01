@@ -1,0 +1,32 @@
+<%= form_with model: Setting, url: settings_hosting_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+  <div class="space-y-4">
+    <div>
+      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        <%= t(".title") %>
+      </h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        <%= t(".description") %>
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <%= form.label :alpha_vantage_api_key, t(".label"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= form.password_field :alpha_vantage_api_key, 
+            value: Setting.alpha_vantage_api_key,
+            placeholder: t(".placeholder"),
+            class: "mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+
+      <% if @alpha_vantage_usage&.success? %>
+        <div class="text-sm text-gray-600 dark:text-gray-400">
+          <%= t(".plan", plan: @alpha_vantage_usage.data.plan.capitalize) %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex justify-end">
+      <%= form.submit t("shared.save"), class: "inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+    </div>
+  </div>
+<% end %>

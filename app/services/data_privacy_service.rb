@@ -56,20 +56,20 @@ class DataPrivacyService
 
       # Purge old UI monitoring events
       cutoff_date = retention_periods[:ui_monitoring_events].days.ago
-      deleted_events = UiMonitoringEvent.where('created_at < ?', cutoff_date).delete_all
+      deleted_events = UiMonitoringEvent.where("created_at < ?", cutoff_date).delete_all
       results[:ui_monitoring_events] = deleted_events
 
       # Purge old resolved feedback
       resolved_cutoff = retention_periods[:user_feedbacks_resolved].days.ago
       deleted_resolved = UserFeedback.where(resolved: true)
-                                   .where('resolved_at < ?', resolved_cutoff)
+                                   .where("resolved_at < ?", resolved_cutoff)
                                    .delete_all
       results[:resolved_feedbacks] = deleted_resolved
 
       # Purge very old unresolved feedback
       feedback_cutoff = retention_periods[:user_feedbacks_unresolved].days.ago
       deleted_feedback = UserFeedback.where(resolved: false)
-                                   .where('created_at < ?', feedback_cutoff)
+                                   .where("created_at < ?", feedback_cutoff)
                                    .delete_all
       results[:user_feedbacks] = deleted_feedback
 
@@ -163,31 +163,31 @@ class DataPrivacyService
     # Automatically anonymize old data based on configuration
     def auto_anonymize_old_data
       return unless Rails.application.config.data_privacy&.anonymization&.auto_anonymize_after_days
-      
+
       anonymize_after_days = Rails.application.config.data_privacy.anonymization.auto_anonymize_after_days
       cutoff_date = anonymize_after_days.days.ago
-      
+
       results = {
         ui_monitoring_events: 0,
         user_feedbacks: 0
       }
-      
+
       # Anonymize old monitoring events
       UiMonitoringEvent.where(data_anonymized: false)
-                       .where('created_at < ?', cutoff_date)
+                       .where("created_at < ?", cutoff_date)
                        .find_each do |event|
         event.anonymize!
         results[:ui_monitoring_events] += 1
       end
-      
+
       # Anonymize old feedback
       UserFeedback.where(data_anonymized: false)
-                  .where('created_at < ?', cutoff_date)
+                  .where("created_at < ?", cutoff_date)
                   .find_each do |feedback|
         feedback.anonymize!
         results[:user_feedbacks] += 1
       end
-      
+
       Rails.logger.info "Auto-anonymization completed: #{results}"
       results
     end
@@ -197,21 +197,21 @@ class DataPrivacyService
       audit_results = {}
 
       # Check UI monitoring events
-      old_events_count = UiMonitoringEvent.where('created_at < ?', retention_periods[:ui_monitoring_events].days.ago).count
+      old_events_count = UiMonitoringEvent.where("created_at < ?", retention_periods[:ui_monitoring_events].days.ago).count
       audit_results[:old_ui_monitoring_events] = old_events_count
 
       # Check resolved feedback
       old_resolved_count = UserFeedback.where(resolved: true)
-                                     .where('resolved_at < ?', retention_periods[:user_feedbacks_resolved].days.ago)
+                                     .where("resolved_at < ?", retention_periods[:user_feedbacks_resolved].days.ago)
                                      .count
       audit_results[:old_resolved_feedbacks] = old_resolved_count
 
       # Check very old unresolved feedback
       old_feedback_count = UserFeedback.where(resolved: false)
-                                     .where('created_at < ?', retention_periods[:user_feedbacks_unresolved].days.ago)
+                                     .where("created_at < ?", retention_periods[:user_feedbacks_unresolved].days.ago)
                                      .count
       audit_results[:old_unresolved_feedbacks] = old_feedback_count
-      
+
       # Check data that needs anonymization
       needs_anon_events = UiMonitoringEvent.needs_anonymization.count
       needs_anon_feedback = UserFeedback.needs_anonymization.count
@@ -223,109 +223,109 @@ class DataPrivacyService
 
     private
 
-    # Anonymize IP addresses by keeping only network portion
-    def anonymize_ip_address(ip_address)
-      return nil if ip_address.blank?
+      # Anonymize IP addresses by keeping only network portion
+      def anonymize_ip_address(ip_address)
+        return nil if ip_address.blank?
 
-      if ip_address =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
-        # IPv4: Keep only first two octets
-        octets = ip_address.split('.')
-        "#{octets[0]}.#{octets[1]}.0.0"
-      elsif ip_address.include?(':')
-        # IPv6: Keep only network portion
-        ip_address.gsub(/:[^:]+:[^:]+$/, ':0:0')
-      else
-        # Unknown format, return anonymized placeholder
-        'anonymized'
-      end
-    end
-
-    # Anonymize user agent strings
-    def anonymize_user_agent(user_agent)
-      return nil if user_agent.blank?
-
-      # Extract basic browser info without detailed version numbers
-      case user_agent
-      when /Chrome/i
-        'Chrome (anonymized)'
-      when /Firefox/i
-        'Firefox (anonymized)'
-      when /Safari/i
-        'Safari (anonymized)'
-      when /Edge/i
-        'Edge (anonymized)'
-      when /Opera/i
-        'Opera (anonymized)'
-      else
-        'Unknown Browser (anonymized)'
-      end
-    end
-
-    # Anonymize event data by removing sensitive information
-    def anonymize_event_data(data)
-      return {} unless data.is_a?(Hash)
-
-      anonymized_data = data.deep_dup
-
-      # Remove or anonymize sensitive fields
-      sensitive_fields = %w[
-        user_agent url stack backtrace context
-        email phone_number api_key token session_id
-      ]
-
-      sensitive_fields.each do |field|
-        if anonymized_data[field].present?
-          anonymized_data[field] = '[ANONYMIZED]'
+        if ip_address =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
+          # IPv4: Keep only first two octets
+          octets = ip_address.split(".")
+          "#{octets[0]}.#{octets[1]}.0.0"
+        elsif ip_address.include?(":")
+          # IPv6: Keep only network portion
+          ip_address.gsub(/:[^:]+:[^:]+$/, ":0:0")
+        else
+          # Unknown format, return anonymized placeholder
+          "anonymized"
         end
       end
 
-      # Anonymize URLs to remove query parameters that might contain sensitive data
-      if anonymized_data['url'].present?
-        begin
-          uri = URI.parse(anonymized_data['url'])
-          uri.query = nil
-          uri.fragment = nil
-          anonymized_data['url'] = uri.to_s
-        rescue URI::InvalidURIError
-          anonymized_data['url'] = '[ANONYMIZED_URL]'
+      # Anonymize user agent strings
+      def anonymize_user_agent(user_agent)
+        return nil if user_agent.blank?
+
+        # Extract basic browser info without detailed version numbers
+        case user_agent
+        when /Chrome/i
+          "Chrome (anonymized)"
+        when /Firefox/i
+          "Firefox (anonymized)"
+        when /Safari/i
+          "Safari (anonymized)"
+        when /Edge/i
+          "Edge (anonymized)"
+        when /Opera/i
+          "Opera (anonymized)"
+        else
+          "Unknown Browser (anonymized)"
         end
       end
 
-      # Recursively anonymize nested hashes
-      anonymized_data.each do |key, value|
-        if value.is_a?(Hash)
-          anonymized_data[key] = anonymize_event_data(value)
-        elsif value.is_a?(String) && value.length > 500
-          # Truncate very long strings that might contain sensitive data
-          anonymized_data[key] = "#{value[0..100]}... [TRUNCATED]"
+      # Anonymize event data by removing sensitive information
+      def anonymize_event_data(data)
+        return {} unless data.is_a?(Hash)
+
+        anonymized_data = data.deep_dup
+
+        # Remove or anonymize sensitive fields
+        sensitive_fields = %w[
+          user_agent url stack backtrace context
+          email phone_number api_key token session_id
+        ]
+
+        sensitive_fields.each do |field|
+          if anonymized_data[field].present?
+            anonymized_data[field] = "[ANONYMIZED]"
+          end
         end
+
+        # Anonymize URLs to remove query parameters that might contain sensitive data
+        if anonymized_data["url"].present?
+          begin
+            uri = URI.parse(anonymized_data["url"])
+            uri.query = nil
+            uri.fragment = nil
+            anonymized_data["url"] = uri.to_s
+          rescue URI::InvalidURIError
+            anonymized_data["url"] = "[ANONYMIZED_URL]"
+          end
+        end
+
+        # Recursively anonymize nested hashes
+        anonymized_data.each do |key, value|
+          if value.is_a?(Hash)
+            anonymized_data[key] = anonymize_event_data(value)
+          elsif value.is_a?(String) && value.length > 500
+            # Truncate very long strings that might contain sensitive data
+            anonymized_data[key] = "#{value[0..100]}... [TRUNCATED]"
+          end
+        end
+
+        anonymized_data
       end
 
-      anonymized_data
-    end
+      # Sanitize messages to remove PII
+      def sanitize_message(message)
+        return nil if message.blank?
 
-    # Sanitize messages to remove PII
-    def sanitize_message(message)
-      return nil if message.blank?
+        sanitized = message.dup
 
-      sanitized = message.dup
+        # Remove email addresses
+        sanitized.gsub!(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/, "[EMAIL_REDACTED]")
 
-      # Remove email addresses
-      sanitized.gsub!(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/, '[EMAIL_REDACTED]')
+        # Remove phone numbers
+        sanitized.gsub!(/\b(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\b/, "[PHONE_REDACTED]")
 
-      # Remove phone numbers
-      sanitized.gsub!(/\b(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\b/, '[PHONE_REDACTED]')
+        # Remove potential API keys or tokens (long alphanumeric strings)
+        sanitized.gsub!(/\b[A-Za-z0-9_-]{20,}\b/, "[TOKEN_REDACTED]")
 
-      # Remove potential API keys or tokens (long alphanumeric strings)
-      sanitized.gsub!(/\b[A-Za-z0-9_-]{20,}\b/, '[TOKEN_REDACTED]')
+        # Remove potential credit card numbers
+        sanitized.gsub!(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/, "[CARD_REDACTED]")
 
-      # Remove potential credit card numbers
-      sanitized.gsub!(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/, '[CARD_REDACTED]')
+        # Remove potential SSNs
+        sanitized.gsub!(/\b\d{3}-?\d{2}-?\d{4}\b/, "[SSN_REDACTED]")
 
-      # Remove potential SSNs
-      sanitized.gsub!(/\b\d{3}-?\d{2}-?\d{4}\b/, '[SSN_REDACTED]')
-
-      sanitized
-    end
+        sanitized
+      end
   end
 end

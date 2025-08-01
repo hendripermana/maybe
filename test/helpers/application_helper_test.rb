@@ -4,58 +4,42 @@ require "test_helper"
 
 class ApplicationHelperTest < ActionView::TestCase
   test "page_active? returns true for exact current page" do
-    def request
-      @request ||= OpenStruct.new(path: "/transactions")
-    end
-
-    def current_page?(path)
-      path == request.path
-    end
+    @request = OpenStruct.new(path: "/transactions")
+    stubs(:request).returns(@request)
+    stubs(:current_page?).with("/transactions").returns(true)
 
     assert page_active?("/transactions")
   end
 
   test "page_active? returns true for parent path" do
-    def request
-      @request ||= OpenStruct.new(path: "/transactions/123")
-    end
-
-    def current_page?(path)
-      path == request.path
-    end
+    @request = OpenStruct.new(path: "/transactions/123")
+    stubs(:request).returns(@request)
+    stubs(:current_page?).with("/transactions").returns(false)
 
     assert page_active?("/transactions")
     refute page_active?("/transactions", true) # exact match
   end
 
   test "page_active? returns false for unrelated path" do
-    def request
-      @request ||= OpenStruct.new(path: "/transactions")
-    end
-
-    def current_page?(path)
-      path == request.path
-    end
+    @request = OpenStruct.new(path: "/transactions")
+    stubs(:request).returns(@request)
+    stubs(:current_page?).with("/budgets").returns(false)
 
     refute page_active?("/budgets")
   end
 
   test "page_active? handles root path correctly" do
-    def request
-      @request ||= OpenStruct.new(path: "/")
-    end
-
-    def current_page?(path)
-      path == request.path
-    end
+    @request = OpenStruct.new(path: "/")
+    stubs(:request).returns(@request)
+    stubs(:current_page?).with("/").returns(true)
 
     assert page_active?("/")
-    
+
     # Change to a different path
-    def request
-      @request ||= OpenStruct.new(path: "/transactions")
-    end
-    
+    @request = OpenStruct.new(path: "/transactions")
+    stubs(:request).returns(@request)
+    stubs(:current_page?).with("/").returns(false)
+
     refute page_active?("/")
   end
 end

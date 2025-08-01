@@ -159,7 +159,7 @@ module Ui
             concat(render(Ui::ButtonComponent.new(variant: :primary) { "Create Account" }))
           end
         end
-        
+
         content_tag(:form, class: "space-y-4") do
           concat(render(Ui::InputComponent.new(
             label: "Account Name",
@@ -199,7 +199,7 @@ module Ui
             concat(render(Ui::ButtonComponent.new(variant: :destructive) { "Delete Account" }))
           end
         end
-        
+
         content_tag(:div, class: "space-y-4") do
           concat(content_tag(:p, "Are you sure you want to delete this account? This will permanently remove:"))
           concat(content_tag(:ul, class: "list-disc list-inside space-y-1 text-sm text-muted-foreground") do
@@ -225,7 +225,7 @@ module Ui
           variant: :primary,
           data: { action: "click->ui--modal#show" }
         ) { "Open Modal" }))
-        
+
         concat(render(Ui::ModalComponent.new(
           title: "Triggered Modal",
           description: "This modal was opened by clicking a button.",
@@ -249,7 +249,7 @@ module Ui
       content_tag(:div, class: "space-y-4") do
         concat(content_tag(:h3, "Modal Theme Examples", class: "text-lg font-semibold"))
         concat(content_tag(:p, "Switch between light and dark themes to see consistent modal styling.", class: "text-sm text-muted-foreground"))
-        
+
         concat(render(Ui::ModalComponent.new(
           title: "Theme-Aware Modal",
           description: "This modal adapts to your current theme setting.",
@@ -262,7 +262,7 @@ module Ui
               concat(render(Ui::ButtonComponent.new(variant: :primary) { "Confirm" }))
             end
           end
-          
+
           content_tag(:div, class: "space-y-4") do
             concat(content_tag(:p, "Notice how the modal background, borders, and text colors all adapt to the current theme."))
             concat(content_tag(:div, class: "p-4 bg-muted rounded-lg") do

@@ -29,24 +29,24 @@ module Ui
 
     private
 
-    attr_reader :src, :alt, :initials
+      attr_reader :src, :alt, :initials
 
-    def container_classes
-      build_classes(
-        "inline-flex items-center justify-center rounded-full overflow-hidden",
-        SIZES[size],
-        src.present? ? "" : VARIANTS[variant]
-      )
-    end
+      def container_classes
+        build_classes(
+          "inline-flex items-center justify-center rounded-full overflow-hidden",
+          SIZES[size],
+          src.present? ? "" : VARIANTS[variant]
+        )
+      end
 
-    def generate_initials(name)
-      return "" if name.blank?
-      
-      name.split(/\s+/)
-          .first(2)
-          .map { |n| n[0] }
-          .join("")
-          .upcase
-    end
+      def generate_initials(name)
+        return "" if name.blank?
+
+        name.split(/\s+/)
+            .first(2)
+            .map { |n| n[0] }
+            .join("")
+            .upcase
+      end
   end
 end

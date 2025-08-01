@@ -1,34 +1,35 @@
-<div data-controller="feedback-form" class="fixed <%= position_classes %> z-50">
+<div data-controller="feedback-form" class="feedback-form fixed <%= position_classes %> z-50">
   <button 
     type="button" 
     data-action="click->feedback-form#toggleForm" 
-    class="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full p-3 shadow-lg flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+    class="feedback-button bg-primary text-primary-foreground hover:bg-primary/90 rounded-full p-3 shadow-lg flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
     aria-label="Provide Feedback"
     aria-expanded="false"
     data-feedback-form-target="toggleButton">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
     </svg>
-    <span class="sr-only">Provide Feedback</span>
+    <span class="sr-only">Feedback</span>
   </button>
   
   <div 
     data-feedback-form-target="panel" 
-    class="hidden absolute bottom-14 right-0 w-80 bg-card text-card-foreground shadow-lg rounded-lg p-4 border border-border"
+    class="feedback-panel hidden absolute bottom-14 right-0 w-80 bg-card text-card-foreground shadow-lg rounded-lg p-4 border border-border"
     role="dialog"
     aria-labelledby="feedback-heading"
     aria-modal="true">
-    <h3 id="feedback-heading" class="text-lg font-medium mb-4">Share Your Feedback</h3>
+    <h3 id="feedback-heading" class="feedback-title text-lg font-medium mb-4">Share Your Feedback</h3>
     
-    <form data-feedback-form-target="form" data-action="submit->feedback-form#submitFeedback" class="space-y-4">
-      <div>
+    <form action="/user_feedbacks" method="post" data-feedback-form-target="form" data-action="submit->feedback-form#submitFeedback" class="space-y-4">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <div class="form-group">
         <label for="feedback-type" class="block text-sm font-medium mb-1">Type of Feedback <span class="text-red-500">*</span></label>
         <select 
           id="feedback-type" 
           name="user_feedback[feedback_type]" 
           data-feedback-form-target="type" 
           class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-primary"
-          aria-required="true">
+          required>
           <option value="">Select a type</option>
           <% feedback_types.each do |label, value| %>
             <option value="<%= value %>"><%= label %></option>
@@ -36,7 +37,7 @@
         </select>
       </div>
       
-      <div>
+      <div class="form-group">
         <label for="feedback-message" class="block text-sm font-medium mb-1">Your Feedback <span class="text-red-500">*</span></label>
         <textarea 
           id="feedback-message" 
@@ -45,26 +46,25 @@
           rows="4" 
           class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-primary" 
           placeholder="Please describe your feedback or the issue you're experiencing..."
-          aria-required="true"></textarea>
+          required></textarea>
       </div>
       
       <input type="hidden" name="user_feedback[page]" value="<%= current_page %>" data-feedback-form-target="page">
       <input type="hidden" name="user_feedback[theme]" value="<%= current_theme %>" data-feedback-form-target="theme">
       <input type="hidden" name="user_feedback[browser]" value="<%= browser_info %>" data-feedback-form-target="browser">
       
-      <div class="flex justify-end space-x-2">
+      <div class="form-actions flex justify-end space-x-2">
         <button 
           type="button" 
           class="border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary" 
           data-action="feedback-form#closeForm">
           Cancel
         </button>
-        <button 
+        <input 
           type="submit" 
+          value="Submit Feedback"
           data-feedback-form-target="submitButton" 
           class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary">
-          Submit Feedback
-        </button>
       </div>
       
       <div 

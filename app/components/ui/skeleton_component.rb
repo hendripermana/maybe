@@ -22,23 +22,23 @@ module Ui
 
     private
 
-    attr_reader :width, :height, :rounded, :animate
+      attr_reader :width, :height, :rounded, :animate
 
-    def container_classes
-      build_classes(
-        VARIANTS[variant],
-        rounded ? "rounded-md" : "",
-        animate ? "animate-pulse" : "",
-        "inline-block"
-      )
-    end
+      def container_classes
+        build_classes(
+          VARIANTS[variant],
+          rounded ? "rounded-md" : "",
+          animate ? "animate-pulse" : "",
+          "inline-block"
+        )
+      end
 
-    def container_styles
-      styles = {}
-      styles[:width] = width if width
-      styles[:height] = height if height
-      
-      styles.map { |k, v| "#{k}: #{v}" }.join("; ")
-    end
+      def container_styles
+        styles = {}
+        styles[:width] = width if width
+        styles[:height] = height if height
+
+        styles.map { |k, v| "#{k}: #{v}" }.join("; ")
+      end
   end
 end

@@ -2,7 +2,7 @@ one:
   email: "test@example.com"
   token: "valid-token-123"
   role: "member"
-  inviter: family_admin
+  inviter: admin_user
   family: dylan_family
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
@@ -12,7 +12,7 @@ two:
   email: "another@example.com"
   token: "valid-token-456"
   role: "admin"
-  inviter: family_admin
+  inviter: admin_user
   family: dylan_family
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
@@ -22,7 +22,7 @@ other_family:
   email: "other@example.com"
   token: "valid-token-789"
   role: "member"
-  inviter: empty
+  inviter: regular_user
   family: empty
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>

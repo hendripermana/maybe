@@ -8,7 +8,7 @@ class FilterBadgeComponentTest < ViewComponent::TestCase
       param_value: "Food",
       clear_url: "/transactions/clear_filter?param_key=categories&param_value=Food"
     ))
-    
+
     assert_selector ".inline-flex.items-center"
     assert_text "Category: Food"
     assert_selector "a[href='/transactions/clear_filter?param_key=categories&param_value=Food']"
@@ -21,7 +21,7 @@ class FilterBadgeComponentTest < ViewComponent::TestCase
       param_value: "today",
       clear_url: "/transactions/clear_filter?param_key=date&param_value=today"
     ))
-    
+
     assert_selector "a[aria-label='Remove Date: Today filter']"
   end
 end

@@ -40,13 +40,22 @@ class Provider::PlaidSandbox < Provider::Plaid
     def create_client
       raise "Plaid sandbox is not supported in production" if Rails.env.production?
 
-      api_client = Plaid::ApiClient.new(
-        Rails.application.config.plaid
-      )
+      # Create a test configuration if none exists (for testing)
+      plaid_config = Rails.application.config.plaid || create_test_config
+
+      api_client = Plaid::ApiClient.new(plaid_config)
 
       # Force sandbox environment for PlaidSandbox regardless of Rails config
       api_client.config.server_index = Plaid::Configuration::Environment["sandbox"]
 
       Plaid::PlaidApi.new(api_client)
+    end
+
+    def create_test_config
+      config = Plaid::Configuration.new
+      config.server_index = Plaid::Configuration::Environment["sandbox"]
+      config.api_key["PLAID-CLIENT-ID"] = "test_client_id"
+      config.api_key["PLAID-SECRET"] = "test_secret"
+      config
     end
 end

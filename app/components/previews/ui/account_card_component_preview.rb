@@ -4,7 +4,7 @@ module Ui
   # Preview for the AccountCard component
   class AccountCardComponentPreview < ViewComponent::Preview
     # @!group Account Types
-    
+
     # @label Checking Account
     def checking_account
       render(Ui::AccountCardComponent.new(account: mock_account("Checking Account", "Depository", 1250.75)))
@@ -57,16 +57,16 @@ module Ui
 
     private
 
-    def mock_account(name, type, balance)
-      OpenStruct.new(
-        name: name,
-        accountable_type: type,
-        institution_name: "Example Bank",
-        balance: balance,
-        currency: "USD",
-        available_balance: balance + 100,
-        can_sync?: true
-      )
-    end
+      def mock_account(name, type, balance)
+        OpenStruct.new(
+          name: name,
+          accountable_type: type,
+          institution_name: "Example Bank",
+          balance: balance,
+          currency: "USD",
+          available_balance: balance + 100,
+          can_sync?: true
+        )
+      end
   end
 end

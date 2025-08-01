@@ -260,7 +260,7 @@ module Ui
       content_tag(:div, class: "space-y-6") do
         concat(content_tag(:h3, "Input Theme Examples", class: "text-lg font-semibold"))
         concat(content_tag(:p, "Switch between light and dark themes to see consistent styling.", class: "text-sm text-muted-foreground mb-4"))
-        
+
         concat(content_tag(:div, class: "grid grid-cols-1 md:grid-cols-2 gap-4") do
           Ui::InputComponent::VARIANTS.keys.each do |variant|
             concat(render(Ui::InputComponent.new(

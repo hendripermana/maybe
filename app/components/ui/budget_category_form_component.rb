@@ -22,8 +22,8 @@ module Ui
       content_tag(:div, id: dom_id(budget_category, :form), class: "w-full flex flex-wrap sm:flex-nowrap gap-3 items-center") do
         # Category color indicator
         concat(
-          content_tag(:div, "", 
-            class: "w-1 h-3 rounded-xl mt-1", 
+          content_tag(:div, "",
+            class: "w-1 h-3 rounded-xl mt-1",
             style: "background-color: #{budget_category.category.color}"
           )
         )
@@ -40,14 +40,14 @@ module Ui
         concat(
           content_tag(:div, class: "ml-auto") do
             form_with(
-              model: [budget_category.budget, budget_category], 
+              model: [ budget_category.budget, budget_category ],
               data: { controller: "auto-submit-form preserve-focus budget-touch" }
             ) do |f|
               content_tag(:div, class: "form-field w-[120px]") do
                 content_tag(:div, class: "flex items-center") do
                   # Currency symbol
                   concat(content_tag(:span, budget_category.budget.currency_symbol, class: "text-secondary text-sm mr-2"))
-                  
+
                   # Input field - enhanced for touch
                   concat(
                     f.number_field(:budgeted_spending,
@@ -57,7 +57,7 @@ module Ui
                       id: dom_id(budget_category, :budgeted_spending),
                       min: 0,
                       max: budget_category.max_allocation,
-                      data: { 
+                      data: {
                         auto_submit_form_target: "auto",
                         budget_touch_target: "input",
                         action: "touchstart->preserve-focus#preserveFocus touchstart->budget-touch#handleTouchStart touchend->budget-touch#handleTouchEnd"
@@ -74,15 +74,15 @@ module Ui
 
     private
 
-    def dom_id(record, prefix = nil)
-      if record.respond_to?(:to_key) && record.to_key
-        id = record.to_key.join('_')
-        prefix ? "#{prefix}_#{id}" : id
-      else
-        # Handle uncategorized budget category which doesn't have a real ID
-        id = record.id.to_s
-        prefix ? "#{prefix}_#{id}" : id
+      def dom_id(record, prefix = nil)
+        if record.respond_to?(:to_key) && record.to_key
+          id = record.to_key.join("_")
+          prefix ? "#{prefix}_#{id}" : id
+        else
+          # Handle uncategorized budget category which doesn't have a real ID
+          id = record.id.to_s
+          prefix ? "#{prefix}_#{id}" : id
+        end
       end
-    end
   end
 end

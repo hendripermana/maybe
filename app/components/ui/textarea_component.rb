@@ -4,16 +4,16 @@ module Ui
   # Modern textarea component for multiline text input
   # Provides consistent styling and accessibility for textarea fields
   class TextareaComponent < BaseComponent
-    attr_reader :form, :field, :placeholder, :rows, :disabled, :readonly, :required, 
+    attr_reader :form, :field, :placeholder, :rows, :disabled, :readonly, :required,
                 :autocomplete, :description, :max_length, :counter
 
     def initialize(
-      form:, 
-      field:, 
-      placeholder: nil, 
+      form:,
+      field:,
+      placeholder: nil,
       rows: 3,
-      disabled: false, 
-      readonly: false, 
+      disabled: false,
+      readonly: false,
       required: false,
       autocomplete: nil,
       description: nil,
@@ -46,7 +46,7 @@ module Ui
         required: @required,
         autocomplete: @autocomplete,
         maxlength: @max_length,
-        aria: { 
+        aria: {
           invalid: has_error? ? "true" : "false",
           describedby: description_id
         },
@@ -69,11 +69,11 @@ module Ui
     def has_error?
       form.object&.errors&.include?(field)
     end
-    
+
     def field_id
       "#{form.object_name}_#{field}"
     end
-    
+
     def description_id
       parts = []
       parts << "#{field_id}_description" if description

@@ -22,7 +22,7 @@ export default class extends Controller {
   connect() {
     console.log("📈 Time series chart controller connected!");
     console.log("📊 Data value:", this.dataValue);
-    
+
     this._install();
     document.addEventListener("turbo:load", this._reinstall);
     this._setupResizeObserver();

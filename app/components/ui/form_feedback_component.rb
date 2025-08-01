@@ -22,27 +22,27 @@ module Ui
 
     private
 
-    def default_icon
-      case @variant
-      when :success
-        "check-circle"
-      when :error
-        "alert-circle"
-      when :info
-        "info"
-      when :warning
-        "alert-triangle"
-      else
-        "info"
+      def default_icon
+        case @variant
+        when :success
+          "check-circle"
+        when :error
+          "alert-circle"
+        when :info
+          "info"
+        when :warning
+          "alert-triangle"
+        else
+          "info"
+        end
       end
-    end
 
-    def feedback_classes
-      build_classes(
-        "form-feedback flex items-center gap-2 p-3 rounded-md text-sm border",
-        "animate-fadeIn",
-        VARIANTS[@variant] || VARIANTS[:info]
-      )
-    end
+      def feedback_classes
+        build_classes(
+          "form-feedback flex items-center gap-2 p-3 rounded-md text-sm border",
+          "animate-fadeIn",
+          VARIANTS[@variant] || VARIANTS[:info]
+        )
+      end
   end
 end

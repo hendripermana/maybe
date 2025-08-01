@@ -2,29 +2,29 @@
 
 module Ui
   # Preview for the Badge component
-  # 
+  #
   # ## Usage Guidelines
-  # 
+  #
   # - Use badges to highlight status, categories, or counts
   # - Choose appropriate variants based on the information being conveyed
   # - Keep badge text concise (1-2 words when possible)
   # - Use consistent badge styling throughout the application
   # - Consider using icons with badges to enhance visual recognition
-  # 
+  #
   # ## Accessibility Considerations
-  # 
+  #
   # - Color contrast: All badge text meets WCAG AA contrast requirements
   # - Text alternatives: Ensure badges have proper text for screen readers
   # - Don't rely on color alone: Use text or icons to convey information
   # - Size: Ensure badges are large enough to be readable
-  # 
+  #
   # ## Theme Support
-  # 
+  #
   # This component uses CSS variables for theming and works in both light and dark modes.
   # All colors are derived from the theme tokens to ensure consistency.
   class BadgeComponentPreview < ViewComponent::Preview
     # @!group Variants
-    
+
     # @label Default
     def default
       render(Ui::BadgeComponent.new(variant: :default)) do
@@ -130,7 +130,7 @@ module Ui
     # @!endgroup
 
     # @!group Theme Examples
-    
+
     # @label Light and Dark Theme
     def theme_examples
       render_with_template(locals: {
@@ -140,7 +140,7 @@ module Ui
     # @!endgroup
 
     # @!group Accessibility Examples
-    
+
     # @label Screen Reader Support
     def screen_reader_support
       render_with_template

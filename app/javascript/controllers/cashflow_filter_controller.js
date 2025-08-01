@@ -14,8 +14,8 @@ export default class extends Controller {
 
   submit(event) {
     // Only intercept if we're in fullscreen mode
-    const fullscreenOverlay = document.querySelector('.fullscreen-overlay');
-    if (!fullscreenOverlay || fullscreenOverlay.classList.contains('hidden')) {
+    const fullscreenOverlay = document.querySelector(".fullscreen-overlay");
+    if (!fullscreenOverlay || fullscreenOverlay.classList.contains("hidden")) {
       // Not in fullscreen, allow normal Turbo behavior
       return;
     }
@@ -29,21 +29,27 @@ export default class extends Controller {
     const params = new URLSearchParams(formData).toString();
 
     // Show loading state (optional)
-    const chartContainer = fullscreenOverlay.querySelector('[data-controller="sankey-chart"]');
+    const chartContainer = fullscreenOverlay.querySelector(
+      '[data-controller="sankey-chart"]',
+    );
     if (chartContainer) {
-      chartContainer.classList.add('opacity-50');
+      chartContainer.classList.add("opacity-50");
     }
 
     // Fetch new data via AJAX (expects JSON response)
-    fetch(url + '?' + params, {
-      headers: { 'Accept': 'application/json' }
+    fetch(url + "?" + params, {
+      headers: { Accept: "application/json" },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         // Update the chart via the sankey-chart controller
         if (chartContainer) {
-          const controller = this.application.getControllerForElementAndIdentifier(chartContainer, 'sankey-chart');
-          if (controller && typeof controller.updateData === 'function') {
+          const controller =
+            this.application.getControllerForElementAndIdentifier(
+              chartContainer,
+              "sankey-chart",
+            );
+          if (controller && typeof controller.updateData === "function") {
             controller.updateData(data);
           } else {
             // fallback: reload the page if controller not found
@@ -54,8 +60,8 @@ export default class extends Controller {
       .catch(() => window.location.reload())
       .finally(() => {
         if (chartContainer) {
-          chartContainer.classList.remove('opacity-50');
+          chartContainer.classList.remove("opacity-50");
         }
       });
   }
-} 
+}

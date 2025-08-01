@@ -2,31 +2,31 @@
 
 module Ui
   # Preview for the Input component
-  # 
+  #
   # ## Usage Guidelines
-  # 
+  #
   # - Always include labels for form inputs
   # - Use the appropriate input type for the data being collected
   # - Provide clear error messages for validation failures
   # - Include help text for complex inputs
   # - Group related inputs logically
   # - Use consistent sizing within the same form
-  # 
+  #
   # ## Accessibility Considerations
-  # 
+  #
   # - Labels: All inputs have properly associated labels
   # - Error states: Clear error messages with proper ARIA attributes
   # - Required fields: Clearly indicated with both visual and programmatic markers
   # - Focus management: Visible focus states for keyboard navigation
   # - Color contrast: All text meets WCAG AA contrast requirements
-  # 
+  #
   # ## Theme Support
-  # 
+  #
   # This component uses CSS variables for theming and works in both light and dark modes.
   # All colors are derived from the theme tokens to ensure consistency.
   class InputComponentPreview < ViewComponent::Preview
     # @!group Types
-    
+
     # @label Text Input
     def text_input
       render(Ui::InputComponent.new(
@@ -254,7 +254,7 @@ module Ui
     # @!endgroup
 
     # @!group Theme Examples
-    
+
     # @label Light and Dark Theme
     def theme_examples
       render_with_template(locals: {
@@ -267,7 +267,7 @@ module Ui
     # @!endgroup
 
     # @!group Accessibility Examples
-    
+
     # @label Keyboard Navigation
     def keyboard_navigation
       render_with_template(locals: {

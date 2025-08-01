@@ -85,7 +85,13 @@ class Family < ApplicationRecord
   end
 
   def missing_data_provider?
-    requires_data_provider? && Provider::Registry.get_provider(:synth).nil?
+    return false unless requires_data_provider?
+    
+    # Check if we have at least one data provider available
+    exchange_rates_provider = Provider::Registry.exchange_rates_api rescue nil
+    securities_provider = Provider::Registry.alpha_vantage rescue nil
+    
+    exchange_rates_provider.nil? && securities_provider.nil?
   end
 
   def oldest_entry_date

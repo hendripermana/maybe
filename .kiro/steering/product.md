@@ -23,4 +23,5 @@ Maybe is an open-source personal finance and wealth management application that 
 - **Plaid**: Bank account connections and transaction syncing
 - **Stripe**: Payment processing for subscriptions
 - **OpenAI**: AI-powered financial assistant
-- **Synth Finance**: Multi-currency exchange rate data
+- **ExchangeRatesAPI.io**: Multi-currency exchange rate data
+- **Alpha Vantage**: Stock prices and security information

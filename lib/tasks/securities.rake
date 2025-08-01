@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 namespace :securities do
-  desc "Backfill exchange_operating_mic for securities using Synth API"
+  desc "Backfill exchange_operating_mic for securities using Alpha Vantage API"
   task backfill_exchange_mic: :environment do
     puts "Starting exchange_operating_mic backfill..."
 
-    api_key = Rails.application.config.app_mode.self_hosted? ? Setting.synth_api_key : ENV["SYNTH_API_KEY"]
+    api_key = Rails.application.config.app_mode.self_hosted? ? Setting.alpha_vantage_api_key : ENV["ALPHA_VANTAGE_API_KEY"]
     unless api_key.present?
-      puts "ERROR: No Synth API key found. Please set SYNTH_API_KEY env var or configure it in Settings for self-hosted mode."
+      puts "ERROR: No Alpha Vantage API key found. Please set ALPHA_VANTAGE_API_KEY env var or configure it in Settings for self-hosted mode."
       exit 1
     end
 
@@ -21,23 +21,23 @@ namespace :securities do
       print "\rProcessing #{processed}/#{total} (#{(processed.to_f/total * 100).round(1)}%)"
 
       begin
-        response = Faraday.get("https://api.synthfinance.com/tickers/#{security.ticker}") do |req|
-          req.params["country_code"] = security.country_code if security.country_code.present?
-          req.headers["Authorization"] = "Bearer #{api_key}"
+        response = Faraday.get("https://www.alphavantage.co/query") do |req|
+          req.params["function"] = "OVERVIEW"
+          req.params["symbol"] = security.ticker
+          req.params["apikey"] = api_key
         end
 
         if response.success?
-          data = JSON.parse(response.body).dig("data")
-          exchange_data = data["exchange"]
+          data = JSON.parse(response.body)
+          
+          # Skip if Alpha Vantage returned an error
+          next if data.key?("Error Message") || data.key?("Note") || data.empty?
 
-          # Update security with exchange info and other metadata
+          # Update security with available info from Alpha Vantage
           security.update!(
-            exchange_operating_mic: exchange_data["operating_mic_code"],
-            exchange_mic: exchange_data["mic_code"],
-            exchange_acronym: exchange_data["acronym"],
-            name: data["name"],
-            logo_url: data["logo_url"],
-            country_code: exchange_data["country_code"]
+            exchange_operating_mic: "XNAS", # Default to NASDAQ for US stocks
+            name: data["Name"],
+            country_code: "US" # Alpha Vantage primarily covers US markets
           )
         else
           errors << "#{security.ticker}: HTTP #{response.status} - #{response.body}"

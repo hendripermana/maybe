@@ -27,7 +27,6 @@ class TransactionsController < ApplicationController
     if params[:focused_record_id].present?
       set_focused_record(base_scope, params[:focused_record_id], default_per_page: per_page)
     end
->>>>>>> upstream/main
   end
 
   def clear_filter

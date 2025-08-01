@@ -7,7 +7,7 @@ export default class extends Controller {
     "destroyField",
     "actionValue",
     "selectTemplate",
-    "textTemplate"
+    "textTemplate",
   ];
 
   remove(e) {

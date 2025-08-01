@@ -2,30 +2,30 @@
 
 module Ui
   # Preview for the Button component
-  # 
+  #
   # ## Usage Guidelines
-  # 
+  #
   # - Use primary buttons for main actions on a page
   # - Use secondary buttons for alternative actions
   # - Use destructive buttons for dangerous actions (delete, remove)
   # - Use ghost buttons for subtle actions within a dense UI
   # - Use outline buttons when you need a less prominent option
   # - Use link buttons for navigation-like actions
-  # 
+  #
   # ## Accessibility Considerations
-  # 
+  #
   # - Keyboard navigation: Buttons are natively focusable and activatable
   # - Screen reader support: Uses semantic button element with proper labels
   # - Color contrast: All button variants meet WCAG AA contrast requirements
   # - Disabled state: Visually distinct and properly communicated to screen readers
-  # 
+  #
   # ## Theme Support
-  # 
+  #
   # This component uses CSS variables for theming and works in both light and dark modes.
   # All colors are derived from the theme tokens to ensure consistency.
   class ButtonComponentPreview < ViewComponent::Preview
     # @!group Variants
-    
+
     # @label Primary
     def primary
       render(Ui::ButtonComponent.new(variant: :primary)) do
@@ -139,7 +139,7 @@ module Ui
     # @!endgroup
 
     # @!group Theme Examples
-    
+
     # @label Light and Dark Theme
     def theme_examples
       render_with_template(locals: {
@@ -149,7 +149,7 @@ module Ui
     # @!endgroup
 
     # @!group Accessibility Examples
-    
+
     # @label Keyboard Navigation
     def keyboard_navigation
       render_with_template(locals: {

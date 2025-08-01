@@ -29,7 +29,7 @@ module Ui
 
     def class_names(*args)
       classes = []
-      
+
       args.each do |arg|
         case arg
         when String
@@ -44,7 +44,7 @@ module Ui
           classes.concat(class_names(*arg).split(" "))
         end
       end
-      
+
       classes.uniq.join(" ")
     end
   end

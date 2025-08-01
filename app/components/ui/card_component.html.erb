@@ -27,7 +27,7 @@
     </div>
   <% end %>
 
-  <% if !has_header? && !has_content? %>
+  <% if !has_header? && !(@description.present?) %>
     <%= content %>
   <% end %>
 

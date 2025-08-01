@@ -1,48 +1,50 @@
-@utility bg-surface {
-  background: var(--color-surface);
-}
+@layer utilities {
+  .bg-surface {
+    background: var(--color-surface);
+  }
 
-@utility bg-surface-hover {
-  background: var(--color-surface-hover);
-}
+  .bg-surface-hover {
+    background: var(--color-surface-hover);
+  }
 
-@utility bg-surface-inset {
-  background: var(--color-surface-inset);
-}
+  .bg-surface-inset {
+    background: var(--color-surface-inset);
+  }
 
-@utility bg-surface-inset-hover {
-  background: var(--color-surface-inset);
-}
+  .bg-surface-inset-hover {
+    background: var(--color-surface-inset);
+  }
 
-@utility bg-container {
-  background: var(--color-container);
-}
+  .bg-container {
+    background: var(--color-container);
+  }
 
-@utility bg-container-hover {
-  background: var(--color-container-hover);
-}
+  .bg-container-hover {
+    background: var(--color-container-hover);
+  }
 
-@utility bg-container-inset {
-  background: var(--color-container-inset);
-}
+  .bg-container-inset {
+    background: var(--color-container-inset);
+  }
 
-@utility bg-container-inset-hover {
-  background: var(--color-container-inset);
-}
+  .bg-container-inset-hover {
+    background: var(--color-container-inset);
+  }
 
-@utility bg-inverse {
-  background: var(--color-text-primary);
-}
+  .bg-inverse {
+    background: var(--color-text-primary);
+  }
 
-@utility bg-inverse-hover {
-  background: var(--color-text-secondary);
-}
+  .bg-inverse-hover {
+    background: var(--color-text-secondary);
+  }
 
-@utility bg-overlay {
-  background-color: var(--color-alpha-black-500);
-}
+  .bg-overlay {
+    background-color: var(--color-alpha-black-500);
+  }
 
-@utility bg-loader {
-  background: var(--color-surface-inset);
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .bg-loader {
+    background: var(--color-surface-inset);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
 }

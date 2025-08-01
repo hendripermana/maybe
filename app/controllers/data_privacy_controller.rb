@@ -1,12 +1,12 @@
 # Controller for handling GDPR and data privacy requests
 class DataPrivacyController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_admin, only: [:admin_index, :admin_purge, :admin_audit]
+  before_action :require_admin, only: [ :admin_index, :admin_purge, :admin_audit ]
 
   # User's data export (GDPR Article 15 - Right of access)
   def export
     @user_data = DataPrivacyService.export_user_data(current_user)
-    
+
     respond_to do |format|
       format.json do
         render json: @user_data
@@ -24,9 +24,9 @@ class DataPrivacyController < ApplicationController
       # 1. Send a confirmation email
       # 2. Have a waiting period
       # 3. Allow the user to cancel the request
-      
+
       results = DataPrivacyService.delete_user_data(current_user)
-      
+
       flash[:notice] = "Your data has been anonymized. Monitoring events: #{results[:ui_monitoring_events]}, Feedback: #{results[:user_feedbacks]}"
       redirect_to root_path
     end
@@ -51,7 +51,7 @@ class DataPrivacyController < ApplicationController
         flash[:alert] = "Data purge failed: #{e.message}"
       end
     end
-    
+
     redirect_to data_privacy_admin_path
   end
 
@@ -60,7 +60,7 @@ class DataPrivacyController < ApplicationController
     @audit_results = DataPrivacyService.audit_data_retention
     @events_needing_anonymization = UiMonitoringEvent.needs_anonymization.count
     @feedback_needing_anonymization = UserFeedback.needs_anonymization.count
-    
+
     respond_to do |format|
       format.html
       format.json { render json: @audit_results }
@@ -72,35 +72,35 @@ class DataPrivacyController < ApplicationController
     if request.post?
       anonymized_events = 0
       anonymized_feedback = 0
-      
+
       begin
         # Anonymize monitoring events
         UiMonitoringEvent.needs_anonymization.find_each do |event|
           event.anonymize!
           anonymized_events += 1
         end
-        
+
         # Anonymize user feedback
         UserFeedback.needs_anonymization.find_each do |feedback|
           feedback.anonymize!
           anonymized_feedback += 1
         end
-        
+
         flash[:notice] = "Anonymization completed. Events: #{anonymized_events}, Feedback: #{anonymized_feedback}"
       rescue => e
         flash[:alert] = "Anonymization failed: #{e.message}"
       end
     end
-    
+
     redirect_to data_privacy_admin_path
   end
 
   private
 
-  def require_admin
-    unless current_user&.admin?
-      flash[:alert] = "You are not authorized to access this page"
-      redirect_to root_path
+    def require_admin
+      unless current_user&.admin?
+        flash[:alert] = "You are not authorized to access this page"
+        redirect_to root_path
+      end
     end
-  end
 end

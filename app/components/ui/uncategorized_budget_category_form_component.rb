@@ -16,14 +16,14 @@ module Ui
 
     private
 
-    def dom_id(record, prefix = nil)
-      if record.respond_to?(:to_key) && record.to_key
-        id = record.to_key.join('_')
-        prefix ? "#{prefix}_#{id}" : id
-      else
-        id = record.id.to_s
-        prefix ? "#{prefix}_#{id}" : id
+      def dom_id(record, prefix = nil)
+        if record.respond_to?(:to_key) && record.to_key
+          id = record.to_key.join("_")
+          prefix ? "#{prefix}_#{id}" : id
+        else
+          id = record.id.to_s
+          prefix ? "#{prefix}_#{id}" : id
+        end
       end
-    end
   end
 end

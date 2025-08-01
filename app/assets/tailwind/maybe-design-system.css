@@ -574,23 +574,51 @@
   }
 
   .form-field__label {
-    @apply block text-sm text-secondary peer-disabled:text-subdued;
+    @apply block text-sm;
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+  
+  .form-field__label:has(+ .peer:disabled) {
+    color: var(--color-text-secondary);
   }
 
   .form-field__input {
-    @apply text-primary border-none bg-container text-sm opacity-100 w-full p-0;
+    @apply border-none bg-container text-sm opacity-100 w-full;
     @apply focus:opacity-100 focus:outline-hidden focus:ring-0;
     @apply placeholder-shown:opacity-50;
-    @apply disabled:text-subdued;
+    color: var(--color-text-primary);
+    padding: 0.75rem 0;
+    margin-top: 0.25rem;
+  }
+  
+  .form-field__input:disabled {
+    color: var(--color-text-subdued);
     @apply text-ellipsis overflow-hidden whitespace-nowrap;
     @apply transition-opacity duration-300;
-    @apply placeholder:text-subdued;
+  }
+  
+  .form-field__input::placeholder {
+    color: var(--color-text-secondary);
+  }
 
+  /* Dark mode improvements for better contrast */
+  [data-theme="dark"] .form-field__label {
+    color: var(--color-gray-200);
+  }
+
+  [data-theme="dark"] .form-field__input {
+    color: var(--color-gray-100);
+  }
+
+  [data-theme="dark"] .form-field__input::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  .form-field__input::-webkit-calendar-picker-indicator {
     @variant theme-dark {
-      &::-webkit-calendar-picker-indicator {
-        filter: invert(1);
-        cursor: pointer;
-      }
+      filter: invert(1);
+      cursor: pointer;
     }
   }
   

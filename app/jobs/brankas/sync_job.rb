@@ -8,25 +8,25 @@ module Brankas
 
     private
 
-    def sync_account(account)
-      client = Brankas::Client.new
-      page   = 1
+      def sync_account(account)
+        client = Brankas::Client.new
+        page   = 1
 
-      loop do
-        resp = client.transactions(page: page)
-        resp.fetch("transactions").each { |txn| upsert_entry(account, txn) }
-        break if resp.fetch("next_page").zero?
-        page = resp.fetch("next_page")
+        loop do
+          resp = client.transactions(page: page)
+          resp.fetch("transactions").each { |txn| upsert_entry(account, txn) }
+          break if resp.fetch("next_page").zero?
+          page = resp.fetch("next_page")
+        end
       end
-    end
 
-    def upsert_entry(account, txn)
-      account.entries.find_or_create_by!(external_id: txn["transaction_id"]) do |e|
-        e.occurred_on      = Date.parse(txn.dig("additional_details", "created_at"))
-        e.amount_cents     = txn.dig("amount", "value").to_i
-        e.amount_currency  = txn.dig("amount", "currency")
-        e.description      = txn.dig("additional_details", "description")
+      def upsert_entry(account, txn)
+        account.entries.find_or_create_by!(external_id: txn["transaction_id"]) do |e|
+          e.occurred_on      = Date.parse(txn.dig("additional_details", "created_at"))
+          e.amount_cents     = txn.dig("amount", "value").to_i
+          e.amount_currency  = txn.dig("amount", "currency")
+          e.description      = txn.dig("additional_details", "description")
+        end
       end
-    end
   end
 end

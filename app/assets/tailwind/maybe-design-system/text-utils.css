@@ -1,19 +1,21 @@
-@utility text-primary {
-  color: var(--color-text-primary);
-}
+@layer utilities {
+  .text-primary {
+    color: var(--color-text-primary);
+  }
 
-@utility text-inverse {
-  color: var(--color-text-inverse);
-}
+  .text-inverse {
+    color: var(--color-text-inverse);
+  }
 
-@utility text-secondary {
-  color: var(--color-text-secondary);
-}
+  .text-secondary {
+    color: var(--color-text-secondary);
+  }
 
-@utility text-subdued {
-  color: var(--color-text-subdued);
-}
+  .text-subdued {
+    color: var(--color-text-subdued);
+  }
 
-@utility text-link {
-  color: var(--color-text-link);
+  .text-link {
+    color: var(--color-text-link);
+  }
 }

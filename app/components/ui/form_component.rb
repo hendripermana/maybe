@@ -27,8 +27,26 @@ module Ui
     end
 
     def auto_submit?
-      @html_options[:data]&.key?(:controller) && 
+      @html_options[:data]&.key?(:controller) &&
       @html_options[:data][:controller].to_s.include?("auto-submit-form")
+    end
+
+    # Provide object method for form field components
+    def object
+      @model
+    end
+
+    def object_name
+      @model&.model_name&.param_key || @model&.class&.name&.underscore
+    end
+
+    # Store the content block to be called with form builder
+    def content_block
+      @content_block
+    end
+
+    def content_block=(block)
+      @content_block = block
     end
   end
 end

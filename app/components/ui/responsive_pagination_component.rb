@@ -28,15 +28,15 @@ module Ui
         1.upto(pagy.pages).to_a
       else
         # Complex logic for showing a subset of pages with ellipsis
-        from = [pagy.page - 1, 1].max
-        to = [from + 2, pagy.pages].min
-        from = [to - 2, 1].max
+        from = [ pagy.page - 1, 1 ].max
+        to = [ from + 2, pagy.pages ].min
+        from = [ to - 2, 1 ].max
 
         result = []
         result << 1 if from > 1
-        result << '...' if from > 2
+        result << "..." if from > 2
         result.concat(from.upto(to).to_a)
-        result << '...' if to < pagy.pages - 1
+        result << "..." if to < pagy.pages - 1
         result << pagy.pages if to < pagy.pages
         result
       end

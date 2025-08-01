@@ -1,41 +1,69 @@
 <%# locals: (balance_sheet:, period:, **args) %>
 
-<div id="net-worth-chart">
+<div id="net-worth-chart" class="space-y-6">
   <% series = balance_sheet.net_worth_series(period: period) %>
   
-  <div class="flex justify-between items-start gap-4 mb-6">
-    <div class="space-y-3">
-      <div class="space-y-2">
-        <p class="text-3xl font-bold text-foreground <%= "loading-shimmer" if balance_sheet.syncing? %>">
+  <!-- Net Worth Value and Trend -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="space-y-2">
+      <div class="flex items-baseline gap-2">
+        <span class="text-3xl font-bold text-foreground <%= "loading-shimmer" if balance_sheet.syncing? %>">
           <%= series.trend.current.format %>
-        </p>
-
-        <% if series.trend.nil? %>
-          <p class="text-muted-foreground">Data not available</p>
-        <% else %>
-          <%= render partial: "shared/trend_change", locals: { trend: series.trend, comparison_label: period.comparison_label } %>
+        </span>
+        <% if series.trend && !balance_sheet.syncing? %>
+          <div class="flex items-center gap-1 text-sm">
+            <%= render partial: "shared/trend_change", locals: { 
+              trend: series.trend, 
+              comparison_label: period.comparison_label,
+              compact: true 
+            } %>
+          </div>
         <% end %>
       </div>
+      
+      <% if series.trend.nil? %>
+        <p class="text-sm text-muted-foreground">Data not available</p>
+      <% elsif !balance_sheet.syncing? %>
+        <p class="text-sm text-muted-foreground">
+          vs. <%= period.comparison_label.downcase %>
+        </p>
+      <% end %>
+    </div>
+    
+    <!-- Period Selector (if needed) -->
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-muted-foreground">Last 30 days</span>
     </div>
   </div>
 
-  <% if series.any? %>
-    <div
-      id="netWorthChart"
-      class="w-full h-full min-h-[300px] rounded-lg"
-      data-controller="time-series-chart"
-      data-time-series-chart-data-value="<%= series.to_json %>"
-      style="height: 320px;">
-    </div>
-  <% else %>
-    <div class="w-full h-full min-h-[300px] flex items-center justify-center">
-      <div class="text-center space-y-3">
-        <%= icon "chart-line", size: "lg", class: "text-muted-foreground" %>
-        <div>
-          <p class="font-medium text-foreground">No data available</p>
-          <p class="text-muted-foreground">Add accounts to start tracking your net worth</p>
+  <!-- Chart Area -->
+  <div class="relative">
+    <% if series.any? %>
+      <div
+        id="netWorthChart"
+        class="w-full rounded-lg bg-card/50 border border-border/50"
+        data-controller="time-series-chart"
+        data-time-series-chart-data-value="<%= series.to_json %>"
+        style="height: 320px;">
+      </div>
+    <% else %>
+      <div class="w-full h-80 flex items-center justify-center bg-card/50 border border-border/50 rounded-lg">
+        <div class="text-center space-y-4">
+          <div class="w-16 h-16 mx-auto bg-muted/50 rounded-full flex items-center justify-center">
+            <%= icon "chart-line", size: "lg", class: "text-muted-foreground" %>
+          </div>
+          <div class="space-y-2">
+            <p class="font-medium text-foreground">No data available</p>
+            <p class="text-sm text-muted-foreground">Add accounts to start tracking your net worth</p>
+          </div>
+          <%= render DS::Link.new(
+            text: "Add your first account",
+            href: new_account_path,
+            variant: :primary,
+            size: :sm
+          ) %>
         </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

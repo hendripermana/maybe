@@ -7,10 +7,10 @@ module Ui
     attr_reader :form, :field, :checked_value, :unchecked_value, :disabled, :label_text, :label_position
 
     def initialize(
-      form:, 
-      field:, 
-      checked_value: "1", 
-      unchecked_value: "0", 
+      form:,
+      field:,
+      checked_value: "1",
+      unchecked_value: "0",
       disabled: false,
       label_text: nil,
       label_position: :right,
@@ -52,14 +52,14 @@ module Ui
         checked? ? "translate-x-5" : "translate-x-0"
       )
     end
-    
+
     def container_classes
       build_classes(
         "flex items-center gap-2",
         "flex-row-reverse" => label_position == :left
       )
     end
-    
+
     def label_classes
       build_classes(
         "text-sm font-medium text-primary",

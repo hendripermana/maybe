@@ -71,7 +71,7 @@ export default class extends Controller {
 
     this.toggleClass(toggler, content, true);
     this.toggleText(toggler, true);
-    this.toggleAriaExpanded(toggler, true)
+    this.toggleAriaExpanded(toggler, true);
   }
 
   hide(toggler, content, transition = true) {
@@ -86,7 +86,7 @@ export default class extends Controller {
 
     this.toggleClass(toggler, content, false);
     this.toggleText(toggler, false);
-    this.toggleAriaExpanded(toggler, false)
+    this.toggleAriaExpanded(toggler, false);
   }
 
   transitionEnd(e) {

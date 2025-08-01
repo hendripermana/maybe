@@ -27,52 +27,52 @@ module Ui
 
     private
 
-    attr_reader :account, :show_balance, :show_actions
+      attr_reader :account, :show_balance, :show_actions
 
-    def container_classes
-      build_classes(
-        "rounded-lg border shadow-sm",
-        VARIANTS[variant],
-        SIZES[size]
-      )
-    end
-
-    def account_type_icon
-      case account.accountable_type
-      when "Depository" then "building-bank"
-      when "CreditCard" then "credit-card"
-      when "Investment" then "trending-up"
-      when "Loan" then "landmark"
-      when "Property" then "home"
-      when "Vehicle" then "car"
-      when "Crypto" then "bitcoin"
-      when "OtherAsset" then "package"
-      when "OtherLiability" then "file-minus"
-      else "circle-dollar-sign"
+      def container_classes
+        build_classes(
+          "rounded-lg border shadow-sm",
+          VARIANTS[variant],
+          SIZES[size]
+        )
       end
-    end
 
-    def account_type_color
-      case account.accountable_type
-      when "Depository" then "blue-600"
-      when "CreditCard" then "purple-600"
-      when "Investment" then "green-600"
-      when "Loan" then "red-600"
-      when "Property" then "amber-600"
-      when "Vehicle" then "cyan-600"
-      when "Crypto" then "orange-600"
-      when "OtherAsset" then "emerald-600"
-      when "OtherLiability" then "rose-600"
-      else "gray-600"
+      def account_type_icon
+        case account.accountable_type
+        when "Depository" then "building-bank"
+        when "CreditCard" then "credit-card"
+        when "Investment" then "trending-up"
+        when "Loan" then "landmark"
+        when "Property" then "home"
+        when "Vehicle" then "car"
+        when "Crypto" then "bitcoin"
+        when "OtherAsset" then "package"
+        when "OtherLiability" then "file-minus"
+        else "circle-dollar-sign"
+        end
       end
-    end
 
-    def account_balance_class
-      if account.balance.to_i.negative?
-        "text-red-600 [data-theme=dark]:text-red-400"
-      else
-        "text-green-600 [data-theme=dark]:text-green-400"
+      def account_type_color
+        case account.accountable_type
+        when "Depository" then "blue-600"
+        when "CreditCard" then "purple-600"
+        when "Investment" then "green-600"
+        when "Loan" then "red-600"
+        when "Property" then "amber-600"
+        when "Vehicle" then "cyan-600"
+        when "Crypto" then "orange-600"
+        when "OtherAsset" then "emerald-600"
+        when "OtherLiability" then "rose-600"
+        else "gray-600"
+        end
       end
-    end
+
+      def account_balance_class
+        if account.balance.to_i.negative?
+          "text-red-600 [data-theme=dark]:text-red-400"
+        else
+          "text-green-600 [data-theme=dark]:text-green-400"
+        end
+      end
   end
 end

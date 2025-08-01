@@ -25,7 +25,7 @@ class UI::BudgetCardComponent < ViewComponent::Base
 
   def status
     return :unallocated unless @budget_category.initialized?
-    
+
     if @budget_category.available_to_spend.negative?
       :over_budget
     elsif @budget_category.available_to_spend.zero? || @budget_category.percent_of_budget_spent > 90
@@ -80,11 +80,11 @@ class UI::BudgetCardComponent < ViewComponent::Base
 
   private
 
-  def format_money(money)
-    helpers.format_money(money)
-  end
+    def format_money(money)
+      helpers.format_money(money)
+    end
 
-  def hex_with_alpha(hex, alpha)
-    helpers.hex_with_alpha(hex, alpha)
-  end
+    def hex_with_alpha(hex, alpha)
+      helpers.hex_with_alpha(hex, alpha)
+    end
 end

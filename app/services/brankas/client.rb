@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Brankas
   class Error < StandardError; end
 
@@ -47,9 +48,9 @@ module Brankas
 
     private
 
-    def handle(response)
-      raise Error, response.body unless response.success?
-      response.body
-    end
+      def handle(response)
+        raise Error, response.body unless response.success?
+        response.body
+      end
   end
 end

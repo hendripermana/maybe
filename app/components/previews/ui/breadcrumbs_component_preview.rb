@@ -5,9 +5,9 @@ module Ui
     def default
       render Ui::BreadcrumbsComponent.new(
         breadcrumbs: [
-          ["Home", "/"],
-          ["Transactions", "/transactions"],
-          ["Details", nil]
+          [ "Home", "/" ],
+          [ "Transactions", "/transactions" ],
+          [ "Details", nil ]
         ]
       )
     end
@@ -15,10 +15,10 @@ module Ui
     def with_multiple_levels
       render Ui::BreadcrumbsComponent.new(
         breadcrumbs: [
-          ["Home", "/"],
-          ["Settings", "/settings"],
-          ["Security", "/settings/security"],
-          ["Two-Factor Authentication", nil]
+          [ "Home", "/" ],
+          [ "Settings", "/settings" ],
+          [ "Security", "/settings/security" ],
+          [ "Two-Factor Authentication", nil ]
         ]
       )
     end

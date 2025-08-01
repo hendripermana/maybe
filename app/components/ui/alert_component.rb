@@ -26,34 +26,34 @@ module Ui
 
     private
 
-    attr_reader :title, :dismissible
+      attr_reader :title, :dismissible
 
-    def container_classes
-      build_classes(
-        "flex items-start gap-3 rounded-lg border",
-        VARIANTS[variant],
-        SIZES[size]
-      )
-    end
-
-    def icon_name
-      case variant
-      when :info then "info"
-      when :success then "check-circle"
-      when :warning then "alert-triangle"
-      when :destructive then "x-circle"
-      else "bell"
+      def container_classes
+        build_classes(
+          "flex items-start gap-3 rounded-lg border",
+          VARIANTS[variant],
+          SIZES[size]
+        )
       end
-    end
 
-    def icon_color
-      case variant
-      when :info then "blue-600"
-      when :success then "success"
-      when :warning then "warning"
-      when :destructive then "destructive"
-      else "gray-600"
+      def icon_name
+        case variant
+        when :info then "info"
+        when :success then "check-circle"
+        when :warning then "alert-triangle"
+        when :destructive then "x-circle"
+        else "bell"
+        end
       end
-    end
+
+      def icon_color
+        case variant
+        when :info then "blue-600"
+        when :success then "success"
+        when :warning then "warning"
+        when :destructive then "destructive"
+        else "gray-600"
+        end
+      end
   end
 end

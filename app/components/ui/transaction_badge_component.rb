@@ -63,11 +63,11 @@ module Ui
     def initialize(transaction_type: nil, transaction_status: nil, custom_label: nil, show_icon: true, size: :sm, **options)
       type_config = TRANSACTION_TYPES[transaction_type.to_sym] if transaction_type
       status_config = TRANSACTION_STATUSES[transaction_status.to_sym] if transaction_status
-      
+
       config = type_config || status_config || { label: custom_label, variant: :default, icon: "tag" }
-      
+
       super(variant: config[:variant], size: size, **options)
-      
+
       @label = custom_label || config[:label]
       @icon = config[:icon]
       @show_icon = show_icon
@@ -75,6 +75,6 @@ module Ui
 
     private
 
-    attr_reader :label, :icon, :show_icon
+      attr_reader :label, :icon, :show_icon
   end
 end

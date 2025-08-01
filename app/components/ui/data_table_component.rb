@@ -12,16 +12,16 @@ class Ui::DataTableComponent < ViewComponent::Base
 
   private
 
-  def css_classes
-    classes = [
-      "w-full bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
-    ]
-    
-    classes << @html_options[:class] if @html_options[:class]
-    classes.compact.join(" ")
-  end
+    def css_classes
+      classes = [
+        "w-full bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+      ]
 
-  def html_options
-    @html_options.except(:class).merge(class: css_classes)
-  end
+      classes << @html_options[:class] if @html_options[:class]
+      classes.compact.join(" ")
+    end
+
+    def html_options
+      @html_options.except(:class).merge(class: css_classes)
+    end
 end

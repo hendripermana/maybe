@@ -23,9 +23,9 @@ class UI::ProgressBarComponent < ViewComponent::Base
 
   def percent
     return 0 if @max.zero?
-    
+
     # Ensure percent is between 0 and 100
-    [(@value / @max * 100).round, 100].min
+    [ (@value / @max * 100).round, 100 ].min
   end
 
   def progress_classes

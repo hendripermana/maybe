@@ -6,7 +6,7 @@ module Security::Provided
   class_methods do
     def provider
       registry = Provider::Registry.for_concept(:securities)
-      registry.get_provider(:synth)
+      registry.get_provider(:alpha_vantage)
     end
 
     def search_provider(symbol, country_code: nil, exchange_operating_mic: nil)

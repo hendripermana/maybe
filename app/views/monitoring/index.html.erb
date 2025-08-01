@@ -88,7 +88,7 @@
         <div class="h-64" id="error-chart"></div>
         <script>
           document.addEventListener('DOMContentLoaded', function() {
-            const data = <%= raw error_chart_data(@error_summary) %>;
+            const data = <%= error_chart_data(@error_summary).to_json.html_safe %>;
             
             if (data.length > 0) {
               const chart = new ApexCharts(document.querySelector("#error-chart"), {
@@ -205,7 +205,7 @@
         <div class="h-64" id="performance-chart"></div>
         <script>
           document.addEventListener('DOMContentLoaded', function() {
-            const data = <%= raw performance_chart_data(@performance_metrics) %>;
+            const data = <%= performance_chart_data(@performance_metrics).to_json.html_safe %>;
             
             if (data.length > 0) {
               const chart = new ApexCharts(document.querySelector("#performance-chart"), {

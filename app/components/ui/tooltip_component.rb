@@ -29,28 +29,28 @@ module Ui
 
     private
 
-    attr_reader :text, :position, :delay_show, :delay_hide
+      attr_reader :text, :position, :delay_show, :delay_hide
 
-    def container_classes
-      build_classes(
-        "relative inline-block"
-      )
-    end
+      def container_classes
+        build_classes(
+          "relative inline-block"
+        )
+      end
 
-    def tooltip_classes
-      build_classes(
-        "absolute z-50 px-2 py-1 text-xs rounded shadow-md whitespace-nowrap opacity-0 pointer-events-none transition-opacity",
-        VARIANTS[variant],
-        POSITIONS[position]
-      )
-    end
+      def tooltip_classes
+        build_classes(
+          "absolute z-50 px-2 py-1 text-xs rounded shadow-md whitespace-nowrap opacity-0 pointer-events-none transition-opacity",
+          VARIANTS[variant],
+          POSITIONS[position]
+        )
+      end
 
-    def data_attributes
-      {
-        controller: "ui--tooltip",
-        "ui--tooltip-delay-show-value": delay_show,
-        "ui--tooltip-delay-hide-value": delay_hide
-      }
-    end
+      def data_attributes
+        {
+          controller: "ui--tooltip",
+          "ui--tooltip-delay-show-value": delay_show,
+          "ui--tooltip-delay-hide-value": delay_hide
+        }
+      end
   end
 end

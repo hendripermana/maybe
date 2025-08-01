@@ -17,7 +17,7 @@ class Dashboard::ThemeSwitchingTest < ViewComponent::TestCase
     # Test primary/accent variant
     render_inline(Dashboard::CardComponent.new(
       title: "Test Card",
-      value: "$1,000", 
+      value: "$1,000",
       variant: :accent,
       icon_name: "trending-up"
     ))
@@ -52,7 +52,7 @@ class Dashboard::ThemeSwitchingTest < ViewComponent::TestCase
 
     # Test negative trend
     render_inline(Dashboard::CardComponent.new(
-      title: "Test Card", 
+      title: "Test Card",
       value: "$1,000",
       trend: { direction: :down, positive: false, value: "5%" }
     ))

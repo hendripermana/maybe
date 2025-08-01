@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 
   # Performance metrics
   post "performance/metrics", to: "performance_metrics#create"
-  
+
   # UI/UX Monitoring
   namespace :monitoring do
     post "ui_error", to: "monitoring#ui_error"
@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     post "performance_issue", to: "monitoring#performance_issue"
     post "user_feedback", to: "monitoring#user_feedback"
   end
-  
+
   # Monitoring Dashboard
   get "monitoring", to: "monitoring#index"
   get "monitoring/events", to: "monitoring#events"
@@ -84,7 +84,7 @@ Rails.application.routes.draw do
 
   namespace :settings do
     resource :profile, only: [ :show, :destroy ]
-    resource :preferences, only: [:show, :update] do
+    resource :preferences, only: [ :show, :update ] do
       post :update_theme, on: :collection
     end
     resource :hosting, only: %i[show update] do
@@ -231,24 +231,24 @@ Rails.application.routes.draw do
   end
 
   # User feedback
-  resources :user_feedbacks, only: [:create]
-  
+  resources :user_feedbacks, only: [ :create ]
+
   # Data privacy and GDPR compliance
   namespace :data_privacy do
     get :export, to: "data_privacy#export"
-    match :delete_request, to: "data_privacy#delete_request", via: [:get, :post]
-    
+    match :delete_request, to: "data_privacy#delete_request", via: [ :get, :post ]
+
     # Admin routes
     get :admin, to: "data_privacy#admin_index", as: :admin
     post :admin_purge, to: "data_privacy#admin_purge"
     get :admin_audit, to: "data_privacy#admin_audit"
     post :admin_anonymize, to: "data_privacy#admin_anonymize"
   end
-  
+
   # API routes
   namespace :api do
-    resources :ui_monitoring_events, only: [:create]
-    
+    resources :ui_monitoring_events, only: [ :create ]
+
     namespace :v1 do
       # Authentication endpoints
       post "auth/signup", to: "auth#signup"

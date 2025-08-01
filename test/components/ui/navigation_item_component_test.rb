@@ -15,7 +15,7 @@ module Ui
         shadow_active: "shadow-blue-500/30",
         shadow_inactive: "shadow-blue-200/20"
       }
-      
+
       render_inline(NavigationItemComponent.new(
         name: "Home",
         path: "/",
@@ -24,13 +24,13 @@ module Ui
         active: false,
         color_classes: color_classes
       ))
-      
+
       assert_selector "a[role='menuitem']"
       assert_selector ".nav-item-modern"
       assert_text "Home"
       refute_selector "a[aria-current='page']"
     end
-    
+
     def test_renders_active_navigation_item
       color_classes = {
         bg_active: "bg-blue-500",
@@ -42,7 +42,7 @@ module Ui
         shadow_active: "shadow-blue-500/30",
         shadow_inactive: "shadow-blue-200/20"
       }
-      
+
       render_inline(NavigationItemComponent.new(
         name: "Home",
         path: "/",
@@ -51,12 +51,12 @@ module Ui
         active: true,
         color_classes: color_classes
       ))
-      
+
       assert_selector "a[role='menuitem'][aria-current='page']"
       assert_selector ".nav-item-modern"
       assert_text "Home"
     end
-    
+
     def test_renders_sidebar_navigation_item
       color_classes = {
         bg_active: "bg-blue-500",
@@ -68,7 +68,7 @@ module Ui
         shadow_active: "shadow-blue-500/30",
         shadow_inactive: "shadow-blue-200/20"
       }
-      
+
       render_inline(NavigationItemComponent.new(
         name: "Home",
         path: "/",
@@ -78,7 +78,7 @@ module Ui
         color_classes: color_classes,
         variant: "sidebar"
       ))
-      
+
       assert_selector "a[role='menuitem']"
       refute_selector ".nav-item-modern"
       assert_text "Home"

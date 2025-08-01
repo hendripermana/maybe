@@ -12,7 +12,7 @@ class CreateUserFeedbacks < ActiveRecord::Migration[7.2]
       t.uuid :resolved_by
       t.timestamps
     end
-    
+
     add_index :user_feedbacks, :feedback_type
     add_index :user_feedbacks, :resolved
   end

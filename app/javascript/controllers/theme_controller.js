@@ -37,7 +37,7 @@ export default class extends Controller {
   // Apply theme preference with smooth transition
   applyThemePreference(preference) {
     let isDark;
-    
+
     switch (preference) {
       case "dark":
         isDark = true;
@@ -50,7 +50,7 @@ export default class extends Controller {
         isDark = this.systemPrefersDark();
         break;
     }
-    
+
     this.setTheme(isDark);
     this.updateToggleState(isDark);
     this.dispatchThemeChangeEvent(isDark, preference);
@@ -61,15 +61,15 @@ export default class extends Controller {
     const root = document.documentElement;
     const newTheme = isDark ? "dark" : "light";
     const currentTheme = root.getAttribute("data-theme");
-    
+
     // Only update if theme actually changed
     if (currentTheme !== newTheme) {
       // Add transition class for smooth theme switching
       root.classList.add("theme-transitioning");
-      
+
       // Set the new theme
       root.setAttribute("data-theme", newTheme);
-      
+
       // Remove transition class after animation completes
       setTimeout(() => {
         root.classList.remove("theme-transitioning");
@@ -81,7 +81,10 @@ export default class extends Controller {
   updateToggleState(isDark) {
     if (this.hasToggleTarget) {
       this.toggleTarget.setAttribute("aria-pressed", isDark.toString());
-      this.toggleTarget.setAttribute("data-theme-state", isDark ? "dark" : "light");
+      this.toggleTarget.setAttribute(
+        "data-theme-state",
+        isDark ? "dark" : "light",
+      );
     }
   }
 
@@ -91,9 +94,9 @@ export default class extends Controller {
       detail: {
         theme: isDark ? "dark" : "light",
         preference: preference,
-        isDark: isDark
+        isDark: isDark,
       },
-      bubbles: true
+      bubbles: true,
     });
     document.dispatchEvent(event);
   }
@@ -116,9 +119,9 @@ export default class extends Controller {
     const currentTheme = document.documentElement.getAttribute("data-theme");
     const newIsDark = currentTheme !== "dark";
     const newPreference = newIsDark ? "dark" : "light";
-    
+
     this.applyThemePreference(newPreference);
-    
+
     // If this is a manual toggle, we should update the user preference
     // This would typically trigger a form submission or AJAX request
     this.updateUserPreference(newPreference);
@@ -144,7 +147,7 @@ export default class extends Controller {
     // Dispatch event that other controllers can listen to for saving preference
     const event = new CustomEvent("theme:preferenceChanged", {
       detail: { preference },
-      bubbles: true
+      bubbles: true,
     });
     document.dispatchEvent(event);
   }

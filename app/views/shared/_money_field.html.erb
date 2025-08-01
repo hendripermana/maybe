@@ -70,7 +70,7 @@
                         Money::Currency.as_options.map(&:iso_code),
                         { inline: true, selected: currency.iso_code },
                         {
-                          class: "w-fit pr-5 disabled:text-subdued form-field__input",
+                          class: "w-fit pr-5 form-field__input",
                           disabled: options[:disable_currency],
                           data: {
                             "money-field-target": "currency",

@@ -1,13 +1,13 @@
 module ThemeHelper
   def current_theme
-    cookies[:theme] || 'light'
+    cookies[:theme] || "light"
   end
-  
+
   def theme_switcher(options = {})
     # Render theme switcher component
     # Implementation depends on your existing theme switching mechanism
   end
-  
+
   def feedback_form(options = {})
     # Render feedback form component
     render(FeedbackFormComponent.new(

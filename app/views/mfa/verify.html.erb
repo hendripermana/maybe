@@ -3,13 +3,30 @@
   header_description t(".description")
 %>
 
-<%= styled_form_with url: verify_mfa_path, method: :post, class: "space-y-4 mt-4 md:mt-0", data: { turbo: false } do |form| %>
-  <%= form.text_field :code,
-    required: true,
-    autofocus: true,
-    autocomplete: "one-time-code",
-    type: "number",
-    label: t(".page_title") %>
+<%= render Ui::CardComponent.new(
+  variant: :elevated,
+  size: :lg,
+  class: "max-w-md mx-auto mt-8"
+) do %>
+  <%= form_with url: verify_mfa_path, method: :post, class: "space-y-4", data: { turbo: false } do |form| %>
+    <div class="form-field">
+      <div class="form-field__body">
+        <%= form.label :code, t(".page_title"), class: "form-field__label" %>
+        <%= form.text_field :code, 
+            class: "form-field__input", 
+            placeholder: "Enter 6-digit code",
+            required: true,
+            autofocus: true,
+            autocomplete: "one-time-code",
+            type: "number" %>
+      </div>
+    </div>
 
-  <%= form.submit t(".verify_button") %>
+    <%= render Ui::ButtonComponent.new(
+      text: t(".verify_button"),
+      variant: :primary,
+      type: "submit",
+      full_width: true
+    ) %>
+  <% end %>
 <% end %>

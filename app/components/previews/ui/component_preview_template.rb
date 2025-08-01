@@ -2,27 +2,27 @@
 
 module Ui
   # Preview for the ComponentName component
-  # 
+  #
   # ## Usage Guidelines
-  # 
+  #
   # - When to use this component
   # - When to use alternatives
   # - Best practices for implementation
-  # 
+  #
   # ## Accessibility Considerations
-  # 
+  #
   # - Keyboard navigation: Tab index and focus management
   # - Screen reader support: ARIA attributes
   # - Color contrast: Meets WCAG AA standards
   # - Reduced motion: Respects user preferences
-  # 
+  #
   # ## Theme Support
-  # 
+  #
   # This component uses CSS variables for theming and works in both light and dark modes.
   # All colors are derived from the theme tokens to ensure consistency.
   class ComponentNamePreview < ViewComponent::Preview
     # @!group Variants
-    
+
     # @label Default
     def default
       render(Ui::ComponentNameComponent.new) do
@@ -72,7 +72,7 @@ module Ui
     # @!endgroup
 
     # @!group Theme Examples
-    
+
     # @label Light and Dark Theme
     def theme_examples
       render_with_template(locals: {
@@ -82,7 +82,7 @@ module Ui
     # @!endgroup
 
     # @!group Accessibility Examples
-    
+
     # @label Keyboard Navigation
     def keyboard_navigation
       render_with_template(locals: {

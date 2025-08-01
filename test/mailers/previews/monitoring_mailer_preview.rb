@@ -7,7 +7,7 @@ class MonitoringMailerPreview < ActionMailer::Preview
       :error
     )
   end
-  
+
   def performance_alert
     MonitoringMailer.ui_monitoring_alert(
       "Performance Alert",
@@ -16,7 +16,7 @@ class MonitoringMailerPreview < ActionMailer::Preview
       :warning
     )
   end
-  
+
   def accessibility_alert
     MonitoringMailer.ui_monitoring_alert(
       "Accessibility Issues Detected",

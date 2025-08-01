@@ -7,6 +7,26 @@ class PagesController < ApplicationController
     @balance_sheet = Current.family.balance_sheet
     @accounts = Current.family.accounts.visible.with_attached_logo
 
+    # Handle net worth period
+    @period = if params[:period].present?
+      case params[:period]
+      when "7d"
+        Period.last_7_days
+      when "30d"
+        Period.last_30_days
+      when "90d"
+        Period.last_90_days
+      when "1y"
+        Period.last_365_days
+      when "all"
+        Period.custom(start_date: Current.family.oldest_entry_date, end_date: Date.current)
+      else
+        Period.last_30_days
+      end
+    else
+      Period.last_30_days
+    end
+
     period_param = params[:cashflow_period]
     @cashflow_period = if period_param.present?
       if period_param == "all"

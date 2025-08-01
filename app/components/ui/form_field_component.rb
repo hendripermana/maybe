@@ -42,14 +42,14 @@ module Ui
         label
       end
     end
-    
+
     def field_classes
       build_classes(
         "form-field space-y-2",
         "form-field-error" => has_error?
       )
     end
-    
+
     def label_classes
       build_classes(
         "form-field-label text-sm font-medium text-primary",

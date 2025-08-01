@@ -14,11 +14,11 @@ class MarketDataImporterTest < ActiveSupport::TestCase
     Holding.delete_all
     Security.delete_all
 
-    @provider = mock("provider")
-    Provider::Registry.any_instance
-                      .stubs(:get_provider)
-                      .with(:synth)
-                      .returns(@provider)
+    @exchange_rates_provider = mock("exchange_rates_provider")
+    @securities_provider = mock("securities_provider")
+    
+    Provider::Registry.stubs(:exchange_rates_api).returns(@exchange_rates_provider)
+    Provider::Registry.stubs(:alpha_vantage).returns(@securities_provider)
   end
 
   test "syncs required exchange rates" do
@@ -37,7 +37,7 @@ class MarketDataImporterTest < ActiveSupport::TestCase
     expected_start_date = (SNAPSHOT_START_DATE + 1.day) - PROVIDER_BUFFER
     end_date            = Date.current.in_time_zone("America/New_York").to_date
 
-    @provider.expects(:fetch_exchange_rates)
+    @exchange_rates_provider.expects(:fetch_exchange_rates)
              .with(from: "CAD",
                    to: "USD",
                    start_date: expected_start_date,
@@ -59,7 +59,7 @@ class MarketDataImporterTest < ActiveSupport::TestCase
     expected_start_date = SNAPSHOT_START_DATE - PROVIDER_BUFFER
     end_date            = Date.current.in_time_zone("America/New_York").to_date
 
-    @provider.expects(:fetch_security_prices)
+    @securities_provider.expects(:fetch_security_prices)
              .with(symbol: security.ticker,
                    exchange_operating_mic: security.exchange_operating_mic,
                    start_date: expected_start_date,
@@ -71,12 +71,12 @@ class MarketDataImporterTest < ActiveSupport::TestCase
                               currency: "USD")
              ]))
 
-    @provider.stubs(:fetch_security_info)
+    @securities_provider.stubs(:fetch_security_info)
              .with(symbol: "AAPL", exchange_operating_mic: "XNAS")
              .returns(provider_success_response(OpenStruct.new(name: "Apple", logo_url: "logo")))
 
     # Ignore exchange rate calls for this test
-    @provider.stubs(:fetch_exchange_rates).returns(provider_success_response([]))
+    @exchange_rates_provider.stubs(:fetch_exchange_rates).returns(provider_success_response([]))
 
     MarketDataImporter.new(mode: :snapshot).import_security_prices
 

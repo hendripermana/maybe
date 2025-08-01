@@ -9,7 +9,7 @@ class CreateUiMonitoringEvents < ActiveRecord::Migration[7.2]
       t.string :ip_address
       t.timestamps
     end
-    
+
     add_index :ui_monitoring_events, :event_type
     add_index :ui_monitoring_events, :created_at
     add_index :ui_monitoring_events, :session_id

@@ -10,13 +10,13 @@ module UiTestingConfig
     baseline_dir: Rails.root.join("test", "visual_regression", "screenshots", "baseline"),
     threshold: 0.01, # 1% difference threshold
     viewports: {
-      mobile: [375, 667],
-      tablet: [768, 1024], 
-      desktop: [1200, 800],
-      large: [1400, 1400]
+      mobile: [ 375, 667 ],
+      tablet: [ 768, 1024 ],
+      desktop: [ 1200, 800 ],
+      large: [ 1400, 1400 ]
     }
   }.freeze
-  
+
   # Theme testing configuration
   THEME_CONFIG = {
     themes: %w[light dark],
@@ -31,7 +31,7 @@ module UiTestingConfig
       /\bborder-white\b/, /\bborder-black\b/, /\bborder-gray-\d+\b/, /\bborder-slate-\d+\b/
     ]
   }.freeze
-  
+
   # Accessibility testing configuration
   ACCESSIBILITY_CONFIG = {
     wcag_level: :aa, # :aa or :aaa
@@ -45,16 +45,16 @@ module UiTestingConfig
     focus_indicators: %w[outline box-shadow border],
     keyboard_navigable_elements: %w[a button input select textarea [tabindex]]
   }.freeze
-  
+
   # Component testing selectors
   COMPONENT_SELECTORS = {
-    buttons: '.btn-modern-primary, .btn-modern-secondary, .btn-modern-ghost, .btn-modern-destructive',
-    cards: '.card-modern, .bg-card',
+    buttons: ".btn-modern-primary, .btn-modern-secondary, .btn-modern-ghost, .btn-modern-destructive",
+    cards: ".card-modern, .bg-card",
     forms: 'input, select, textarea, button[type="submit"]',
     navigation: 'nav a, [role="navigation"] a',
     interactive: 'button, a, input, select, textarea, [role="button"]'
   }.freeze
-  
+
   # Test data for component variations
   COMPONENT_VARIANTS = {
     button: {
@@ -72,29 +72,29 @@ module UiTestingConfig
       states: %i[default focus error disabled]
     }
   }.freeze
-  
+
   class << self
     def setup_visual_regression_directories
       FileUtils.mkdir_p(VISUAL_REGRESSION_CONFIG[:screenshot_dir])
       FileUtils.mkdir_p(VISUAL_REGRESSION_CONFIG[:baseline_dir])
     end
-    
+
     def cleanup_old_screenshots(days_old: 7)
       cutoff_date = days_old.days.ago
       screenshot_dir = VISUAL_REGRESSION_CONFIG[:screenshot_dir]
-      
+
       Dir.glob(screenshot_dir.join("*.png")).each do |file|
         File.delete(file) if File.mtime(file) < cutoff_date
       end
     end
-    
+
     def component_test_matrix
       # Generate test combinations for comprehensive component testing
       COMPONENT_VARIANTS.flat_map do |component, config|
-        variants = config[:variants] || [:default]
-        sizes = config[:sizes] || [:default]
-        states = config[:states] || [:default]
-        
+        variants = config[:variants] || [ :default ]
+        sizes = config[:sizes] || [ :default ]
+        states = config[:states] || [ :default ]
+
         variants.product(sizes, states).map do |variant, size, state|
           {
             component: component,
@@ -105,7 +105,7 @@ module UiTestingConfig
         end
       end
     end
-    
+
     def theme_test_combinations
       # Generate all theme + viewport combinations for testing
       THEME_CONFIG[:themes].product(VISUAL_REGRESSION_CONFIG[:viewports].keys).map do |theme, viewport|

@@ -17,52 +17,74 @@
   </div>
 <% end %>
 
-<% if @user.errors.present? %>
-  <div class="text-red-600 flex items-center gap-2">
-    <%= icon("circle-alert") %>
-    <p class="text-sm"><%= @user.errors.full_messages.to_sentence %></p>
-  </div>
-<% end %>
-
-<%= styled_form_with model: @user, url: registration_path, class: "space-y-4" do |form| %>
-  <%= form.email_field :email,
-      autofocus: false,
-      autocomplete: "email",
-      required: "required",
-      placeholder: "you@example.com",
-      label: true,
-      disabled: @invitation.present? %>
-
-  <% if invite_code_required? && !@invitation %>
-    <%= form.text_field :invite_code, required: "required", label: true, value: params[:invite] %>
+<%= render Ui::CardComponent.new(
+  variant: :elevated,
+  size: :lg,
+  class: "max-w-md mx-auto mt-8"
+) do %>
+  <% if @user.errors.present? %>
+    <div class="text-red-600 flex items-center gap-2 mb-4">
+      <%= icon("circle-alert") %>
+      <p class="text-sm"><%= @user.errors.full_messages.to_sentence %></p>
+    </div>
   <% end %>
 
-  <%= form.hidden_field :invitation, value: @invitation&.token %>
-
-  <div data-controller="password-validator">
-    <div data-controller="password-visibility" class="relative">
-      <%= form.password_field :password,
-          autocomplete: "new-password",
-          required: "required",
-          placeholder: t(".password_placeholder"),
-          label: true,
-          maxlength: 72,
-          data: {
-            password_validator_target: "input",
-            password_visibility_target: "input",
-            action: "input->password-validator#validate"
-          } %>
-      <button type="button"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-              data-action="click->password-visibility#toggle">
-        <div data-password-visibility-target="showIcon">
-          <%= icon("eye") %>
-        </div>
-        <div data-password-visibility-target="hideIcon">
-          <%= icon("eye-off") %>
-        </div>
-      </button>
+  <%= form_with model: @user, url: registration_path, class: "space-y-4" do |form| %>
+    <div class="form-field">
+      <div class="form-field__body">
+        <%= form.label :email, "Email address", class: "form-field__label" %>
+        <%= form.email_field :email, 
+            class: "form-field__input", 
+            placeholder: "you@example.com",
+            autocomplete: "email",
+            required: true,
+            autofocus: false,
+            disabled: @invitation.present? %>
+      </div>
     </div>
+
+    <% if invite_code_required? && !@invitation %>
+      <div class="form-field">
+        <div class="form-field__body">
+          <%= form.label :invite_code, "Invite code", class: "form-field__label" %>
+          <%= form.text_field :invite_code, 
+              class: "form-field__input", 
+              placeholder: "Enter invite code",
+              required: true,
+              value: params[:invite] %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= form.hidden_field :invitation, value: @invitation&.token %>
+
+    <div data-controller="password-validator">
+      <div data-controller="password-visibility" class="relative form-field">
+        <div class="form-field__body">
+          <%= form.label :password, "Password", class: "form-field__label" %>
+          <%= form.password_field :password,
+              class: "form-field__input",
+              autocomplete: "new-password",
+              required: true,
+              placeholder: t(".password_placeholder"),
+              maxlength: 72,
+              data: {
+                password_validator_target: "input",
+                password_visibility_target: "input",
+                action: "input->password-validator#validate"
+              } %>
+          <button type="button"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  data-action="click->password-visibility#toggle">
+            <div data-password-visibility-target="showIcon">
+              <%= icon("eye") %>
+            </div>
+            <div data-password-visibility-target="hideIcon">
+              <%= icon("eye-off") %>
+            </div>
+          </button>
+        </div>
+      </div>
 
     <div class="flex gap-4 my-4">
       <div class="h-1 bg-gray-200 rounded-full flex-grow" data-password-validator-target="blockLine" data-requirement-type="length"></div>
@@ -91,5 +113,11 @@
     </div>
   </div>
 
-  <%= form.submit t(".submit") %>
+    <%= render Ui::ButtonComponent.new(
+      text: t(".submit"),
+      variant: :primary,
+      type: "submit",
+      full_width: true
+    ) %>
+  <% end %>
 <% end %>

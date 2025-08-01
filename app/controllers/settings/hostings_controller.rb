@@ -6,8 +6,11 @@ class Settings::HostingsController < ApplicationController
   before_action :ensure_admin, only: :clear_cache
 
   def show
-    synth_provider = Provider::Registry.get_provider(:synth)
-    @synth_usage = synth_provider&.usage
+    exchange_rates_provider = Provider::Registry.get_provider(:exchange_rates_api)
+    @exchange_rates_usage = exchange_rates_provider&.usage
+
+    alpha_vantage_provider = Provider::Registry.get_provider(:alpha_vantage)
+    @alpha_vantage_usage = alpha_vantage_provider&.usage
   end
 
   def update
@@ -19,8 +22,12 @@ class Settings::HostingsController < ApplicationController
       Setting.require_email_confirmation = hosting_params[:require_email_confirmation]
     end
 
-    if hosting_params.key?(:synth_api_key)
-      Setting.synth_api_key = hosting_params[:synth_api_key]
+    if hosting_params.key?(:exchange_rates_api_key)
+      Setting.exchange_rates_api_key = hosting_params[:exchange_rates_api_key]
+    end
+
+    if hosting_params.key?(:alpha_vantage_api_key)
+      Setting.alpha_vantage_api_key = hosting_params[:alpha_vantage_api_key]
     end
 
     redirect_to settings_hosting_path, notice: t(".success")
@@ -36,7 +43,7 @@ class Settings::HostingsController < ApplicationController
 
   private
     def hosting_params
-      params.require(:setting).permit(:require_invite_for_signup, :require_email_confirmation, :synth_api_key)
+      params.require(:setting).permit(:require_invite_for_signup, :require_email_confirmation, :exchange_rates_api_key, :alpha_vantage_api_key)
     end
 
     def ensure_admin

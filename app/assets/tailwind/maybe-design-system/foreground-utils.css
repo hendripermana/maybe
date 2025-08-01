@@ -1,31 +1,33 @@
-@utility fg-gray {
-  color: var(--color-text-secondary);
-}
+@layer utilities {
+  .fg-gray {
+    color: var(--color-text-secondary);
+  }
 
-@utility fg-contrast {
-  color: var(--color-text-tertiary);
-}
+  .fg-contrast {
+    color: var(--color-text-tertiary);
+  }
 
-@utility fg-inverse {
-  color: var(--color-text-inverse);
-}
+  .fg-inverse {
+    color: var(--color-text-inverse);
+  }
 
-@utility fg-primary {
-  color: var(--color-text-primary);
-}
+  .fg-primary {
+    color: var(--color-text-primary);
+  }
 
-@utility fg-primary-variant {
-  color: var(--color-text-primary);
-}
+  .fg-primary-variant {
+    color: var(--color-text-primary);
+  }
 
-@utility fg-secondary {
-  color: var(--color-text-secondary);
-}
+  .fg-secondary {
+    color: var(--color-text-secondary);
+  }
 
-@utility fg-secondary-variant {
-  color: var(--color-text-tertiary);
-}
+  .fg-secondary-variant {
+    color: var(--color-text-tertiary);
+  }
 
-@utility fg-subdued {
-  color: var(--color-text-subdued);
+  .fg-subdued {
+    color: var(--color-text-subdued);
+  }
 }
