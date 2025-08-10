@@ -1,0 +1,7 @@
+<%= render DS::Dialog.new do |dialog| %>
+  <% dialog.with_header(title: "Make payment") %>
+  <% dialog.with_body do %>
+    <%# Render transfers form with initial values %>
+    <%= render "transfers/form", transfer: @transfer, prefill: @prefill %>
+  <% end %>
+<% end %>

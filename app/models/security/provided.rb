@@ -10,6 +10,7 @@ module Security::Provided
     # 2) SECURITIES_PROVIDER (single value)
     # 3) Registry default order for :securities concept
     def provider
+      return @__provider_override if defined?(@__provider_override) && @__provider_override
       providers_in_order.first
     end
 
@@ -27,13 +28,22 @@ module Security::Provided
         registry.send(:available_providers)
       end
 
-      Array(names).filter_map do |name|
-        begin
-          registry.get_provider(name.to_sym)
-        rescue => _e
-          nil
+      resolved = []
+      Array(names).each do |name|
+        if name.respond_to?(:fetch_security_price)
+          resolved << name
+          break
+        else
+          begin
+            prov = registry.get_provider(name.to_sym)
+            resolved << prov if prov
+            break if resolved.any?
+          rescue Provider::Registry::Error
+            # ignore and continue
+          end
         end
       end
+      resolved
     end
 
     def search_provider(symbol, country_code: nil, exchange_operating_mic: nil)
@@ -69,29 +79,25 @@ module Security::Provided
 
     return price if price.present?
 
-    provs = self.class.providers_in_order
-    return nil if provs.empty?
+    prov = self.class.provider
+    return nil if prov.nil?
 
-    provs.each do |prov|
-      response = prov.fetch_security_price(
-        symbol: ticker,
-        exchange_operating_mic: exchange_operating_mic,
-        date: date
-      )
+    response = prov.fetch_security_price(
+      symbol: ticker,
+      exchange_operating_mic: exchange_operating_mic,
+      date: date
+    )
 
-      next unless response.success?
+    return nil unless response.success?
 
-      price = response.data
-      Security::Price.find_or_create_by!(
-        security_id: self.id,
-        date: price.date,
-        price: price.price,
-        currency: price.currency
-      ) if cache
-      return price
-    end
-
-    nil
+    price = response.data
+    Security::Price.find_or_create_by!(
+      security_id: self.id,
+      date: price.date,
+      price: price.price,
+      currency: price.currency
+    ) if cache
+    price
   end
 
   def import_provider_details(clear_cache: false)

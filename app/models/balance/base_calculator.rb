@@ -56,7 +56,7 @@ class Balance::BaseCalculator
       change_holdings_value - net_buy_sell_value
     end
 
-  def flows_for_date(date)
+    def flows_for_date(date)
       entries = sync_cache.get_entries(date)
 
       cash_inflows = 0
@@ -71,12 +71,15 @@ class Balance::BaseCalculator
       trade_cash_outflow_sum = entries.select { |e| e.amount >= 0 && e.trade? }.sum(&:amount)
 
       if account.balance_type == :non_cash
-        # For non-cash accounts (OtherAsset, Property, Vehicle, OtherLiability, Loan),
-        # transactions represent changes in the non-cash value.
-        # Negative txn amounts (on assets) mean value increased; treat as inflows.
-        # Positive txn amounts mean value decreased; treat as outflows.
-        non_cash_inflows = txn_inflow_sum.abs
-        non_cash_outflows = txn_outflow_sum
+        if account.accountable_type == "Loan"
+          # Loans are special: transactions affect non-cash balance (principal changes)
+          non_cash_inflows = txn_inflow_sum.abs
+          non_cash_outflows = txn_outflow_sum
+        else
+          # Other non-cash accounts ignore transaction flows for balance calculations
+          non_cash_inflows = 0
+          non_cash_outflows = 0
+        end
       elsif account.balance_type != :non_cash
         cash_inflows = txn_inflow_sum.abs + trade_cash_inflow_sum.abs
         cash_outflows = txn_outflow_sum + trade_cash_outflow_sum
@@ -108,7 +111,11 @@ class Balance::BaseCalculator
       entries = sync_cache.get_entries(date)
       # For non-cash accounts, apply transaction flows to the non-cash balance.
       if account.balance_type == :non_cash
-        non_cash_balance + signed_entry_flows(entries)
+        if account.accountable_type == "Loan"
+          non_cash_balance + signed_entry_flows(entries)
+        else
+          non_cash_balance
+        end
       elsif account.balance_type == :investment
         # For reverse calculations, we need the previous day's holdings
         target_date = direction == :forward ? date : date.prev_day

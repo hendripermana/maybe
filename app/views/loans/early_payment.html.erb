@@ -1,0 +1,18 @@
+<%= render DS::Dialog.new do |dialog| %>
+  <% dialog.with_header(title: "Early payment") %>
+  <% dialog.with_body do %>
+    <%= form_with url: early_payment_loan_path(@account), method: :post, data: { turbo_frame: :_top }, class: "space-y-4" do |f| %>
+      <%= f.number_field :amount, name: "early_payment[amount]", step: 0.00000001, min: 0, required: true, label: "Amount (#{@account.currency})" %>
+      <%= f.collection_select :cash_account_id, Current.family.accounts.assets.alphabetically, :id, :name, { label: "From account" } %>
+      <div>
+        <label class="text-sm text-secondary mb-1 block">Mode</label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2"><%= f.radio_button :mode, :shorten_term, name: "early_payment[mode]", checked: true %> Shorten term</label>
+          <label class="flex items-center gap-2"><%= f.radio_button :mode, :reduce_payment, name: "early_payment[mode]" %> Reduce monthly payment</label>
+        </div>
+      </div>
+      <%= f.date_field :date, name: "early_payment[date]", value: Date.current, label: "Date" %>
+      <%= f.submit "Record early payment" %>
+    <% end %>
+  <% end %>
+<% end %>

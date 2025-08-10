@@ -187,7 +187,16 @@ Rails.application.routes.draw do
   end
   resources :vehicles, only: %i[new create edit update]
   resources :credit_cards, only: %i[new create edit update]
-  resources :loans, only: %i[new create edit update]
+  resources :loans, only: %i[new create edit update] do
+    member do
+      # Debt actions
+      get :make_payment
+      get :early_payment
+      post :early_payment
+      get :reschedule
+      post :reschedule
+    end
+  end
   resources :cryptos, only: %i[new create edit update]
   resources :other_assets, only: %i[new create edit update]
   resources :other_liabilities, only: %i[new create edit update]

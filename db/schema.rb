@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_24_115507) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_10_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_24_115507) do
     t.uuid "accountable_id"
     t.decimal "balance", precision: 19, scale: 4
     t.string "currency"
-    t.virtual "classification", type: :string, as: "\nCASE\n    WHEN ((accountable_type)::text = ANY ((ARRAY['Loan'::character varying, 'CreditCard'::character varying, 'OtherLiability'::character varying])::text[])) THEN 'liability'::text\n    ELSE 'asset'::text\nEND", stored: true
+    t.virtual "classification", type: :string, as: "\nCASE\n    WHEN ((accountable_type)::text = ANY (ARRAY[('Loan'::character varying)::text, ('CreditCard'::character varying)::text, ('OtherLiability'::character varying)::text])) THEN 'liability'::text\n    ELSE 'asset'::text\nEND", stored: true
     t.uuid "import_id"
     t.uuid "plaid_account_id"
     t.decimal "cash_balance", precision: 19, scale: 4, default: "0.0"
@@ -421,6 +421,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_24_115507) do
     t.integer "term_months"
     t.decimal "initial_balance", precision: 19, scale: 4
     t.jsonb "locked_attributes", default: {}
+    t.string "debt_kind"
+    t.string "counterparty_type"
+    t.string "counterparty_name"
+    t.uuid "disbursement_account_id"
+    t.date "origination_date"
+    t.integer "due_day"
+    t.integer "grace_days", default: 5, null: false
+    t.integer "schedule_version", default: 1, null: false
+    t.datetime "rescheduled_at"
+    t.text "reschedule_reason"
+    t.index ["counterparty_type"], name: "index_loans_on_counterparty_type"
+    t.index ["debt_kind"], name: "index_loans_on_debt_kind"
+    t.index ["disbursement_account_id"], name: "index_loans_on_disbursement_account_id"
   end
 
   create_table "merchants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -848,6 +861,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_24_115507) do
   add_foreign_key "imports", "families"
   add_foreign_key "invitations", "families"
   add_foreign_key "invitations", "users", column: "inviter_id"
+  add_foreign_key "loans", "accounts", column: "disbursement_account_id"
   add_foreign_key "merchants", "families"
   add_foreign_key "messages", "chats"
   add_foreign_key "mobile_devices", "users"

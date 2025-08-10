@@ -1,3 +1,62 @@
+# Debt lifecycle & repayment design (Phase 1 — design notes only)
+#
+# Purpose: Introduce derived debt status, monthly schedules, and flexible repayments
+# without changing existing double-entry, FX, materialization, or cache behavior.
+#
+# Status model (derived; not persisted):
+#   Values: :active, :in_grace, :overdue, :paid_off
+#   Inputs: next_due_date, amount_due_period, grace_days (default 5), outstanding
+#   Rules:
+#     - paid_off     if outstanding <= tolerance (1 minor currency unit)
+#     - overdue      if today > next_due_date + grace_days AND amount_due_period not fully paid
+#     - in_grace     if next_due_date < today <= next_due_date + grace_days AND not fully paid
+#     - active       otherwise
+#   Contract (planned): LoanStatusComputer.new(loan, as_of: Date.current)
+#     .status, .next_due_date, .amount_due_period, .days_past_due
+#   Notes: purely reads transactions/entries and any schedule metadata; no posting.
+#
+# Scheduling (standard loans and personal loans):
+#   - Monthly cadence using origination_date, term_months, due_day (default = origination day)
+#   - Fixed-rate amortization for now; variable-rate hook reserved for later
+#   - For credit card–like debts (future): statement_day, due_day, min_payment -> hook only
+#   Contract (planned): AmortizationSchedule.compute(outstanding:, rate:, term_months:, due_day:)
+#     .installments, .amount_due(on: date)
+#
+# Flexible repayments (respect existing transfer-based postings):
+#   - Partial payment: already supported via Transfer::Creator to Loan accounts (kind: loan_payment)
+#     amount_due calculation must subtract partials within the period
+#   - Early payment (extra principal):
+#       EarlyPaymentService.call!(loan:, amount:, mode: :shorten_term|:reduce_payment, date:)
+#       Default mode: :shorten_term; recompute schedule from new outstanding only
+#       Posts DR Debt (principal), CR Cash via existing transfer pipeline; then recompute schedule
+#   - Reschedule: RescheduleService.call!(loan:, new_term_months:, new_rate: nil, new_due_day: nil,
+#       effective_date:, reason:)
+#       Freeze prior schedule, bump schedule_version, recompute from outstanding@effective_date
+#       Preserve history; audit with event "debt_rescheduled"
+#
+# Data model additions (Phase 2 migrations; additive only):
+#   loans: due_day:integer, grace_days:integer (default: 5), schedule_version:integer (default: 1),
+#          rescheduled_at:datetime, reschedule_reason:text
+#   Optional future: min_payment_cents for CC-like debts
+#
+# UI (non-blocking follow-ups):
+#   - Debt index (accounts list liabilities): status chip, progress bar (paid/total),
+#     “next due • date” + “amount due”
+#   - Debt show: prominent status + progress; actions: Make Payment (prefilled transfer),
+#     Early Payment, Reschedule
+#   - Notifications: daily job DebtDueCheckerJob computes transitions and queues reminders
+#
+# Safety/constraints:
+#   - Use Current.family ownership checks in services; cash/loan accounts must belong to same family
+#   - Idempotency for EarlyPaymentService & RescheduleService (deterministic keys or last action ids)
+#   - Do NOT alter double-entry, FX conversion (Money.exchange_to), materialization, or cache key strategy
+#
+# Edge cases to cover in tests:
+#   - Cross-currency payments (loan vs. cash currency)
+#   - Zero-interest loans (monthly payment reduces to principal/term)
+#   - Partial payments keeping status in_grace/overdue until fully covered for the period
+#   - Paid off tolerance (<= 1 unit of currency)
+
 class Loan < ApplicationRecord
   include Accountable
 

@@ -54,14 +54,15 @@ class Transfer::Creator
     end
 
     # If destination account has different currency, its transaction should show up as converted
-    # Future improvement: instead of a 1:1 conversion fallback, add a UI/UX flow for missing rates
+    # For loan repayments, do not allow fallback rates. Raise if no historical rate exists.
     def inflow_converted_money
-      Money.new(amount.abs, source_account.currency)
-           .exchange_to(
-             destination_account.currency,
-             date: date,
-             fallback_rate: 1.0
-           )
+      money = Money.new(amount.abs, source_account.currency)
+      if destination_account.loan?
+        money.exchange_to(destination_account.currency, date: date)
+      else
+        # Non-loan transfers can still fallback to 1.0 to preserve existing UX
+        money.exchange_to(destination_account.currency, date: date, fallback_rate: 1.0)
+      end
     end
 
     # The "expense" side of a transfer is treated different in analytics based on where it goes.

@@ -1,0 +1,17 @@
+<%# locals: (account:) %>
+<% if account.accountable_type == "Loan" %>
+  <% status = LoanStatusComputer.new(account.loan, as_of: Date.current).call %>
+  <div class="flex items-center gap-2 text-xs">
+    <%# status chip %>
+    <% color = { active: "bg-emerald-100 text-emerald-700", in_grace: "bg-amber-100 text-amber-700", overdue: "bg-red-100 text-red-700", paid_off: "bg-slate-200 text-slate-700" }[status.status] %>
+    <span class="px-2 py-0.5 rounded-full <%= color %>"><%= status.status.to_s.humanize %></span>
+    <%# next due and amount %>
+    <span class="text-secondary">Next due • <%= status.next_due_date %></span>
+    <span class="text-secondary">Amount due: <%= format_money status.amount_due_period %></span>
+    <%# progress bar %>
+    <div class="w-24 h-1.5 bg-slate-200 rounded overflow-hidden">
+      <% pct = (status.progress * 100).round %>
+      <div class="h-full bg-emerald-500" style="width:<%= pct %>%"></div>
+    </div>
+  </div>
+<% end %>

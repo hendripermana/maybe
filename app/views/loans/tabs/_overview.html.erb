@@ -51,4 +51,10 @@
     href: edit_loan_path(account),
     frame: :modal
   ) %>
+  <%# Debt actions %>
+  <div class="flex items-center gap-2 ml-4">
+    <%= render DS::Link.new(text: "Make payment", variant: :outline, href: make_payment_loan_path(account), frame: :modal) %>
+    <%= render DS::Link.new(text: "Early payment", variant: :outline, href: early_payment_loan_path(account), frame: :modal) %>
+    <%= render DS::Link.new(text: "Reschedule", variant: :outline, href: reschedule_loan_path(account), frame: :modal) %>
+  </div>
 </div>

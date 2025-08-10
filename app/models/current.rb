@@ -1,9 +1,11 @@
 class Current < ActiveSupport::CurrentAttributes
   attribute :user_agent, :ip_address
 
-  attribute :session
+  attribute :session, :family
 
-  delegate :family, to: :user, allow_nil: true
+  def family
+    super || user&.family
+  end
 
   def user
     impersonated_user || session&.user

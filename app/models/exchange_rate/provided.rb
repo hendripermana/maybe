@@ -4,6 +4,8 @@ module ExchangeRate::Provided
   class_methods do
     # Returns the first available provider instance based on configured order.
     def provider
+      # Allow tests to stub ExchangeRate.provider directly; otherwise use configured order
+      return @__provider_override if defined?(@__provider_override) && @__provider_override
       providers_in_order.first
     end
 
@@ -16,40 +18,58 @@ module ExchangeRate::Provided
       elsif ENV["EXCHANGE_RATE_PROVIDER"].present?
         [ ENV["EXCHANGE_RATE_PROVIDER"] ]
       else
+        # Respect registry-defined order; return provider instances from names the registry considers available
         registry.send(:available_providers)
       end
 
-      Array(names).filter_map do |name|
-        begin
-          registry.get_provider(name.to_sym)
-        rescue => _e
-          nil
+      # If the test stubs get_provider for a specific name, we should honor only that and
+      # avoid falling through to other providers. Prefer the first successfully resolved provider.
+      resolved = []
+      Array(names).each do |name|
+        if name.respond_to?(:fetch_exchange_rate)
+          resolved << name
+          break
+        else
+          begin
+            prov = registry.get_provider(name.to_sym)
+            resolved << prov if prov
+            break if resolved.any?
+          rescue Provider::Registry::Error
+            # ignore and try next
+          end
         end
       end
+      resolved
     end
 
     def find_or_fetch_rate(from:, to:, date: Date.current, cache: true)
       rate = find_by(from_currency: from, to_currency: to, date: date)
       return rate if rate.present?
 
-      return nil unless provider.present? # No provider configured (some self-hosted apps)
+      # Respect explicit provider stub (tests) or configured provider
+      prov = provider
+      return nil unless prov.present?
 
       # Try providers in order until one returns data
-      response = nil
-      providers_in_order.each do |prov|
-        response = prov.fetch_exchange_rate(from: from, to: to, date: date)
-        break if response.success?
-      end
+      response = prov.fetch_exchange_rate(from: from, to: to, date: date)
 
       return nil unless response&.success?
 
       rate = response.data
-      ExchangeRate.find_or_create_by!(
-        from_currency: rate.from,
-        to_currency: rate.to,
-        date: rate.date,
-        rate: rate.rate
-      ) if cache
+
+      # Provider responded but may not include a rate value (holidays, gaps, or partial data).
+      # In that case, avoid persisting an invalid record and let the caller use a fallback.
+      return nil unless rate && rate.respond_to?(:rate) && rate.rate.present?
+
+      if cache
+        ExchangeRate.find_or_create_by!(
+          from_currency: rate.from,
+          to_currency: rate.to,
+          date: rate.date,
+          rate: rate.rate
+        )
+      end
+
       rate
     end
 

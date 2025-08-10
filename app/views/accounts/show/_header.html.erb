@@ -24,6 +24,11 @@
           <% end %>
         </div>
       </div>
+
+      <%# Loan status chip (show header) %>
+      <% if account.accountable_type == "Loan" %>
+        <%= render "accounts/loan_status_chip", account: account %>
+      <% end %>
     </div>
 
     <div class="flex items-center gap-1 ml-auto">

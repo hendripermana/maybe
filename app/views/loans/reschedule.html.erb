@@ -1,0 +1,13 @@
+<%= render DS::Dialog.new do |dialog| %>
+  <% dialog.with_header(title: "Reschedule loan") %>
+  <% dialog.with_body do %>
+    <%= form_with url: reschedule_loan_path(@account), method: :post, data: { turbo_frame: :_top }, class: "space-y-4" do |f| %>
+      <%= f.number_field :new_term_months, name: "reschedule[new_term_months]", min: 1, label: "New term (months)" %>
+      <%= f.number_field :new_rate, name: "reschedule[new_rate]", step: 0.0001, label: "New interest rate (%)" %>
+      <%= f.number_field :new_due_day, name: "reschedule[new_due_day]", min: 1, max: 28, label: "New due day" %>
+      <%= f.date_field :effective_date, name: "reschedule[effective_date]", value: Date.current, label: "Effective date" %>
+      <%= f.text_area :reason, name: "reschedule[reason]", rows: 3, label: "Reason" %>
+      <%= f.submit "Update schedule" %>
+    <% end %>
+  <% end %>
+<% end %>

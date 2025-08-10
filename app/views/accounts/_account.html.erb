@@ -23,6 +23,11 @@
         <% end %>
       </div>
 
+      <%# Loan status chip (index) %>
+      <% if account.accountable_type == "Loan" %>
+        <%= render "accounts/loan_status_chip", account: account %>
+      <% end %>
+
       <% unless account.pending_deletion? %>
         <%= link_to edit_account_path(account, return_to: return_to), data: { turbo_frame: :modal }, class: "group-hover/account:flex hidden hover:opacity-80 items-center justify-center" do %>
           <%= icon("pencil-line", size: "sm") %>

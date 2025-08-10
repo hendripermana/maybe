@@ -32,9 +32,9 @@ class PagesController < ApplicationController
 
     # Fallback if no release notes are available
     if @release_notes.nil?
-      gh = github_provider
+      gh = Provider::Github.new
       @release_notes = {
-        avatar: gh.owner_avatar_url,
+        avatar: nil,
         username: gh.owner,
         name: "Release notes unavailable",
         published_at: Date.current,
